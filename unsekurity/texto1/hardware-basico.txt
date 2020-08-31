@@ -1,0 +1,406 @@
+
+############################ Unsekurity Team ###########################################
+
+
+
+
+   Voce pode encontrar este e outros textos em:
+		http://unsekurity.virtualave.net/
+
+
+
+             .
+ by raynox  . .  Jerry Slater - jerryslater@bol.com.br
+
+
+
+  Faco como meu amigo coracaodeleao... 
+
+   "SE VOCE E ELITE, VOCE NAO PRECISA PERDER SEU PRECIOSO TEMPO LENDO ESTE
+TUTORIAL, POIS O MESMO E VOLTADO APENAS PARA O PESSOAL NEWBIE...!!!!!!! "
+
+
+
+
+ Esse txt nao e para voce aprender a consertar ou configurar sua placa de video,
+ou se som no seu sistema. E para ter apenas uma ideia de como a coisa e por
+dentro...!!!
+ Aprender a programar e essencial para fucadores... mas nao custa nada aprender
+um pouco como e seu computador por dentro e com ele trabalha neh? Pois todo
+conhecimento e valido.
+
+
+
+
+
+
+                            ***********************
+                            * - HARDWARE BASICO - *
+                            ***********************
+
+
+
+
+
+
+    - Conceitos Iniciais - 
+
+	
+		A eletronica digital se difere da analogica basicamente por nao
+   sofrer muitas variacoes na sua onda. Sempre varia entre 1 e 0, enquanto que
+   na analogica a variacao e bem maior...!!! Toda sua maquina trabalha com o
+   sitema binario sendo 1 - Verdadeiro e 0 - Falso.
+
+		Muito se ouve falar tambem em numeros hexadecimais. Logo abaixo
+   segue uma tabela para melhor compreensao.
+
+
+            = Tabela Hexadecimal =
+
+
+
+       BINARIO                                       HEXADECINAL
+	0000						0
+	0001						1
+	0010						2
+	0011						3	
+	0100						4
+	0101						5
+	0110						6		
+	0111						7		
+	1000						8	
+	1001						9	
+	1010						A	
+	1011						B			
+	1100						C
+	1101						D	
+	1110						E
+	1111						F
+			  
+
+                Isso e basico para programacao em baixo nivel...!!!!! Nao vou
+tocar no assunto sobre tantos bits equivalem a tantos bytes por que ja e demais tambem! =)
+		Tudo em seu computador tem um endereco proprio, seu mouse,
+seu teclado, etc...todos dispositivos sem exececao alguma.
+
+
+
+	- Hertz e Clock -
+
+
+	
+		O Hertz e a unidade de medida de oscilacoes, no caso entre 1
+e 0, ele determina o numero de oscilacoes existentes em 1 segundo. O Hertz e
+usado para medir o Clock de um processador, pois o Clock e o numero de ciclos
+(Instrucoes realizadas pelo processador) digitais que um chip executa a cada
+segundo. Por exemplo: 300MHz -> 300 milhoes de ciclos por segundos, ou seja,
+sao 300 milhoes de instrucoes que  sao processadas em 1 segundo.
+
+
+
+
+
+	- BARRAMENTOS -
+
+
+	
+		Barramentos sao por onde passam a comunicacao feita entre os
+dispositivos do seu computador.
+		Barramento local: E aquele usado para conectar o processador
+a todos os circuitos essenciais da placa-mae.
+                Barramento de Dados: Usado para fluxo de dados entre o proces-
+sador, memoria e perifericos.
+		Barramento de Enderecos: Aqui e o 'canal' de comunicacao entre
+o processador e o resto da maquina. So o processador tem acesso a esse barra-
+mento.
+                Barramento de Controle: Circulam informacoes como se a opera-
+cao executada e escrita ou leitura.
+	
+	Eh mais ou menos assim que a coisa acontece..=)
+
+
+                                                                              
+         |==============================================================|                          |                       Barramento de Enderecos                       |
+         |               Barramento de Enderecos                        |
+         | =========================================================== ||
+         ||                                                            ||
+        \  /                                                           ||
+         \/                                                           \  /
+                                                                       \/
+|=============|       |                              |      ________________
+|             |     / ================================ \    |               |  
+| Processador |    /       Barramento de Dados          /   | Dispositivos  |
+|             |     \ ================================ /    |_______________|
+|=============|       |                               |               / \ 
+         /\                                                          /   \
+        /  \                                                          ||
+         ||                                                           ||           
+         | =========================================================== |
+         |                Barramento de Controle                       |
+         |=============================================================|   
+
+
+
+	- SLOTS - 
+
+
+		Slots, para leigos, e aquela local aonde sao conectadas as
+placas a sua placa-mae. Existem diversos tipos de slots, mas os mais usados
+sao o ISA, VESA, PCI e atualmente AGP. Todos esses seram comentados abaixo.
+
+                * ISA (Industry Standart Architecture) - Foi desenvolvido pela
+IBM em 1984, embora um pouco antigo, ainda e um dos mais usados. O slot ISA
+possui uma largura de 16Bits, uma frequencia de operacao de 8MHz e uma taxa de
+transferencia de 8MB/s. Mesmo tendo uma largura de 16Bits, esse slot permite
+conexao com adaptadores antigos de 8Bits.
+
+		* VESA (Video Eletronic Standart Association) - Foi desenvolvi
+ do pela Associacao de Padronizacao da Eletronica de Video em 1992. Um dos
+ intutos para seu desenvolvimento foi para aceleracao de monitores de video. O
+ slot VESA possui uma largura de 32Bits, uma frequencia de operacao de 33MHz e
+ uma taxa de transferencia de 107MB/s. Embora mais rapido que o ISA, sua aceita
+ cao nao foi tao boa pois era este possui um tamanho 'enorme' e isso tirava um
+ pouco da compatibilidade dos computadores pessoais. E tambem quase em seguida
+ foi lancado um novo slot, o PCI.
+
+		* PCI (Peripherical Component Interconnect) - Desenvolvido pela
+  INTEL em 1994. Atualmente e o slot mais usado entre os computadores do mundo,
+  pois o primeiro slot a permitir a configuracao Plug and Play. Possui uma
+  largura de 32Bits, frequencia de operacao de 33MHZ e uma taxa de transferencia
+  132MB/s. Esse e um dos slots mais compactos junto com o AGP.
+
+		* AGP (Acceleration Graphics Port) - Desenvolvido pela INTEL em
+  1998. Atualmente e o slot mais rapido no mercado... mas sua velocidade so pode
+  ser aproveitada para video, ou seja, foi um slot voltado para parte grafica.
+  Possui uma largura de 32Bits, uma frequencia de operacao de 100MHz e uma taxa
+  de transferencia de 528MB/s.
+
+
+
+
+	- IRQ's -
+
+
+		Cada dispositivo do seu computador se comunica de um por um com
+seu processador, ou seja,  cada dispositivo tem sua privacidade ao se
+comunicar com seu processador isso atraves do barramento de dados. Muitas
+vezes ocorre de um dispositivo tentar se comunicar mas o barramento esta
+ocupado, ai entra o papel das IRQ's (Interrupt Request). Ela gerencia os
+pedidos de interrupcoes feitas ao processador. AS IRQ's possuem uma hierarquia
+como segue:
+		IRQ 0 - IRQ 1 - IRQ 8 -IRQ 9 - IRQ 10 - IRQ 11 - IRQ 12 -
+          IRQ 13 - IRQ 14 - IRQ 15 - IRQ 3 - IRQ 4 - IRQ 5 - IRQ 6 - IRQ 7
+		Quando acontece um problema de conflito em seu computador e por
+que dois dispositivos estao usando a mesma IRQ e isso pode ser facilmente
+arrumado, nao precisa voce levar seu pc para um tecnico para ele te cobrar os
+olhos da cara para arrumar uma coisa dessas. Basta voce alterar a configuracao
+de um dos dispositivos... =)
+
+
+
+
+
+
+	- MEMORIAS -
+
+		
+		Como sabemos, exitem dois tipos de memorias num computador. Sao
+a memoria RAM e memoria ROM.
+
+		* RAM (Read Only Memory) - Essa memoria trabalha entre os
+dispositivos e processador. Comparada a um HD vemos que essa memoria e pequena,
+mas em termos de velocidade ela e bem superior. A memoria e como se fosse um
+arquivo, um movel cheio de gavetas, e quando um aplicativo e executado uma
+parte dele vem para uma das gavetas, mas para se previnir a memoria chama o
+maximo que ela puder para preencher seus espacos, fazendo assim com que se
+computador tenha um melhor desenpenho e tente reduzir ao maximo o acesso ao HD.
+Esta memoria divide-se basicamente em dois tipos a EDORAM e SDRAM.
+
+			* EDORAM (Extended Data Out RAM) - Memoria voltada mais
+para processadores 386, 486 e pentium que possuem chipset para esse tipo de
+memoria. Esta se divide em SIMM e DIMM. A SIMM (Single In Line Memory Module)
+possui um encapsulamento de 30e 72 vias. Essa e o tipo de memoria EDO (30 vias)
+voltada para os 386 e 486, sao modulos de 8Bits, sua capacidade varia entre
+256KB e 4MB. Ja as de 72 vias foram criados para pentiuns e superiores, mas
+existe para 486 tambem. Sao modulos de 32Bits.
+
+                          A os modulos de memoria DIMM (Double In Line Memory
+Modules) sao modulos de 64Bits e possuem 168 vias.
+
+			* SDRAM (Synchronous Dynamic RAM) - Unica memoria
+disponivel capaz de suportar clock de 100MHz. Trabalha em sincronia com a
+placa-mae. Internamente possui duas matrizes de capacitores o que permite aces
+so a dois enderecos diferentes sejam iniciados ao mesmo tempo.
+		Mesmo tendo a vantagem de ser rapida e melhor o desenpenho da
+sua maquina, a memoria RAM possui digamos q uma pequena falha, pois ele so
+guarda a informacao por momento, pois toda vez que seu compuador e reiniciado ela
+reseta junto com ele.
+
+		* ROM - Ler texto disponivel em 
+			http://unsekurity.virtualave.net/txts/roms.txt
+
+
+
+
+
+
+
+	- DISCOS - 
+
+		* DISCO FLEXIVEL - Antigamente essencias para o funcionamento
+dos pc's, mas com o avanco da tecnologia, passaram a sera pior unidade para
+guardar informacoes importantes. Devido sua sensibilidade os diskettes foram,
+com o passar dos tempos, tornando-se os mais mais inseguros de fazer algum
+backup. Conectado atraves da controladora FDC, que vem junto a placas multi
+I/O. Mas, na maioria dos casos essa palca ja vem onboard.
+		
+		* DISCO RIGIDO - HD - Hoje os hd's sao as unidades quase que
+mais confiaveis (nao sao as mais devido a existencia dos cracker's...=P).
+Antigamente possuiam capacidade minuscula se comparados aos de hoje.
+			Controlado pela IDE (Integrated Drive Eletronic), que
+tambem na maioria dos casos vem onboard, o hd esta conectado a placa-mae pelo
+cabo FLET, o qual suporta 2 discos.Um intem muito interessante e a configura-
+cao do hd que e feita via jumper's, entre MASTER e SLAVE. A IDE primaria ou
+IDE I deve ter estar seu hd configurado como MASTER (talvez algum de voces
+pense...: E como eu vou saber se estar MASTER ou SLAVE??? Basta voce ver o
+proprio hd, pois este contem a configuracao necessaria.). Um fator importante
+para configuracao MASTER e que o boot da maquina e dado apenas nos arquivos
+contidos no proprio. Outra contraladora para hd e a SCSI (Small Computer
+System Interface), esta por sua vez nao e um padrao para discos rigidos e nem
+uma placa onboard. Sua principal diferenca para IDE e a velocidade.
+
+		* CDROM - Tambem usa IDE ou SCSI como controladoras. Quando
+dizemos que um cdrom e 50X ou 24X, estamos dizem que ele tem uma taxa de
+transferencia de, no caso, 50 multiplicado por 150Kbs ou 24 multiplicado por
+150Kbs, isso depende do seu cdrom.
+			
+		Nao entrarei em detalhes comentando obre CDR ou DVD, pois este
+e um tutorial basico... =)
+
+
+
+
+
+
+
+
+	- PROCESSADOR ou CPU -
+
+
+		Intermanente um processador divide-se +- assim:
+
+
+                ________________
+	       |  ____________  |                    
+	       |  | UNIDADE   | |           	  
+	       |  |     DE    | |          	
+               |  |    I/O    | |
+               |  |___________| |                       
+               |   ___________  |                   
+               |  | UNIDADE   | |          
+               |  |   DE      | |          
+	       |  | CONTROLE  | |           
+	       |  |___________| |                      	 
+	       |   ___________  |                   	
+               |  |  UNIDADE  | |        
+               |  |   LOGICA  | |         
+               |  |ARITMETICA | |           
+               |  |___________| |           	 
+               |________________|
+
+
+
+		CPU (Central Processing Unit) - Centro de toda sua maquina.
+Nao que esse seja um texto totalmente explicativo e detalhado, mas darei um
+pouco de enfase aos procssadores INTEL.=P
+		A INTEL, apos o lancamento do 286 (processador que trabalhava
+com 16Bits e permitia recursos bem mais avancados em relacao aos processadores
+anterios), para nao fugir as regras de compatibilidade dividio em dois modos
+de opercao seu processador, sao eles: o modo REAL e o modo PROTEGIDO.
+			* MODO REAL - Quando um processador trabalha em modo
+real, ele assumi todas as caracteristicas de um 8086. Toda vez que ligamos o
+computador, nosso processador encontra-se em modo real, so atraves de uma
+instrucao especial ele passa para o outro modo, o protegido. Nao importa qual
+processador vc tenha, mas ele sempre tera um 8086 embutido.!
+			* MODO PROTEGIDO - Nesse modo o processador pode
+desenvolver toda sua capacidade, podendo assim atingir o maximo do seu
+desenpenho. E como eu comentei anteriormente, o processador so opera nesse
+modo apos receber uma instrucao especial no momentos depois de ligado.
+
+		Importante tambem e saber o que e e para que serve a memoria
+CACHE. Memoria CACHE e uma memoria especial para o processador. Veja a figura
+abaixo.
+
+
+                              ________________
+                             |                |
+                             |  MEMORIA CACHE |
+                             |_______  _______|
+   |=============|         |        |  |               |     _______________
+   |             |       / ============================= \   |              | 
+   | Processador |      /                                 /  | MEMORIA RAM  | 
+   |             |       \ ============================= /   |______________|
+   |=============|         |                            |                     
+
+
+		A memoria CACHE fica entre o processador e RAM para melhorar
+o desenpenho da sua maquina.
+		Aqui nao irei comentar sobre todos os tipos de processadores,
+apenas os mais usados.
+			* PENTIUM - Possui um barramento de dados interno de
+32Bits e externo de 64Bits, seu barramento de endereco e de 32 linhas, possui
+duas ULAs (Unidade Logica Aritmetica).
+
+			* PENTIUM MMX (Malt Midia eXtended) - As principais
+diferencas comparados ao pentium foram ou aumento da performance em aplicacoes
+multimidia e o aumento de instrucoes.
+
+			* PENTIUM II - Evolucao do socket 7 (ZIF) para o
+socket SEC (Single Edge Contact). O memoria cahe passou a vir unida ao
+processador e seu padrao e ATX.
+
+			* PENTIUM III - As princiais diferencas para o pentium
+II sao a nova tecnologia MMXII e o aumento do clock.
+
+		Nao comentarei aqui sobre os demais processadores (nao que eu
+tenha nada contra), mas sabemos que todos ele foram basedos no pentium...!!!!
+
+        ~#~ Esclarecimento... socket e aquele encaixe do processador na placa-
+mae. O ZIF (Zero Insertion Force) e aquele cheio de pinos e tal... o SEC e
+aquele tipo um cartucho de video-game. =)
+
+
+
+
+
+
+
+
+
+
+Bem galera...!!!! Por enquanto acho que isso da pra quebrar o galho...!!! =)
+
+
+        So gostaria que vc's leitores dos txt's do u.t. prestem atencao para
+como a midia trata os hackers. Inumeras vezes ja vi anuncios em revista de
+grande circulacao dizendo: "De uma esmola para um ex-hacker" ou "Sou um
+ex-hacker, agora passo fome.", uma propaganda de uma rede de cartoes de credi-
+to. Isso e deprimente, revoltante... a que ponto chegaram as empresas.
+Mas como sempre a nossa luta persiste, e agora cada vez mais forte...
+Espero que em um futuro proximo a etica hacker seja tanto disponivel como
+compreendida entre a populacao que habita esse mundo virtual chamado internet,
+e que tenhamos mais forcas para continuar na resistencia...=)
+                                                        
+
+        Gostaria de agradecer a todo unsekurity team, Cs0, xf86config, module,
+e-brain, psych, xcarioca, segfault, m1x, t[rex], klogd, Blind_Bard, cdk e 
+principalmente ao meu amigo coracaodeleao e a todos que compoem 
+o u.t. indiretamente...!!!!!
+
+[]'s
+
+
+ 
+                                                                    
+     
+

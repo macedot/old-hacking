@@ -1,0 +1,567 @@
+,*********************,
+| Criptografia Basica |
+'*********************'
+
+Autor: Dimitri Vashnov
+
+Email: dimitrivashnov@yahoo.com.br
+
+Thanks Unsekurity Scene!
+
+
+0. Introducao
+
+Tenho buscado ao longo dos anos textos sobre criptografia,
+e verifiquei que o assunto ainda eh muito restrito, existem
+poucos textos sobre o assunto, principalmente em portugues.
+Busquei tambem programas que utilizam criptografia, e o que
+tenho verificado eh que os americanos nao desejam que o resto
+do mundo adote criptografia (principalmente a forte) ou que
+tenhamos sempre uma criptografia mais fraca que a deles. Eh
+impressionante como os clientes FTP de hoje em dia ainda 
+nao adotam criptografia por padrao. Impressionante tambem
+eh saber que essa criptografia fraca que usamos eh mesmo que
+nada, pois quem possui um supercomputador pode quebra-la 
+facilmente, alem de existir tecnicas como Man In The Middle,
+que poem abaixo um conceito que ateh entao nos enganava.
+
+A solucao eh criarmos nos mesmos, hackers fora do eixo
+EUA-CANADA, nossas proprias solucoes em criptografia. Este
+texto objetiva isso: ajuda-lo a entender a criptografia,
+afinal, hackers tem de se defender contra agentes da matrix. 
+A leitura deste texto nao exige muito sobre programacao, 
+jah que o objetivo eh passar a base dos conceitos. Para quem 
+quer se aprofundar, aprender matematica bem avancada eh muito 
+importante.
+
+1. Funcoes
+
+Aqui quando nos referimos a funcao, estamos na verdade nos
+referindo a uma funcao matematica, definida por 2 conjuntos
+e uma regra que associa cada elemento do primeiro conjunto
+a algum elemento do segundo. Nosso interesse nao eh dar aqui
+o embasamento matematico necessario para a leitura deste
+texto, acho que qualquer livro de matematica do 2º grau 
+explica muito bem este topico. Com isso, podemos analisar 
+funcoes que podem nos ajudar nessa tarefa de criptografar dados. 
+
+1.1 Funcoes 1-way
+
+Funcoes 1-way (via unica) sao aquelas no qual dado x, eh
+facil achar f(x)=y, mas que dado y, torna-se razoavelmente
+dificil, para os padroes computacionais atuais, obter x 
+tal que f(x)=y. 
+
+Um exemplo de funcao 1-way eh um produto de numeros primos.
+Se dado a e b primos, calcular f(a,b)=a*b=c eh facil, mas no
+entanto, fatorar c em produtos de primos eh uma tarefa bem
+mais dificil. Eh exatamente nesta dificuldade que se baseiam
+as criptografias de chave publica.
+
+Funcoes 1-way com chave secreta sao as Funcoes 1-way nas quais
+se dado y e for fornecido alguma informacao secreta, torna-se 
+facil obter x tal que f(x)=y. Seria uma especie de informacao
+que torna a 'volta' mais facil. O exemplo acima eh uma funcao
+1-way com chave secreta (em ingles chamam de trapdoor 1-way 
+function, mas resolvi traduzir assim por fazer mais sentido).
+
+1.2. Permutacoes
+
+Uma permutacao eh uma bijecao de um conjunto em si mesmo.
+
+Ex.: 
+
+(1,2,3,4,5) -> (4,3,5,1,2)
+ | | | | '------|-|-|-|-'
+ | | | '--------|-|-|-'
+ | | '----------|-|-'
+ | '------------|-'
+ '--------------'
+
+p = / 1,2,3,4,5 \
+    \ 4,3,5,1,2 /
+
+p(1)=4,p(2)=3, ...
+    
+Como uma permutacao eh uma bijecao, entao sempre temos 
+uma permutacao inversa. Isso faz da permutacao uma pessima
+opcao de criptografia. 
+
+p^-1 = / 1,2,3,4,5 \
+       \ 4,5,2,1,3 /
+
+
+3. Conceitos Basicos
+
+Chamaremos de mensagem a informacao que desejamos criptografar,
+e mensagem cifrada a mensagem jah criptografada. Utilizaremos 
+tambem os conceitos de chaves. Uma chave define uma bijecao. Com
+isso podemos definir chaves de encriptacao, que gera uma 
+funcao de criptografia, e chaves de desencriptacao, que geram 
+funcoes inversas para as funcoes de criptografia. Mas nem
+sempre eh do nosso interesse que haja uma chave de desencriptacao.
+
+A criptografia deve satisfazer as necessidades para as quais 
+venham a ser projetadas. Se nosso objetivo eh, por exemplo,
+armazenar um arquivo de senhas num computador, entao devemos
+criar uma criptografia que torne a funcao inversa quase 
+impossivel, ou seja, que permita a encriptacao e a verificacao
+das cifras e que nao permita a desencriptacao, e assim soh
+forca bruta seria capaz de quebrar tal criptografia.
+
+Se o objetivo, porem, eh criptografar um arquivo de forma que
+voce possa ter acesso a mensagem original, entao voce deve
+ter algum meio que possa desencriptar a cifra, talvez por
+meio de alguma chave de desencriptacao (que deve ser secreta).
+
+Se voce tem acesso a qualquer uma das chaves, ainda assim eh
+possivel quebrar a criptografia. Com a chave de encriptacao,
+podemos quebrar via forca bruta (ou entao tentar descobrir
+a chave de desencriptacao com ela). Com a chave de desencriptacao,
+a tarefa torna-se trivial.
+
+Um esquema basico de criptografia simples seria o seguinte:
+
+1- Emissor criptografa a mensagem com uma chave e, de encriptacao.
+
+2- A mensagem cifrada eh enviada pelo meio de comunicacao (inseguro).
+
+3- A mensagem chega ao Receptor, que utiliza sua chave d, de
+desencriptacao, e assim le a mensagem.
+
+Se as duas chaves 'e' e 'd' sao iguais, entao a criptografia eh
+dita simetrica. Geralmente sao as mais fracas.
+
+Se as duas chaves 'e' e 'd' sao diferentes, entao a criptografia
+eh assimetrica. 
+
+Um exemplo de assimetria eh a da chave publica. A chave 'e' 
+eh de conhecimento publico, e a chave 'd' eh privada, de 
+conhecimento somente do receptor. A chave RSA eh um exemplo disso,
+no qual a chave d eh gerada, consistindo de dois (ou mais) numeros
+primos imensos (de centenas de digitos) e a chave e eh gerada
+pelo produto desses numeros. Como obter d apartir de e eh muito 
+dificil (ou pelo menos acredita-se e espera-se ser), entao e 
+eh distribuida. 
+
+4. Criptografia Simetrica
+
+Como vimos no topico anterior, a criptografia simetrica baseia-se
+apenas numa chave unica, para encriptar e desencriptar. Como as
+chaves sao as mesmas, a funcao serah uma bijecao.
+Se o objetivo eh encriptar, a chave gera uma bijecao p,
+e se o objetivo eh desencriptar, a mesma chave gera uma bijecao
+inversa de p, digamos q. 
+
+Ex.: 
+ p = / A,B,C,D,E,F,G,L,H,R,S,T,U \
+     \ F,T,U,A,L,S,R,H,B,E,C,G,D /
+
+Inversa de p = / A,B,C,D,E,F,G,L,H,R,S,T,U \
+               \ D,H,S,U,R,A,T,E,L,G,F,B,C /
+
+p(UNSEKURITY) = DNCLKDEIGY (criptografando com p)
+
+p(DNCLKDEIGY) = UNSEKURITY (desencriptografando com p^-1)
+
+
+O problema eh que a chave unica deve ser transmitida por um meio
+seguro, e com isso, torna-se inviavel seu uso pela internet, que
+eh um meio inseguro de transmissao. O meio mais seguro eh fisicamente,
+e mesmo assim, eh facil quebrar uma criptografia de chave simetrica.
+
+Existem 2 tipos de criptografia simetrica a serem estudados aqui:
+cifras de bloco e cifras de cadeia.
+
+4.1 Cifragem de Bloco (Block Ciphers)
+
+Neste esquema, a mensagem eh dividida em blocos de tamanho fixo t e
+encripta-se um bloco por vez, independentemente dos demais. Eh o
+tipo mais famoso de criptografia simetrica. O exemplo anterior,
+no qual encriptamos a palavra UNSEKURITY, eh um exemplo. A mensagem
+eh dividida em blocos de 8 bytes (caracteres) e cada bloco eh
+encriptado individualmente, independente dos demais.
+
+Dentro deste esquema de criptografia, verificamos ainda outros 2 
+subtipos: cifragem de substituicao e cifragem de transposicao. 
+Existem tambem cifragens que combinam estes 2 subtipos, gerando um 
+novo tipo, dito cifragem de produto. 
+
+4.1.1. Substituicao
+
+Cifragem de substituicao sao aquelas nos quais fazemos substituicao
+de certos simbolos (ocorrencia de certos caracteres, por exemplo)
+por outros. Existem 3 metodos de substituicao:
+
+a) Substituicao simples
+
+Eh a substituicao que fazemos atraves de uma permutacao fixa p,
+substituindo cada bloco por sua imagem atraves de p. A obtencao
+da imagem atraves da cifra eh obtido com a inversa de p, que eh
+facil de determinar.
+
+Este tipo de criptografia prova-se inadequada, jah que por mais 
+dificil seja de obter a chave, uma simples observacao de ocorrencia
+de cifras pode nos levar a chave, desde que disponhamos de uma
+razoavel quantidade de texto cifrado. Por exemplo, sabendo que a
+letra A ocorre em grande quantidade na nossa lingua, podemos ir
+decifrando o texto sem grandes dificuldades.
+
+b) Substituicao semi-aleatoria
+
+Nesta substituicao, para cada bloco possivel x, definimos um conjunto
+de blocos distintos A(x), e assim substituimos cada bloco x qualquer
+por um elemento aleatoriamente escolhido do tal conjunto A(x).
+
+Essa substituicao exige uma funcao injetiva B -> S(C) no qual um 
+elemento estah associado a um subconjunto de C, e que para quaisquer
+dois elementos de B, as suas imagens (subconjuntos de C) sao disjuntos.
+(S(C) eh o conjunto dos subconjuntos de C).
+
+Ex.:
+Suponha que o alfabeto da nossa mensagem seja composto apenas de vogais.
+Assim definimos os conjuntos da seguinte maneira:
+
+a -> { ei, io, eo, au }
+e -> { ie, ou, oa, iu }
+i -> { uo, ue, ao, oo }
+o -> { uu, ae, aa, ia }
+u -> { ai, ee, oe, ii }
+
+Com isso nossa mensagem poderia ter varias possiveis cifras:
+
+OIE -> AEAOIU ou UUUOOA
+
+Deve-se frisar que os conjuntos devem ser disjuntos para nao haver
+casos em que dois blocos diferentes tenham a mesma cifragem.
+
+Com a substituicao aleatoria, o tamanho da cifra tende a aumentar, e
+torna-se mais dificil a desencriptacao por analise de frequencias
+de cifras.
+
+c) Substituicao polialfabetica
+
+Uma substituicao polialfabetica com blocos de tamanho t consiste
+em criptografar cada bloco de tamanho 1 com uma permutacao distinta.
+Com isso, definimos t permutacoes.
+
+Assim, se o bloco eh de tamanho 3, definimos 3 permutacoes distintas.
+Se o bloco eh "AAA" por exemplo, cada uma das permutacoes cada A
+a uma minicifra distinta.
+
+p1 = / A,E,I,O,U \
+     \ O,U,A,I,E /
+
+p2 = / A,E,I,O,U \
+     \ E,O,U,A,I /
+
+p3 = / A,E,I,O,U \
+     \ U,A,I,E,O /
+
+Assim, o bloco "AAA" eh cifrado em p1(A)p2(A)p3(A) = "OEU".
+
+A vantagem desta cifra sobre a substituicao simples eh que a
+frequencia dos blocos nao eh preservada. Porem, isso nao dificulta
+muito, jah que se descoberto o tamanho do bloco, as frequencias 
+dos elementos de mesma ordem num bloco sao preservadas.
+
+4.1.2. Transposicao
+
+A transposicao consiste na simples troca da ordem (ou permuta) de 
+simbolos em um mesmo bloco.
+
+Ex.: UNSEKURITY -> YTIRUKESNU
+
+Como a transposicao preserva a quantidade de simbolos de um mesmo 
+tipo, fica facil desencriptar.
+
+4.1.3. Composicao de Cifras
+
+Podemos compor as cifras de substituicao e de transposicao, jah que
+cada uma individualmente nao confere muita seguranca a informacao.
+Como uma substituicao ou transposicao podem ser postas em forma
+matematica como funcoes, uma composicao seria exatamente uma 
+composicao destas funcoes, o que forneceria uma funcao unica para
+criptografia.
+
+Ex.:
+
+Suponhamos novamente que nosso alfabeto seja composto somente de 
+vogais. Definimos assim a seguinte composicao:
+
+1- Definimos um bloco como de tamanho 3.
+2- Realizamos uma substituicao semi aleatoria como definida em 4.1.1 b)
+3- Definimos agora o bloco com tamanho 6.
+4- Utilizamos de transposicao, trocando o primeiro elemento do bloco
+pelo ultimo e vice-versa.
+
+Podemos continuar esse trabalho indefinidamente. A substituicao 
+adiciona um pouco de confusao e a transposicao adiciona uma difusao.
+A confusao torna a relacao entre a mensagem e a mensagem cifrada
+mais dificil de ser percebida, enquanto que a difusao se encarrega
+de tornar qualquer redundancia da mensagem imperceptivel na 
+mensagem cifrada (lembra-se de regrinhas como antes de p e b só vem
+m e nao n?).
+
+4.2 Cifras em Cadeia (Stream Ciphers)
+
+Cifras em cadeia sao importantes, jah que possibilitam que cada bloco
+seja cifrado diferentemente. Os blocos continuam com tamanhos fixos t,
+mas a cifragem de um determinado bloco depende da cifragem dos outros.
+
+Ex.:
+Consideremos nosso alfabeto outra vez como sendo as vogais, e 
+definamos uma operacao de acordo com a seguinte tabela:
+ 
+@|A,E,I,O,U
+A|E,I,O,U,A
+E|I,O,U,A,E
+I|O,U,A,E,I
+O|U,A,E,I,O
+U|A,E,I,O,U
+
+Assim, A@A=E, I@U=I, E@O=A.
+
+Com isso, definimos a mensagem como sendo "AIAAEUOOIIOEUUE".
+Dividindo em blocos de 3, teremos "AIA","AEU","OOI","IOE","UUE".
+O esquema seria entao o seguinte:
+
+1- Com o primeiro bloco utilizamos uma substituicao simples,
+definida por 
+p = / A,E,I,O,U \
+    \ U,O,A,E,I /
+Assim, "AIA" -> "UAU"
+
+2- Realizamos uma operacao @ entre UAU e o segundo bloco.
+"UAU" @ "AEU" = "AIU". Esta eh a cifra do segundo bloco.
+
+3- Realizamos uma operacao @ entre AIU e o terceiro bloco.
+"AIU" @ "OOI" = "UEI". Esta eh a cifra do terceiro bloco.
+
+4- Repetimos as operacoes @ entre a cifra do bloco anterior
+e o bloco que queremos cifrar.
+
+No fim, teremos:
+
+"AIA" -> "UAU"
+"AEU" -> "AIU"
+"OOI" -> "UEI"
+"IOE" -> "IAU" 
+"UUE" -> "IAE"
+
+Dai "AIAAEUOOIIOEUUE" -> "UAUAIUUEIIAUIAE"
+
+Como voce pode ver, este metodo eh bem falho, mas quisemos
+apenas ilustrar no que consiste uma cifragem em cadeia.
+
+
+5. Criptografia Assimetrica de Chave Publica (Public Key)
+
+
+A criptografia de chave publica consiste num esquema que
+se baseia em 2 chaves: uma para encriptar (e) e outra
+para desencriptar (d). A chave de encriptacao define uma
+funcao f(x) 1-way no qual eh computacionalmente inviavel
+dado y, descobrir x tal que f(x)=y. A chave de desencriptacao
+define uma funcao que torna facil a tarefa de descobrir
+x tal que f(x)=y, dado y. Assim, d eh a informacao
+necessaria para tornar a desencriptacao viavel, em curto
+espaco de tempo e sem muita demanda de recursos.
+A chave e eh tornada de conhecimento publico, enquanto
+que a chave d eh privada, ficando de conhecimento apenas 
+do receptor.
+
+Com isso, uma comunicacao atraves de um canal inseguro
+torna-se mais segura. Se voce deseja enviar uma mensagem
+para um outro computador, voce pede a ele que forneca
+a chave publica, voce entao encripta sua mensagem com 
+esta chave publica e envia a mensagem cifrada, e quando
+tiver recebido tal mensagem cifrada, o computador receptor
+desencripta a informacao usando sua chave privada.
+
+Este mecanismo de chave publica, no entanto, apesar de
+parecer agradavel, ainda pode ser ineficaz caso um
+terceiro computador se passe pelo receptor perante o
+emissor e se passe pelo emissor perante o receptor. Este
+ataque eh conhecido como 'Man-In-The-Middle', ou
+"Atravessador".
+
+O esquema funciona da seguinte maneira: 
+
+1-O emissor pede a chave publica do receptor.
+2-O atravessador rastreia esse pedido e automaticamente
+envia sua propria chave publica para o emissor, barrando
+o pedido original, e pede para si a chave publica do
+receptor.
+3-O emissor, achando que recebeu a chave publica do
+receptor, quando na verdade recebeu a chave publica
+do atravessador, encripta a mensagem usando a falsa
+chave publica e envia a mensagem.
+4- O atravessar recebe a mensagem, criptografada com
+sua chave publica, e a descriptografa com usa chave
+privada, le a informacao e encripta-a novamente usando
+a chave publica do receptor, enviando-a em seguida.
+
+Os aplicativos que utilizam-se de chave publica as
+armazena localmente e podem detectar qualquer mudanca
+em tais chaves, mas se a chave impostora for armazenada
+fica quase improvavel que o emissor ou o receptor
+descubra que foi enganado. As vezes a farsa eh descoberta,
+e o aplicativo exibe uma mensagem, mas por muitas vezes
+os usuarios nao ligam e resolvem confiar na nova chave.
+
+6. Assinaturas Digitais
+
+A assinatura digital eh um conceito fundamental na 
+identificacao de computadores. Eh usada para verificar
+a confiabilidade da mensagem transmitida, ou seja, para
+nos certificarmos de que a mensagem realmente vem de 
+onde achamos que ela vem, assim como uma assinatura a mao
+num documento certifica que aquele documento foi lido
+e aprovado por quem assinou.
+
+Para atribuir confiabilidade a uma assinatura digital,
+eh utilizado o seguinte esquema criptografico:
+
+1- Para cada mensagem, temos uma funcao de certificacao,
+que relaciona uma assinatura digital para cada mensagem.
+Esta funcao eh mantida em sigilo pelo emissor.
+2- O emissor tambem fornece uma funcao, de conhecimento
+publico, chamada funcao de verificacao, que certifica
+se o par (Mensagem,Assinatura) eh verdadeiro ou falso,
+ou seja, que verifica se a assinatura corresponde com
+a mensagem.
+3- O receptor recebe a mensagem e a assinatura, e de
+posse da funcao de verificacao, que eh publica, ele 
+pode verificar se a mensagem eh veridica ou nao.
+
+Assim, a funcao C(m)=a eh a funcao de certificacao,
+que atribui uma assinatura 'a' a uma mensagem 'm',
+e a funcao V(m,a)=verdadeiro ou falso eh a funcao 
+de verificacao, que atribui o valor booleano V ou F
+a um par m,a de mensagem e assinatura, respectivamente.
+
+A escolha de tais funcoes deve ser cuidadosa, e alem
+disso, a funcao de verificacao V(m,a)=b deve ser tal 
+que seja computacionalmente inviavel descobrir a 
+tal que b seja verdadeiro, para um dado m.
+
+Um bom exemplo de assinaturas digitais utiliza o
+esquema de chave publica (public key). Na criptografia
+por chave publica (assimetrica) existem duas chaves,
+uma publica, e, que define uma funcao E(mensagem)=cifra
+e uma chave privada, d, que define uma funcao 
+D(cifra)=mensagem.
+
+Em vista desta propriedade, verificamos que E(D(x))=D(E(x))
+qualquer que seja x (mensagem ou cifra).
+
+O nosso esquema de assinatura digital parte do principio
+que a funcao de certificacao eh a funca D(), de
+desencriptacao, e nossa funcao de verificacao eh a funcao 
+C(), de encriptacao.
+
+Com isso, a assinatura para a mensagem m eh D(m)=a, 
+e como a funcao E(), gerada pela chave publica 'e', eh
+por sua vez publica, uma vez que se verifique E(a)=m, 
+entao a assinatura realmente eh verdadeira, e a mensagem
+partiu de onde ela diz ser originaria.
+
+Para eliminar possibilidades de redundancia (caso em que
+a assinatura verdadeira seja enviada e se altere no meio
+do caminho, por motivos diversos) entao adiciona-se
+uma especie de informacao de verificacao (melhor seria chamarmos
+de estrutura de verificacao) a mensagem, e entao pegar a 
+a assinatura desta mensagem, e enviar apenas a assinatura.
+Como exemplo, se temos como mensagem 'm' "UNSEKURITY", podemos
+alterar a mensagem, tornando-a "UNSEKURITYUNSEK", bastando
+adicionar os 5 primeiros caracteres no fim da mensagem, e 
+pegando a assinatura 'a' desta nova mensagem. Neste esquema,
+apenas a assinatura eh enviada, e a funcao E() eh utilizada
+nessa assinatura 'a', gerando uma possivel mensagem 'n', que
+soh fara sentido se os 5 primeiros digitos ocorrerem nos 5
+ultimos digitos da possivel mensagem 'n'.
+
+Esquematizando:
+
+1-O emissor deseja enviar a mensagem "Thanks, Unsekurity".
+Ele entao pode querer adicionar o 1º, 3º e 5º primeiros
+caracteres no fim da mensagem, assim a nova mensagem eh
+"Thanks, UnsekurityTak".
+2-O emissor entao pega a assinatura para esta nova mensagem 
+modificada, e envia apenas ela para o receptor.
+3-O receptor recebe, e de posse da funcao de encriptacao (que
+faz o papel da funcao de verificacao), gera uma possivel
+mensagem, e verifica se nela, o 1º, 3º e 5º caracteres ocorrem
+nos 3 ultimos. Caso isso se verifique, entao a mensagem eh
+considerada confiavel.
+
+Este esquema leva vantagem pelo fato do emissor nao estar
+enviando a mensagem limpa e seca (sem encriptacao) pelo meio 
+inseguro, e por ser livre de redundancia (erros de transmissao).
+
+O melhor seria adicionar um 'checksum' ao final da mensagem, de
+tamanho fixo, e entao pegar a assinatura de tal mensagem, jah que
+adicionar apenas o 1º, 3º e 5º caracteres eh muito pouco para
+nos livrar da redundancia.
+
+7. Funcoes hash
+
+Uma funcao hash eh uma funcao que transforma (ou mapeia) uma
+string binaria de tamanho variavel em uma string binaria de 
+tamanho fixo.
+
+Para ser usada em criptografia, a funcao hash deve ser tal que
+seja bastante dificil obter dois elementos distintos tais que 
+suas imagens atraves da funcao hash sejam iguais.
+
+Hashes sao geralmente usadas em assinaturas digitais e para
+certificar a integridade de dados. Um exemplo de funcao hash
+eh a MD5, bastante utilizado para garantir que um arquivo
+foi baixado sem erros (se voce jah abaixou a imagem .iso de
+um cd, deve ter visto que quase sempre se acompanha uma soma
+md5 da imagem, para fins de verificacao de integridade).
+
+Funcoes hash, no entanto, nao sao reversiveis, ou seja, sao
+projetadas para nao admitirem funcoes inversas. Isso as torna
+util para armazenamento de senhas em um computador para fins
+de autenticacao.
+
+8. Numeros pseudo-aleatorios
+
+A geracao de numeros aleatorios toma um papel importante 
+em diversos mecanismos criptograficos, como a geracao de
+chaves, por exemplo, que deve ser imprevisivel para o atacante.
+Existem diversos mecanismos propostos para geracao de chaves
+aleatorias, que utilizam horario, data, bytes na memoria, 
+movimento de mouse, teclado, etc, ou seja, todo tipo de 
+informacao que possa ser util na geracao de numeros aleatorios
+que sao imprevisiveis.
+
+9. Finalizando
+
+Este texto teve como objetivo unico passar os conceitos 
+basicos sobre criptografia, jah que quem deseja se aprofundar,
+tera de estudar uma matematica bem mais avancada, coisas como
+teoria dos numeros, algebra abstrata, etc. Acho que foge do
+escopo colocar aqui formulas e conceitos matematicos, mas
+se eh do seu interesse, vao aqui alguns livros com os quais
+voce pode avancar nesse topico:
+
+Sobre criptografia e matematica relacionada a criptografia:
+
+Handbook of Applied Cryptography, de A. Menezes, 
+P. van Oorschot e S. Vanstone, da CRC Press, 1996.
+http://www.cacr.math.uwaterloo.ca/hac
+
+Sobre teoria dos numeros:
+
+Introducao a Teoria dos Numeros, de Jose Plinio de O. Santos
+Colecao Matematica Universitaria, IMPA, 1998.
+
+
+Agradecimentos a todos do Unsekurity Scene, e especialmente
+aos meus ex-professores de matematica.
+
+Enviem sugestoes e criticas sobre este texto para
+dimitrivashnov@yahoo.com.br

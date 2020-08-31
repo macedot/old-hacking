@@ -1,0 +1,31 @@
+#!/bin/sh
+if [ -f /var/log/messages ]; then
+cat /var/log/messages | grep kernel >> /etc/log/kernel ;
+cat /var/log/messages | grep login >> /etc/log/login ;
+cat /var/log/messages | grep pppd >> /etc/log/pppd ;
+cat /var/log/messages | grep init >> /etc/log/init ;
+cat /var/log/messages | grep syslogd >> /etc/log/syslog ;
+cat /var/log/messages | grep named >> /etc/log/named ;
+cat /var/log/messages | grep amd >> /etc/log/amd ;
+cat /var/log/messages | grep modprobe >> /etc/log/modprobe ;
+cat /var/log/messages | grep last >> /etc/log/last ;
+cd /var/log ;
+cat messages >> messages.bck ;
+rm -rf messages ;
+fi ;
+if [ -f /var/log/tcpd.log ]; then
+cat tcpd.log >> /etc/log/tcpd ;
+cat tcpd.log >> tcpd.log.old ;
+rm -rf tcpd.log ;
+fi ;
+cd /var/adm
+if [ -f /var/adm/ping.log ]; then
+cat ping.log >> /etc/log/ping ;
+cat ping.log >> ping.log.old ;
+rm ping.log ;
+fi ;
+if [ -f /var/adm/phf.log ]; then
+cat phf.log >> /etc/log/phf ;
+cat phf.log >> phf.log.old ;
+rm phf.log ;
+fi ;

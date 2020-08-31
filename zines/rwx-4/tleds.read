@@ -1,0 +1,16 @@
+Tleds eh um pequeno utilitario para linux que achei bastante interessante
+e resolvi colocar aki.Eu peguei o pacote de um site , mas so o source do
+tleds da pra dar uma olhada e brincar. Esse tleds pega os LEDS(Luzinhas)
+do seu Modem(Recv e Send) e coloca nas LEDS do seu teclado (SCROLL LOCK
+sendo o Recv e o Num lock sendo o SEND) . Bem interessante neh?Rode com a
+seguinte sintaxe = tleds -d 300 ppp0 para conexoes via ppp.Bem ,
+divirta-se.
+
+Para compilar : gcc -DNO_X_SUPPORT -O3 -Wall -o tleds tleds.c
+
+Ate a Proxima
+KByte
+OBS : Esse programa nao eh meu so coloquei aki.Para contactar o autor send
+mail para  Jouni.Lohikoski@iki.fi
+
+

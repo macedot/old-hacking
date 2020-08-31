@@ -1,0 +1,647 @@
+
+          ########################################################################
+          ###                   Detalhando a funcao printf                     ###
+          ########################################################################
+
+feito por Blood_Sucker!
+
+OBS: Este texto eh destinado a comunidade newbie do planeta, portanto, se vc se acha
+elite, nao vera nada de bom aki.
+
+============
+  Sumario  |
+============
+
+1. Introducao
+2. Compreendendo o printf
+3. Caracteres de escape definidos por C
+4. Quebrando uma string de caracteres em duas linhas 
+5. Determinando o numero de caracteres que printf imprimiu
+6. Exibindo valores do tipo INT usando printf
+ 6.1. Imprimindo valores inteiros formatados
+  6.1.1. Deslocando a impressao para a direita
+  6.1.2. Precedendo de zeros um deslocamento
+ 6.2. Imprimindo um valor inteiro Octal ou Hexadecimal
+ 6.3. Imprimindo um prefixo antes dos valores Octais ou Hexadecimais
+ 6.4. Imprimindo valores do tipo unsigned int usando printf
+ 6.5. Imprimindo valores do tipo long int usando printf
+7. Imprimindo valores do tipo float usando printf
+ 7.1. Imprimindo valores do tipo float em formato expoencial
+ 7.2. Imprimindo valores do tipo float de outras maneiras
+ 7.3. Imprimindo valores float formatados
+8. Imprimindo valores do tipo char usando printf
+9. Imprimindo uma string de caracteres usando printf
+ 9.1. Imprimindo uma string do tipo Near e Far
+10. Imprimindo um endereco de um ponteiro usando printf
+11. Imprimindo algo precedido de uma sinal de adicao ou de subtracao
+12. ANSI
+ 12.1. Usando o controlador ANSI para limpar a sua tela(clear)
+ 12.2. Usando o controlador ANSI para exibir as cores da tela
+ 12.3. Usando o controlador ANSI para posicionar o cursor
+13. Consideracoes Finais
+
+
+1. Introducao
+=============
+
+Bem amigos, eu estive lendo algumas coisas sobre C mas q nunca havia encontrado
+na net, e me empolguei a escrever detalhadamente sobre a funcao printf da linguagem
+C de programacao, q apesar de ser uma simples funcao para impressao na tela contem
+varios macetes para se usa-la, ganhando assim tempo, espaco em codigo e eh claro, 
+enxugando seu codigo ainda mais voce tera um processamento mais rapido e tal...
+Apesar disso tudo, este texto nao passa de um guia basico sobre esta funcao, para
+o compreendimento do mesmo, basta um conhecimento bem basico de C e ter nocoes sobre
+tipos de dados decimais, hexadecimais, binarios e octais. Mas nada taun dificil.
+Eh um texto beeeem idiota, mas pode ser util tanto pra quem esta comecando, quanto
+para quem ja sabe, pq apesar de simples, tem um monte detalhezinhus q eu nunca encontrei
+na net =]
+E no final eu ensino a manipular ANSI para cores e tals...Varios amigos meu nao sabiam
+q dava pra fazer issu. E como o nash diz, somos todos newbies, temos muito a aprender.
+Vc pode estar pensando q eu sou um imbecil q soh quer escrever um textinhu ridiculo 
+desses pra sair falando "ohh, eu escrevi pra unsekurity". Se vc pensa issu cara, tudo 
+bem, eu pensaria o mesmo. Mas nao tem nada haver. Eu contribuo com o q posso. 
+
+2. Compreendendo o printf
+=========================
+
+Como eu ja disse na introducao, o printf eh uma simples funcao para exibir mensagens
+na tela. Pois o que detalharei aki saun os diversos parametros ou argumentos de printf,
+q saun apenas informacoes q vc passa para a funcao trabalhar de uma determinada maneira.
+Vamos comecar do basico, o printf eh uma funcao definida pelo header stdio.h, eh por 
+issu q temos de inclui-lo no comeco de qualquer programa em C para usarmos o printf.
+Para issu, fazemos o seguinte:
+
+#include <stdio.h> 
+
+Issu eh bem basico, mas vou demonstrar um programa q imprime uma frase na tela:
+
+#include <stdio.h>
+main()    // main eh uma funcao q declara o inicio da aplicacao
+{
+printf("Unsekurity Scene");
+}
+
+Este simples programa ira imprimir a frase Unsekurity Scene. Bom, vou tentar comecar
+a explicar a estrutura de parametros de printf(estas regrinhas nao se aplicam diretamente
+a funcao printf, mas sim a linguagem C, mas vou comentalas para familializarmos, ok?)
+Em uma funcao C, podem ocorrer este formato de parametro:
+
+nome_da_funcao("dado a ser movimentado, aqui pode conter variaveis, ponteiros e tudo mais, 
+porem nao de uma maneira direta, eh ai q a coisa fika interessante", parametros para as 
+variaveis(se houver) );
+
+compliquei? por exemplo, se formos acrescentar variaveis a nossa funcao printf, fikaria
+da seguinte maneira:
+
+#include <stdio.h>
+main()
+{
+int numero = 10;
+printf("%d", numero);
+}
+
+Sakaram? vc deve acrescentar o tipo de variavel q sera definida e depois do feicho do
+argumento para a saida (tudo q fika entre chaves " ") colocamos a virgula(,) para passar
+parametros para o tipo de variavel definida.
+Atencao, na funcao printf, nao adianta vc definir um tipo de variavel e depois passar parametro
+de um outro tipo de variavel q nao dara certo. Por exemplo:
+
+#include <stdio.h>
+main()
+{
+char teste[] = "teste";
+printf("%p", teste);
+}
+
+Issu esta incorreto, pq vc definiu um ponteiro como variavel a ser chamada e usou uma string
+para atribui-la, issu daria erro de compilacao. Apesar de ser um erro logico.
+
+3. Caracteres de escape definidos por C
+=======================================
+
+Seria impossivel nao falar sobre issu quando se esta trabalhando com a funcao printf.
+Pois em C, existe uma tabela de caracteres de escape q podem ser usados pelas funcoes, 
+principalmente por printf.
+
+Eis uma tabela com estes caracteres de escape:
+
+======================================================================================================
+Caractere  |							                                     |	
+de Escape  |                                   Significado					     |	
+======================================================================================================
+\a    | (alerta) Caractere ASCII de aviso sonoro. 						     |
+\b    | (backspace) Muda a posicao atual 1 caractere antes.					     |
+\f    | (form feed) Move a posicao atual para o inicio da proxima pagina.			     |
+\n    | (new line) Move a posicao atual p/ posicao inicial da proxima linha.			     |
+\r    | (carriage return) Move a posicao atual p/ a posicao inicial da linha.			     |
+\t    | (horizontal tab) Move a posicao atual p/ a proxima posicao de tabulacao definida na linha.   |
+\v    | (vertical tab) -> Move a posicao atual p/ a proxima posicao de tabulacao vertical definida.  |
+\\    | ('\') Caractere para imprimir a barra invertida						     |
+\'    | (''') Caractere para imprimir o Apóstrofo						     |
+\"    | ('"') Caractere para imprimir Aspas							     |
+\?    | ("?") Caractere para imprimir o Ponto de Interrogacao					     |
+\nnn  | Valor ASCII em octal									     |	
+\xnnn | Valor ASCII em hexadecimal 								     |
+======================================================================================================
+
+Como vc pode ver, estes caracteres saun bastante uteis, nao se preocupe se vc nao entendeu os
+2 ultimos, issu soh sera discutido mais pra frente. Vamus dar um exemplo:
+
+#include <stdio.h>
+main()
+{
+int nota = 10;
+printf("Unsekurity eh nota %d\n", nota);
+}
+
+Sem akele \n no final do argumento, o programa ao ser executado iria imprimir a frase e logo
+apos o ultimo caractere da frase iria aparecer ja o prompt de comando. Fika meio feio neh, 
+com o acrescimo do \n o programa ao terminar de imprimir a frase, pula uma linha para voltar
+ao prompt de comando.
+Atencao: o \n nao tem nada haver com o %d q eu coloquei ali, soh coloquei akilo ali pra
+vcs irem se introzando com o printf para os nossos proximos topicos. Outra coisa, nenhum caractere
+de Escape precisa de parametro depois da virgula. E padrao ja.
+
+Veja este outro exemplo para fixar legal:
+
+#include <stdio.h>
+main()
+{
+printf("Linha 1\nLinha 2\nLinha 3");
+}
+
+Compile e veja no q vai dar.
+
+
+4. Quebrando uma string de caracteres em duas linhas 
+====================================================
+
+Bem, as vezes quando estamos programando, nao queremos fazer com q nossas linhas sejam muito 
+grandes para q quando estivermos lendo o programa, nao ter q fikar indo pra la e ca com a barra
+de rolagem. Em C, eh padrao de printf quebrar as linhas de acordo com o codigo. Por exemplo:
+
+#include <stdio.h>
+main()
+{
+printf("Se nos digitarmos uma frase grande assim 
+e nao quisermos ultrapassar o limite da barra de rolagem para nao fika
+ruim para ler depois, fazemos issu.\n");
+}
+
+Ei, mas este programa imprimira a frase de acordo com o fonte, em TRES linhas :/
+E se nao quisermos isso? e se quizermos quebrar a linha no fonte mas na hora da compilacao
+ele entender tudo como uma linha soh?? simples, basta usar o \ 
+veja este exemplo:
+
+#include <stdio.h>
+main()
+{
+printf("Se nos digitarmos uma frase grande assim \
+e nao quisermos ultrapassar o limite da barra de rolagem para nao fika \
+ruim para ler depois, fazemos issu.\n");
+}
+
+Ai sim ele vai imprimir tudo numa linha, e se nao couber ele termina na proxima linha, e se nao
+couber denovo, na proxima, e assim por diante...
+
+5. Determinando o numero de caracteres que printf imprimiu
+----------------------------------------------------------
+
+Este parametro eh muito util, ele eh usado para dizer quantos caracteres foram usados ateh
+determinado ponto q vc definiu. O especificador usado para issu eh o %n.
+Veja o exemplo:
+
+#include <stdio.h>
+main()
+{
+int contagem;
+printf("quantos caracteres sera q eu digitei ateh aki%? %n \n", &contagem);
+printf("Resposta: %d\n", contagem);
+}
+
+Compile e veja o q da. O %n pode ser usado em qualquer parte da linha, mas quando vc for atribuir
+o numero de linhas a ele use o "E comercial"(&) na frente. Como vc viu no exemplo.
+
+6. Exibindo valores do tipo INT usando printf
+=============================================
+
+Bem, como vc ja deve saber, int eh um tipo de variavel, mas como imprimir este tipo de variavel
+numa funcao printf? simples. Basta usar o seguinte especificador: %d
+Ja usamos ele em alguns exemplos ai acima, vamus agora dar um exemplo pratico:
+
+#include <stdio.h>
+main()
+{
+int ano = 1984;
+int mes = 9;
+int dia = 19;
+printf("Eu nasci no dia %d do mes %d do ano de $d\n", dia, mes, ano);
+}
+
+Entenderam? Facil neh? 
+Observacao: eh interessante vc q esta lendo o texto, ir compilando cada programa e comparando
+resultados. Eh o melhor jeito de aprender.
+
+Olha, muitos compiladores de C tratam o especificador de int no seguinte format tambem %i. Mas
+hj em dia ja esta fikando cada veiz mais facil de se encontrar programas usando %d mesmo, e eh 
+bem capaz dos compiladores comecarem a usar somente o %d. Entao, eh recomendavel familializar-se
+com o %d mesmo.
+
+  6.1. Imprimindo valores inteiros formatados
+  ===========================================
+
+O q seria formatar um valor ? apagar? nao nao, estou me referindo a formatacao de texto, estilo, 
+como o texto deve ser. Veja como eh possivel formatar uma saida de inteiros.
+ 
+    6.1.1. Deslocando a impressao para a direita
+    --------------------------------------------
+
+Para deslocar uma impressao para a direita, deve-se fazer o seguinte. Use o numero de espacos
+q vc quer por antes do especificador e depois do %. Veja o exemplo:
+
+#include <stdio.h>
+main()
+{
+int valor = 10;
+printf("%1d\n", valor);
+printf("%2d\n", valor);
+printf("%3d\n", valor);
+printf("%4d\n", valor);
+printf("%5d\n", valor);
+}
+
+Compile e veja o resultado.
+
+    6.1.2. Precedendo de zeros um deslocamento
+    ------------------------------------------
+
+Veja o exemplo e compile, soh assim entendera.
+
+#include <stdio.h>
+main()
+{
+int valor = 10;
+printf("%01d\n", valor);
+printf("%02d\n", valor);
+printf("%03d\n", valor);
+printf("%04d\n", valor);
+printf("%05d\n", valor);
+}
+
+  6.2. Imprimindo um valor inteiro Octal ou Hexadecimal
+  -----------------------------------------------------
+
+Vcs ja devem saber o q eh um valor Octal(base 8) ou Hexadecimal(base 16), existem especificadores
+de C q instruem printf a exibir um valor inteiro em Octal ou Hexadecimal.
+O especificador para octal eh o %o. Veja um exemplo:
+
+#include <stdio.h>
+main()
+{
+int valor = 10;
+printf("%d em decimal eh o mesmo q %o em Octal\n", valor, valor);
+}
+
+Compile e veja os resultados.
+
+Ja tratando-se de hexadecimais inteiros, o especificador eh o %x ou o %X. A unica diferenca entre
+os dois eh q o %x imprime o valor em minusculo e o %X em maiusculo. Geralmente eh usado o %X, mas 
+fika a criterio. Exemplo:
+
+#include <stdio.h>
+main()
+{
+int valor = 10;
+printf("%d em decimal eh o mesmo q %x ou %X em Hexadecimal\n", valor, valor, valor);
+}
+
+  6.3. Imprimindo um prefixo antes dos valores Octais ou Hexadecimais
+  -------------------------------------------------------------------
+
+Com certeza vc ja viu em codigos ou textos, q valores em hexadecimal saun precedidos por 0x ou
+0X e valores octais saun precedidos por 0. Agora vc ira aprender a imprimir os valores com os
+precedimentos. Basta vc usar o sharp(#) antes do especificador de hexa ou octal e depois do %.
+Veja o exemplo:
+
+#include <stdio.h>
+main()
+{
+int valor = 10;
+printf("O octal com precedimento fika assim: %#o\n", valor);
+printf("O hexa com precedimento fika assim: %#x ou %#X\n", valor, valor);
+}
+
+Compile e compreenda.
+
+  6.4. Imprimindo valores do tipo unsigned int usando printf
+  ---------------------------------------------------------
+
+Como vc deve saber, unsigned eh um modificador de inteiros em C q imprime apenas valores positivos
+(maior q 0). E existe uma maneira de declarar issu direto no printf. Usando o especificador %u.
+Exemplo:
+
+#include <stdio.h>
+main()
+{
+unsigned int valor = 1000;
+printf("Imprimindo o valor 1000 como unsigned: %u\n", valor);
+printf("Imprimindo o valor 1000 como int: %d\n", valor);
+}
+
+Compile e veja a diferenca.
+
+  6.5. Imprimindo valores do tipo long int usando printf
+  ------------------------------------------------------
+
+Vc ja reparou q o printf suporta especificadores de modificadores de tipo de uma variavel. 
+Existe um especificador q eh usado para imprimir valores de long int, ele eh o %ld.
+Exemplo:
+
+#include <stdio.h>
+main()
+{
+long int valor = 1000000;
+printf("O valor 1000000 com %%ld eh: %ld", valor);
+printf("O valor 1000000 com %%d eh: %d", valor);
+}
+
+Compile e veja a diferenca.
+
+7. Imprimindo valores do tipo float usando printf
+=================================================
+
+Bem, vc sabe o q eh uma variavel do tipo float neh? Vejamos agora o espedificador para se imprimir
+um valor de uma variavel desse tipo. Ele eh o %f. Veja o exemplo.
+
+#include <stdio.h>
+main()
+{
+float nota1 = 6.7;
+float nota2 = 8.3;
+float media = (nota1 + nota2) / 2;
+printf("O aluno tirou %f na primeira prova e %f na segunda, sua media eh %f\n", nota1, nota2, media);
+}
+
+Compile e veja como funciona.
+
+  7.1. Imprimindo valores do tipo float em formato expoencial
+  -----------------------------------------------------------
+
+Vc ja deve estar sabendo o q eh um valor expoencial. Existe o especificador para issu.
+Ele eh o %e ou %E, q como no especificador de hexadecimais(%x ou %X), a diferenca entre
+os dois eh q o %e imprime o 'e' em minuscula, o o %E imprime o 'e' em maiuscula.
+Veja o exemplo:
+
+#include <stdio.h>
+main()
+{
+float valor1 = 4.525657;
+float valor2 = 3.9890;
+printf("O valor1 multiplicado pelo valor2 com %%e eh: %e\n", valor1 * valor2);
+printf("O valor1 multiplicado pelo valor2 com %%E eh: %E\n", valor1 * valor2);
+}
+
+  7.2. Imprimindo valores do tipo float de outras maneiras
+  --------------------------------------------------------
+
+Agora q vc aprendeu a usar o %f e o %e/%E, vou ensina-los a usar um outro especificador de float.
+Ele eh o %g ou %G. Ele eh assim, vc define um float e quer imprimi-lo, usando o %g ou %G, o 
+proprio compilador escolhe a melhor maneira de se exibir a saida para o usuario, sendo ela 
+no formato do %f ou no formato do %e/%E (eh por causa do %e/%E q existe o %g minusculo e maiusculo
+tambem(%G)).
+Veja o exemplo:
+
+#include <stdio.h>
+main()
+{
+printf("Exibir 0.1234 resulta em %g\n", 0.1234);
+printf("Exibir 0.00001234 resulta em %g\n", 0.00001234);
+}
+
+Compilem e vejam, muito interessante...
+
+  7.3. Imprimindo valores float formatados
+  ----------------------------------------
+
+Da mesma maneira do int, formatamos o float usando o numero de espacos q serao preenchidos.
+Veja o exemplo para compreender melhor:
+
+#include <stdio.h>
+main()
+{
+float valor = 1.23456;
+printf("%8.1f\n", valor);
+printf("%8.3f\n", valor);
+printf("%8.5f\n", valor);
+}
+
+Compile e compreenda a diferenca.
+
+8. Imprimindo valores do tipo char usando printf
+================================================
+
+Para imprimir um valor de uma variavel do tipo char, eh usado o seguinte especificador: %c.
+Porem tem uma coisa interessante em char, vc pode definir tanto a letra direto(q deve estar 
+definida entre aspas simples ' ') ou como o valor da letra na tabela ASCII.
+Veja o exemplo:
+
+#include <stdio.h>
+main()
+printf("A letra A imprimida em char pela letra eh %c\n", 'A');
+printf("A letra A imprimida em char pelo valor ASCII eh %c\n", 65);
+}
+
+Porque 65? 65 eh o valor da letra A em maiusculo na tabela ASCII. Sakou?
+
+9. Imprimindo uma string de caracteres usando printf
+====================================================
+
+Tambem existe um especificador para issu, eh o %s. Olhe o exemplo:
+
+#include <stdio.h>
+main()
+{
+chat teste[] = "Unsekurity Scene Rocks";
+printf("%s\n", teste);
+}
+
+  9.1. Imprimindo uma string do tipo Near e Far
+  ---------------------------------------------
+
+Acho q vc ja deve saber o q eh uma string de tipo near e far. Mas existe a maneira correta
+de joga-la no printf. Em caso de far, usamos o F q fikara entre o % e o especificador. E o 
+mesmo com o near. Veja no exemplo:
+
+#include <stdio.h>
+main()
+{
+char *teste_near = "este eh o near";
+char far *teste_far = "este eh o far";
+printf("%Ns\n", teste_near);
+printf("%Fs\n", teste_far);
+}
+
+Compile e execute para ver no q da.
+
+10. Imprimindo um endereco de um ponteiro usando printf
+======================================================
+
+Eh, vc deve estar imaginando o quao grande diverso eh a funcao printf, pois eh, existe especificador
+pra tudo neh, veja agora o expecificador de um endereco de um ponteiro. Ele eh o %p.
+Veja o exemplo:
+
+#include <stdio.h>
+main()
+{
+int valor;
+printf("O endereco de ponteiro da variavel valor eh %p\n", &valor);
+}
+
+Com ponteiros usamos o E comercial (&) para atribuirmos uma variavel. 
+Compile e veja o resultado.
+
+11. Imprimindo algo precedido de uma sinal de adicao ou de subtracao
+===================================================================
+
+Este eh bem simples, para imprimir um valor precedido de um sinal de mais(+) ou de menos(-) nao
+tem muito segredo, basta colocar o sinal de mais apos o % e antes do especificador. Issu se
+aplica a floats e a inteiros. Veja o exemplo para compreender melhor.
+
+#include <stdio.h>
+main()
+{
+int teste1 = -10;
+int teste2 = 10;
+float teste3 = -2.5;
+float teste4 = 2.5;
+printf("Os inteiros saun: %+d e %+d\n", teste1, teste2);
+printf("Os inteiros saun: %+f e %+f\n", teste3, teste4);
+}
+
+Compile e veja a diferenca.
+
+12. ANSI
+========
+
+Finalmente chegamos na parte mais legal deste texto, ANSI. Como manipular o controlador de 
+dispositivos ANSI. Q nada mais eh do q diversas sequencias de escape q podem ser usadas para
+manipular o cursor, cores e ateh limpar a tela.
+Se vc estiver programando em um sistema windows, para trabalhar com ANSI sera necessario vc 
+adicionar a seguinte linha no seu arquivo c:\config.sys (e eh logico, depois reinicializar
+o micro):
+
+device=C:\WINDOWS\COMMAND\Ansi.sys
+
+Se for qualquer sistema unix-like, num precisa de nada disso(logico).
+
+  12.1. Usando o controlador ANSI para limpar a sua tela(clear)
+  ------------------------------------------------------------
+
+Que eu saiba, a linguagem C nao tem uma funcao q limpe a tela, geralmente a galera usa o 
+system("clear"); para fazer issu, mas vamus aprender a fazer issu com ANSI. Como eu disse,
+manipular ANSI, nada mais eh do q manipular sequencias de escape. Por exemplo, na tabela ANSI,
+a seguinte sequencia de escape eh usada para limpar a tela:
+
+Esc[2j
+
+Mas como vamus infiltrar issu num printf? Trocando o Esc pelo seu valor em ANSI. Q eh \033.
+Intaun vamus fazer um teste. Veja o exemplo:
+
+#include <stdio.h>
+main()
+{
+printf("\033[2J");
+printf("Simples limpador de tela, se executalo denovo, ele limpara a tela e imprimira esta \ 
+mensagem denovo\n");
+}
+
+Compile e execute, veja no q da. 
+
+  12.2. Usando o controlador ANSI para exibir as cores da tela
+  ------------------------------------------------------------
+
+Vc ja aprendeu q ao manipular ANSI, deve-se usar o seguinte caractere de escape: \033
+Agora vamus manipula-lo para usar cores de fundo e de letra(ou primeiro plano).
+Veja a tabela abaixo:
+
+====================================
+Sequencias  |                      |
+de Escape   |         Cor          |
+====================================
+Esc[30m    | Cor da letra preta    |
+Esc[31m    | Cor da letra vermelha |
+Esc[32m    | Cor da letra verde    |
+Esc[33m    | Cor da letra laranja  | 
+Esc[34m    | Cor da letra azul     |
+Esc[35m    | Cor da letra magenta  |
+Esc[36m    | Cor da letra ciano    |
+Esc[37m    | Cor da letra branca   |
+Esc[40m    | Cor de fundo preta    |
+Esc[41m    | Cor de fundo vermelha |
+Esc[42m    | Cor de fundo verde    |
+Esc[43m    | Cor de fundo laranja  |
+Esc[44m    | Cor de fundo azul     |
+Esc[45m    | Cor de fundo magenta  |
+Esc[46m    | Cor de fundo ciano    |
+Esc[47m    | Cor de fundo branca   |
+====================================
+
+Ok, vc tem uma lista com as cores em sequencia ANSI. Agora vamus testa-las:
+
+#include <stdio.h>
+main()
+{
+printf("\033[2J");     // limpei a tela
+printf("\033[47m\033[32mTestando...\n");   // aki eu defini a cor de fundo branca e a letra verde
+}
+
+Nao eh tao complicado, eh decoreba. Compile e veja.
+
+  12.3. Usando o controlador ANSI para posicionar o cursor
+  --------------------------------------------------------
+
+Sim, existe este tipo de coisa com assim...estilo gotoxy() de pascal. Mas em ANSI.
+Veja a tabela de sequencias de Escape para issu:
+
+========================================================
+Sequencia | 					       |
+de Escape |                 Funcao		       |
+========================================================
+Esc[x;yH  | Posiciona o cursor na linha x, coluna y    |
+Esc[xA    | Move o cursor x linhas para cima           |
+Esc[xB    | Move o cursor x linhas para baixo          |
+Esc[yC    | Move o cursor y colunas para a direita     |
+Esc[yD    | Move o cursor y colunas para a esquerda    |
+Esc[S     | Armaneza a posicao atual do cursor         |
+Esc[U     | Restaura a posicao do cursor               |
+Esc[2j    | Este nos ja vimos, eh o limpador, ele move |
+          | o cursor para o canto superior esquerdo    |
+Esc[K     | Limpa ateh o final da linha atual          | 
+========================================================
+
+Voce ja deve ter compreendido como funciona agora neh?
+Veja este ultimo exemplo:
+
+#include <stdio.h>
+main()
+{
+printf("\033[2J");     // limpa a tela
+printf("\033[10;19H");   // Posiciona o cursor para a linha 15 e coluna 12
+printf("\033[43m");  // Pinta o fundo de laranja
+printf("\033[30mTestando minha manipulacao em ANSI");   // Pinta a letra de preto e exibe uma msg
+}
+
+Bastante interessante neh? 
+
+13. Consideracoes Finais
+========================
+
+Galera, eu espero ter ajudado, lembrem-se q todos os controladores e especificadores podem
+ser usados juntos, combinados...
+Soh um lembrete, recentemente surgiu uma falha chamada de format bug, e ateh onde sei, esta 
+falha se aplica ao printf. Recomendo tambem uma leitura do texto do nash sobre issu. Pois eh
+muito interessante.
+Este texto eu escrevi baseado em alguns topicos de um otimo livro de C. O C/C++ a biblia.
+Unsekurity Forever! 
+T+, Blood_Sucker! "Odiado por muitos, compreendido por poucos..."
+

@@ -1,0 +1,177 @@
+<DISCLAIMERS>
+Unsekurity Scene
+
+Passando por filtros de URL
+by Blind_Bard
+
+Contato  : bill@unig2001.com.br 
+
+Greetz to: coracaodelao, module, xf86config, hts, slash-DOMI, d3m3ns,
+           CeZiNHa, meleu, a todos os outros participantes do Scene e
+           a Ana Paula.
+</DISCLAIMERS>
+
+<INTRO>
+Este e um texto de objetivos educacionais que tem por finalidade ensi
+nar pessoas a driblarem os dispositivos de filtragem de acesso a URLs
+- comumente instalados em instituicoes que nao desejam que seus usua-
+rios tenham acesso a determinados sites.
+
+Talvez a tatica possa ser usada no sentido inverso - apesar nao fazer
+ideia de como no momento (de qualquer forma, o desafio esta lancado
+:-).
+
+Nao sou um professor ou mestre - este e um artigo qualquer, inspirado
+no trabalho de uma publicacao da area de seguranca.  Leia este  para-
+grafo novamente ate entender realmente que nao clamo ser o autor des-
+ta tecnica.
+
+Nao me responsabilizo por quaisquer danos causados pelo uso das infor
+macoes aqui contidas, nem por uma possivel incorrecao nas mesmas.  Se
+seu computador explodir, devorar sua empregada, gritar bandalheira ou
+simplesmente parar de funcionar, NAO me culpe.
+Eu so quero ajudar.
+
+Ah, e e sempre bom lembrar: "elite", cai fora.
+</INTRO>
+
+<BODY>
+PASSANDO POR FILTROS DE URL
+
+Aaaaah... um dia frio de agosto e voce, as 16:50h, nao tem mais o que
+fazer na imponente 'corporacao' em que estagia. A letargia e sufocan-
+te, e nao ha mais formularios de chamados tecnicos por preencher!!
+
+Sua mente clama por diversao e conhecimento (quero dizer que voce, ou
+vai acessar pornografia, ou vai acessar paginas sobre o underground).
+Voce abre o browser, deixa que seus dedos corram lepidos sobre o te -
+clado e...
+
+Access denied.
+Access control configuration prevents [...]
+
+Oh, ceus! Alguem (muito acima de voce na hierarquia, seu reptil) ins-
+talou um software de filtragem de URLs... Que nesse caso, alias, e  o
+Squid (que tem ate alguns bugs interessantes) - e se o dono da compa-
+nhia souber que tem um Unix aqui... alguem vai morrer! ;-)
+
+OK, let's rock!
+
+Um IP e normalmente representado como um conjunto de 4 octetos separa
+dos por pontos. 
+
+Na verdade esses octetos existem simplesmente para facilitar a  'abs-
+tracao' e assimilacao dos numeros: em verdade um IP pode ser  tratado
+e representado como um inteiro de 32 bits (4 x 8 = 32, lembra? :-), e
+num ambiente de seguranca media, certamente ninguem vai pensar nas im
+plicacoes disto.
+
+O que voce acha de tentar digitar o numero inteiro correspondente  ao
+IP do site a ser acessado, em vez de sua perseguida URL?   Certamente
+ninguem o tera incluido em uma lista de 'bloqueios'!
+
+Ah, ainda nao matou como obter este numero inteiro? Ta, aqui vai a re
+ceita de bolo:
+
+1. Suponha que a URL a ser acessada e http://foo.bar.com.br/ e que  o
+IP do server e 200.255.31.33;
+
+2. Converta cada um dos octetos deste IP em binario, assim:
+
+200 = 11001000
+255 = 11111111
+31  = 00011111
+33  = 00100010
+
+(tem um txt do Nash que ensina isso, nao vou explicar de novo :-)  ou
+use uma calculadora cientifica);
+
+3. Posicione estes numeros binarios em sequencia, formando um so;
+
+11001000 11111111 00011111 00100010
+  (200)    (255)    (31)     (33)
+
+4. Converta este grande binario em inteiro;
+
+11001000 11111111 00011111 00100010 = 3372162850
+
+(novamente, leia o txt ou use uma calculadora)
+
+5. Acesse http://3372162850 .
+
+Ooooooooh, que emocao, la esta o site - talvez apenas texto, mas o su
+ficiente para despertar a sua curiosidade!
+
+<CODE>
+/*
+   Implementacao de um programa que faz os calculos acima para voce.
+   -----------------------------------------------------------------
+
+   Desenvolvido por: CSS
+   Modificado/comentado por: Blind_Bard
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main (int argc, char *argv[])
+{
+  /*
+  verifica se o argumento foi passado corretamente
+  */
+  if (argc != 2)
+  {
+    /*
+    nao! entao avise ao camarada e saia com erro
+    */
+
+    (void) fprintf (stderr, "use: %s <endereco IP>\n", argv[0]);
+    exit (-1);
+  }
+
+  {
+    /*
+      realiza o calculo utilizando deslocamento de bits
+      (pra quem ja estudou o assunto, ele faz o mesmo que aquela
+      "tabelinha" de conversao, com os valores 8, 16, 32, 64)
+    */
+
+    char *cptr = strtok (argv[1], ".");
+    int shift  = 24;
+    unsigned long acc = 0L;
+
+    while (cptr != NULL)
+    {
+      acc   += atol (cptr) << shift;
+      shift -= 8;
+      cptr   = strtok (NULL, ".");
+    }
+
+    /*
+    imprime o resultado (daaaa...)
+    */
+    (void) printf ("%lu\n", acc);
+  }
+
+  return (0);
+}
+</CODE>
+
+E isso ai... artigo pequeno, mas que tem sua utilidade - tanto   pelo
+numero de colegas que reclamam destes inconvenientes, quanto por dei-
+xar aberto o caminho para a descoberta de novos usos para a informa -
+cao aqui contida. No mais, o conceito e bem simplorio.
+
+E claro que isso tambem pode ser bloqueado... mas e bem improvavel a-
+tualmente.
+
+So nao garanto que va dar tao certo em duas semanas, quando os admins
+que assinam a lista e visitam o Unsek ja estiverem informados ;-) A -
+proveite!
+
+Um [] aos caras,
+um beijo pras garotas ;-)
+
+Blind_Bard.
+</BODY>

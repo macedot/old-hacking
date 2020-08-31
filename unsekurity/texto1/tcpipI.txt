@@ -1,0 +1,464 @@
+---------------,
+TCP-IP Parte 1 |
+---------------'
+
+0. Pre-introducao
+
+Este manual foi baseado no numero 33 da phrack, originalmente em ingles,
+entao nao repare se muita coisa tiver sido traduzida. Muitas coisas traduzi,
+e tambem acrescentei, retirei e tentei explicar algumas coisas com minhas
+proprias palavras, jah que nenhuma traducao pode ser feita ao pe da letra.
+Com o tempo irei enchendo este tutorial com informacoes uteis para voce,
+newbie, assim como eu que tambem sou newbie (alias, nunca deixarei de ser
+newbie pq eh muito bom vc ficar sempre atras de aprender algo novo).
+
+Prometo tambem uma parte 2, referente ao numero 34 da phrack, com mais
+informacoes valiosas! Por enquanto vao ter q se contentar com este tutorial,
+que creio, serah de valiosa importancia aqueles que levam o hacking a serio,
+e acima de tudo, querem aprender mais e mais.
+
+1. Introducao
+
+Neste tutorial nos focalizamos os pontos mais salientes do TCP/IP.
+Omitimos informacoes sobre a origem, sua historia, e diversas informacoes
+tecnicas. O que sobra eh um minimo de informacao necessaria para um
+profissional trabalhando com o mundo TCP/IP. Isso inclui o administrador de
+sistemas, o programador de sistemas e o administrador de redes. 
+
+Os exemplos usados aqui sao voltados para o ambiente UNIX. Se voce
+precisa de informacoes maiores sobre um protocolo especifico, pesquise nos
+RFC's da vida, voce ira encontrar em http://www.protocols.com.
+
+2. Visao geral
+
+O termo TCP/IP genericamente se refere tudo que se relaciona aos
+protocolos TCP e IP. Isso inclui aplicativos, outros protocolos, etc.
+Exemplos de protocolos: UDP, ARP, ICMP. Exemplos de aplicativos: TELNET,
+FTP, e rcp.
+
+2.1 Estrutura basica
+
+                     ----------------------------
+                     |    aplicativos de rede   |
+                     |                          |
+                     |...  \ | /  ..  \ | /  ...|
+                     |     -----      -----     |
+                     |     |TCP|      |UDP|     |
+                     |     -----      -----     |
+                     |         \      /         |
+                     |         --------         |
+                     |         |  IP  |         |
+                     |  -----  -*------         |
+                     |  |ARP|   |               |
+                     |  -----   |               |
+                     |      \   |               |
+                     |      ------              |
+                     |      |ENET|              |
+                     |      ---@--              |
+                     ----------|-----------------
+                               |
+         ----------------------o---------
+             Cabo Ethernet
+
+                  Figura 1.  Basico No de rede TCP/IP
+
+Esta eh uma estrutura logica de camadas de protocolos dentro de um
+computador da internet. Cada computador que pode se conectar a internet tem
+uma estrutura semelhante a esta. O cabo horizontal eh um cabo ethernet, mas
+pode ser uma linha telefonica, fibra optica ou outra tecnologia disponivel.
+O "o" eh o transceiver, o @ eh o endereco ethernet, e o * eh o endereco IP.
+O entendimento desta estrutura eh essencial!
+
+2.2 Terminologia
+
+O nome do dado que viaja pela internet depende muito do protocolo em
+que eh implementado. Se eh uma rede Ethernet, eh um frame Ethernet. Se estah
+entre um driver Ethernet e um modulo IP, eh um pacote IP. Se estah entre um
+modulo IP e um modulo UDP, eh chamado de datagrama UDP. Se estah entre um
+modulo IP e um modulo TCP, eh chamado de segmento TCP. Estas definicoes sao
+imperfeitas, Verifique o RFC 1122, secao 1.3.3.
+
+        Um driver eh um software que se comunica diretamente com a interface
+do hardware de rede. Um modulo eh um software que se comunica com um driver,
+com aplicativos de rede e com outro modulo.
+
+2.3 Fluxo de dados
+
+Vamos seguir os dados a medida que eles vao descendo pela figura 1.
+Para um aplicativo que usa TCP (Transmission Control Protocol), os dados
+passam entre o aplicativo de rede e o modulo TCP. Para um aplico que usa UDP
+(Use Datagram Protocol), os dados passam enter o aplicativo e o modulo UDP.
+FTP (File Transfer Protocol) eh um tipico exemplo de aplicativo que usa TCP.
+Os protocolos usados sao FTP/TCP/IP/ENET. SNMP (Simple Network Management
+Protocol) eh um aplicativo que usa UDP. Os protocolos usados sao
+SNMP/UDP/IP/ENET.
+
+Os modulo TCP, UDP e os drivers Ethernet sao multiplexadores n para
+1. Como multiplexadores, eles ordenam muitas entradas para uma saida. Eles
+tambem sao desmultiplexadores 1 para n, ordenando as saidas dependendo do
+tipo que sao.
+
+
+         1   2 3 ... n                    1   2 3 ...   n
+          \  |      /      |               \  | |      /        ^
+           \ | |   /       |                \ | |     /         |
+         -------------   fluxo              ----------------   fluxo
+        |multiplexador|   de               |desmultiplexador|   de 
+         -------------   dados              ----------------   dados
+              |            |                     |              | 
+              |            v                     |              | 
+              1                                  1
+
+        Figura 2.  multiplexador n-para-1 e desmultiplexador 1-para-n.
+
+
+Quando um frame Ethernet passa pelo driver Ethernet, ele pode seguir
+adiante para o modulo ARP ou o modulo IP.
+
+Se um pacote IP passa pelo modulo IP, ele deve seguir entao para o
+modulo TCP ou UDP, conforme for o valor do campo protocolo dentro do
+cabecalho IP. Depois disso, se eh UDP ou TCP, ele ira para o aplicativo que
+estiver ouvindo a porta especificada pelo campo porta dentro do cabecalho
+UDP ou TCP, conforme for.
+
+A multiplexacao inversa eh o processo inverso, nao ha misterio. Cada
+modulo de protocolo acrescenta ao pacote seu cabecalho de forma que possa
+ser desmultiplexado no destino.
+
+Os dados que saem dos aplicativos e que atravessam o TCP ou o UDP con
+vergem todos no modulo IP e eh enviado adiante por uma camada de rede mais
+inferior.
+
+Usamos como camada fisica um frame Ethernet porque eh o mais popular
+para se trabalhar com o IP. Um endereco Ethernet de 6 bytes eh unica para
+cada interface numa rede Ethernet. Um computador tambem tem um endereco IP
+de 4 bytes. Este endereco eh unico para uma Internet, e obviamente, qualquer
+computador sabe seu endereco IP e Ethernet.
+
+2.4 Duas interfaces de rede
+
+
+Se um computador estah conectado a 2 Ethernet's separadas, como
+na figura abaixo..
+
+                ----------------------------
+                |    aplicativos de rede   |
+                |                          |
+                |...  \ | /  ..  \ | /  ...|
+                |     -----      -----     |
+                |     |TCP|      |UDP|     |
+                |     -----      -----     |
+                |         \      /         |
+                |         --------         |
+                |         |  IP  |         |
+                |  -----  -*----*-  -----  |
+                |  |ARP|   |    |   |ARP|  |
+                |  -----   |    |   -----  |
+                |      \   |    |   /      |
+                |      ------  ------      |
+                |      |ENET|  |ENET|      |
+                |      ---@--  ---@--      |
+                ----------|-------|---------
+                          |       |
+                          |    ---o---------------------------
+                          |             Cabo Ethernet 2
+           ---------------o----------
+             Cabo Ethernet 1
+
+             Figura 3.  Noh de rede TCP/IP com 2 Ethernet's
+
+Na figura acima voce pode observar que este computador tem 2
+enderecos Ethernet's e 2 enderecos IP. Quando um computador se interliga
+em duas redes totalmente distintas, o chamamos de No de rede, como se
+estivessemos dando um no em duas cordas diferentes.
+
+Vimos que para computadores com uma interface fisica de rede,
+o modulo IP eh simultaneamente um multiplexador n para m e um demulti-
+plexador m para n.
+
+         1   2 3 ...   n                   1   2 3 ...   n
+          \  | |      /    |                \  | |      /       ^
+           \ | |     /     |                 \ | |     /        |
+         -------------   fluxo             ----------------   fluxo
+        |multiplexador|    de             |de-multiplexador|    de
+         -------------   dados             ----------------   dados
+           / | |     \     |                 / | |     \        |
+          /  | |      \    v                /  | |      \       |
+         1   2 3 ...   m                   1   2 3 ...   m
+
+        Figura 4.  multiplexador n para m e demultiplexador  m p/ n
+
+Ele realiza esta multiplexacao em qualquer direcao para 
+permitir dados indo e voltando. Um modulo IP com mais de uma interface
+de rede eh mais complexo que nosso exemplo anterior no qual ele pode
+passar os dados para a rede seguinte. Dados podem chegar de qualquer
+interface de rede e ser retransmitidos para qualquer outra.
+
+
+                           TCP      UDP
+                             \      /
+                              \    /
+                          --------------
+                          |     IP     |
+                          |            |
+                          |    ---     |
+                          |   /   \    |
+                          |  /     v   |
+                          --------------
+                           /         \
+                          /           \
+                       dados           dados
+                      chegam            saem
+                     aqui                aqui
+
+    Figura 5.  Exemplo de Retransmissao IP de Pacotes IP (IP Forwarding)
+
+O processo de enviar um pacote IP para outra rede eh chamado de
+"IP forwarding" ou redirecionamento de pacotes IP. Um computador que eh
+dedicado a esta tarefa de redirecionar pacotes IP eh chamado de IP-router, 
+ou roteador.
+
+Como voce pode ver desta figura, o pacote IP retransmitido 
+toca os modulos TCP e UDP no roteador. Algumas implementacoes de roteadores
+nao tem um modulo TCP ou UDP. Neste caso, os equipamentos desempenham a
+tarefa mais rapido.
+
+2.5 IP cria uma rede logica simples.
+
+O modulo IP eh o centro de todo o sucesso da tecnologia da
+internet. Cada modulo ou driver adiciona seu cabecalho na mensagem
+a medida que ela desce de nivel de protocolos. Cada modulo ou driver
+retira o cabecalho correspondente da mensagem a medida que ela sobe o
+o nivel de protocolos em rumo ao aplicativo. O cabecalho IP contem
+o endereco IP, que constroi uma simples rede logica apartir de multiplas
+redes fisicas. A intercomunicacao das redes fisicas eh a origem do nome:
+internet. Um conjunto de redes interconectadas fisicamente que simula
+uma apenas eh o que chamamos de internet.
+
+2.6 Independencia da rede fisica
+
+O IP esconde o hardware da rede dos aplicativos de rede. Se
+voce inventar um novo tipo de rede fisica, voce pode coloca-la em
+funcionamento implementando um novo driver que conecta sua rede
+a internet utilizando o IP. Assim, aplicativos de rede ficam intactos
+e nao sao vuneraveis a mudancas na tecnologia do hardware.
+
+2.7 Interoperabilidade (Compatibilidade)
+
+Se dois computadores na internet podem se comunicar, entao
+diz-se que eles sao interoperados. Se uma implementacao da tecnologia
+da internet eh boa, ela eh dita ter interoperabilidade. Usuarios de
+computadores pessoais se beneficiam da instalacao de uma internet
+devido a interoperabilidade com os computadores do mercado. (Bah)
+
+Bem, por enquanto eh o que posso disponibilizar o mais rapido possivel,
+mas em breve estarei divulgando a parte 2 e a parte 3 e mais textos.
+Agradeco a todos do Unsekurity Team e aqueles que sejam beneficiados
+pelo conhecimento que vemos transmitindo.
+
+
+
+Phrack Volume Three, Issue Thirty-Three, File 8 of 13
+
+
+3. Ethernet
+
+Um frame Ethernet contem o endereco de destino, o endereco de origem, o tipo
+de dado e o dado propriamente dito. 
+
+Os enderecos Ethernet tem 6 bytes, e cada ponto Ethernet tem seu proprio
+endereco Ethernet que le frames Ethernet cujo destino tem seu endereco. Alem
+de ler frames Ethernet cujo destino eh si mesmo, todos os pontos Ethernet
+leem tambem quaisquer pacotes cujo endereco destino eh FF-FF-FF-FF-FF-FF,
+tambem conhecido como broadcast address (eh como se fosse um endereco que
+atingisse a todos os pontos ethernet).
+
+A tecnologia Ethernet usa CSMA/CD (Carrier Sense and Multiple Access with
+Collision Detection). CSMA/CD significa que todos os pontos ethernet
+comunicam-se num unico meio, que pode transmitir um por vez, e que todos
+eles podem receber simultaneamente. Se dois pontos tentam transmitir ao
+mesmo instante, uma colisao de transmissao eh detectada, e ambos os pontos
+esperam um periodo de tempo aleatorio (porem curto) antes de tentar
+transmitir novamente.
+
+4. ARP
+
+Quando enviamos um pacote IP, como saber qual o destino Ethernet ?
+
+ARP significa Address Resolution Protocol, ou Protocolo de Resolucao de
+Enderecos, que eh usado para traduzir o endereco IP para endereco Ethernet.
+
+4.1 Tabela ARP para Traducao de Enderecos.
+
+
+A traducao eh realizada com uma simples olhada numa tabela. Esta tabela,
+chamada tabela ARP, eh armazenada na memoria e contem uma linha para cada
+computador. Existe uma coluna para o endereco IP e uma coluna para o
+endereco Ethernet. Quando a traducao eh feita, a tabela eh buscada por um
+determinado endereco IP. Temos aqui uma tabela ARP simplificada:
+
+
+                  ------------------------------------
+                  |IP address       Ethernet address |
+                  ------------------------------------
+                  |223.1.2.1        08-00-39-00-2F-C3|
+                  |223.1.2.3        08-00-5A-21-A7-22|
+                  |223.1.2.4        08-00-10-99-AC-54|
+                  ------------------------------------
+                  TABELA 1.  Tabela ARP exemplificada.
+
+
+A convencao de um endereco Ethernet sao seis numeros em hexadecimal
+separados por um hifen, ao contrario do endereco IP, que sao 4 numeros 
+decimais separados por um ponto.
+
+Uma tabela ARP eh necessaria pois os enderecos IP e Ethernet sao escolhidos
+independentemente. Assim nao ha nenhum algoritmo para realizar a traducao. O
+endereco IP eh selecionado pelo administrador de redes, baseando-se na
+localizacao do computador na internet. Assim, quando o computador muda-se
+para uma parte diferente da internet, o endereco deve ser mudado. O endereco
+Ethernet eh selecionado pelo fabricante baseado no espaco dos enderecos
+Ethernet reservados para si. Quando a parte fisica muda, o endereco Ethernet
+muda.
+
+4.2 Traducao de Enderecos
+
+Em operacao normal, um aplicativo de rede, como Telnet, envia uma mensagem
+para o TCP, e entao o TCP manda a mensagem TCP correspondente para o modulo
+IP. O endereco IP do destino eh conhecido pelo aplicativo, o modulo TCP e o
+modulo IP. Neste ponto, o pacote IP jah foi construido e jah estah pronto
+para ser entregue ao driver Ethernet, mas antes o endereco Ethernet de
+destino tem que ser determinado.
+
+A tabela ARP eh usada para verificar qual o endereco Ethernet de destino.
+(Look-up).
+
+4.3 O par Pedido/Resposta ARP
+
+
+Mas como a tabela ARP fica preenchida no primeiro lugar? A resposta eh que
+ela eh preenchida automaticamente pelo ARP utilizando o conceito 'as-needed'
+ou como necessario for.
+
+Duas coisas acontecem quando a tabela ARP nao pode ser usada para traduzir
+um endereco:
+
+1. Um pacote ARP de pedido com um endereco Ethernet broadcast eh enviado
+para a rede para todos os computadores.
+
+2. O pacote IP eh colocado na lista de espera.
+
+Todo computador com interface Ethernet recebe o broadcast do frame Ethernet.
+Cada driver Ethernet examina o tipo de pacote no frame Ethernet e passa o
+pacote ARP para o modulo ARP. O pacote ARP de pedido diz "Se seu endereco IP
+combina com o endereco IP de destino deste pacote, entao por favor, diga-me
+seu endereco Ethernet". O pacote ARP de pedido parece-se com algo assim:
+ 
+
+                ---------------------------------------
+                |Sender IP Address   223.1.2.1        |
+                |Sender Enet Address 08-00-39-00-2F-C3|
+                ---------------------------------------
+                |Target IP Address   223.1.2.2        |
+                |Target Enet Address <blank>          |
+                ---------------------------------------
+                     TABELA 2.  Pedido ARP
+
+
+Cada modulo ARP examina o endereco IP e se o Target IP address (Endereco IP
+alvo) combina com seu proprio endereco IP, ele envia uma resposta
+diretamente para o endereco Ethernet de origem. O pacote ARP de resposta diz
+"Sim, este endereco IP alvo eh meu, deixe-me enviar meu endereco Ethernet".
+Um pacote ARP de resposta tem o campo de remetente/destinatario e parece com
+algo como:
+
+                ---------------------------------------
+                |Sender IP Address   223.1.2.2        |
+                |Sender Enet Address 08-00-28-00-38-A9|
+                ---------------------------------------
+                |Target IP Address   223.1.2.1        |
+                |Target Enet Address 08-00-39-00-2F-C3|
+                ---------------------------------------
+                     TABELA 3.  Resposta ARP
+
+
+A nova tabela, jah renovada, agora parece como esta:
+
+                   ----------------------------------
+                   |IP address     Ethernet address |
+                   ----------------------------------
+                   |223.1.2.1      08-00-39-00-2F-C3|
+                   |223.1.2.2      08-00-28-00-38-A9|
+                   |223.1.2.3      08-00-5A-21-A7-22|
+                   |223.1.2.4      08-00-10-99-AC-54|
+                   ----------------------------------
+                TABELA 4.  Tabela ARP depois da resposta.
+
+
+4.4 Continuando
+
+A nova traducao foi automaticamente instalada na tabela, apenas milisegundos
+apos ter sido necessaria. Como voce pode lembrar do passo 2 acima, o pacote
+IP que deveria ser enviado foi mantido na espera. Agora, a traducao do
+endereco IP para o endereco Ethernet eh realizada por uma 'olhada' (look-up)
+na tabela ARP e entao o frame Ethernet eh transmitido na Ethernet. Assim,
+com novos passos 3, 4 e 5, a situacao do computador que estah enviando eh a
+seguinte:
+
+
+1. Um pacote ARP de pedido com um endereco Ethernet broadcast eh enviado
+para a rede para todos os computadores.
+
+2. O pacote IP eh colocado na lista de espera.
+
+3. A resposta do ARP chega com a traducao dos enderecos IP para Ethernet
+para a tabela ARP.
+
+4. O pacote IP posto em espera tem seu endereco IP traduzido para o endereco
+Ethernet pela tabela ARP.
+
+5. O frame Ethernet eh transmitido na Ethernet.
+
+Resumindo: quando a traducao falta na tabela ARP, o pacote IP eh colocado em
+espera. Os dados para a traducao eh rapidamente obtido via pacotes ARP de
+pedido/resposta e o pacote IP anteriormente colocado em espera eh
+transmitido.
+
+
+Cada computador tem uma tabela ARP separada para cada uma de suas interfaces
+Ethernet. Se o computador alvo nao existe, nao haverah nenhuma resposta ARP
+e nenhuma entrada na tabela ARP. O protocolo IP ira descartar os pacotes IP
+enviados para tal endereco. Os procolos da camada superior nao podem dizer a
+diferenca entre uma Ethernet quebrada e a ausencia de um computador com o
+endereco IP alvo.
+
+Algumas implementacoes do IP e ARP nao colocam o pacote IP em espera
+enquanto esperam pela resposta ARP. Em vez, o pacote IP eh descartado e a
+recuperacao pela perda do pacote eh deixada para o modulo TCP ou o
+aplicativo de rede que utiliza UDP. Esta recuperacao eh garantida atraves de
+um time-out e pela retransmissao. A mensagem retransmitida eh enviada com
+sucesso pela rede pois a primeira copia da mensagem provocou a renovacao da
+tabela ARP previamente.
+
+6. Fim
+
+Bem, este eh o fim.. As informacoes mais importantes, creio, foram a tabela
+ARP e a nocao de No de Rede.. Mantenham bem isso em mente, e tambem sobre o
+IP header e que cada protocolo coloca infos nos pacotes.. Quando voce for
+programar em raw sockets, poderah fazer coisas bastante interessantes.
+
+Tambem nao eh necessario falar 'protocolo ip' pq IP jah significa Internet
+Protocol e IP soh pode ser o protocolo. Igualmente para TCP! E FTP! e etc..
+Quando falei em programa FTP, quis dar entender programas que se utilizam do
+FTP.
+
+
+Bibliografia
+
+Phrack Volume Three, Issue Thirty-Three, File 8 of 13
+
+---------------,
+Dimitri Vashnov|
+---------------'-------,
+palwaaktaar@bol.com.br |
+-----------------------'

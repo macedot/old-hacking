@@ -1,0 +1,333 @@
+
+
+
+            _   _                 _               _  _
+           | | | | _ __  ___ ___ | |__ _  _  _ _ (_)| |_  _  _
+           | |_| || '  \(_-</ -_)| / /| || || '_|| ||  _|| || |
+            \___/ |_||_|/__/\___||_\_\ \_,_||_|  |_| \__| \_, |
+                    http://unsekurity.virtualave.net      |__/
+                         ___
+                        / __| __  ___  _ __  ___
+                        \__ \/ _|/ -_)| '  \/ -_)
+                        |___/\__|\___||_||_|\___|
+
+                               apresenta:
+
+
+                      -------------------------------
+            - - = = < G u i a  d o  I n i c i a n t e > = = - -
+                      -------------------------------
+                       Por: meleu            11/2001
+
+
+
+
+
+                      ,-----------------------------,
+                      |                             |
+                      | 1.    Propósito deste texto |
+                      |                             |
+                      | 2.           Primeiro: Unix |
+                      |                             |
+                      | 3.     Segundo: Programação |
+                      |                             |
+                      | 4.         Terceiro: Redes  |
+                      |                             |
+                      | 5.            Outras fontes |
+                      |                             |
+                      | 6.                Conclusão |
+                      |                             |
+                      '-----------------------------'
+
+
+
+
+
+
+
+1. --> Propósito deste texto
+
+   Com este texto eu pretendo dar uma orientada às pessoas que chegaram
+recentemente à Internet e de alguma maneira ouviram falar de hackers e
+começaram a se interessar pelo assunto, e finalmente pretenderam se tornar
+um.
+   Pois bem, se todas as pessoas que pretendessem se tornar hacker se
+tornassem um o mundo estaria infestado de hackers! Em outras palavras:
+hacking é pra poucos! Não estou querendo excluir ninguém, só estou dizendo
+que para ser hacker tem que ter muita força de vontade.
+   Não ache você que eu sei tudo que enumero aqui! Este "roteiro" eu uso
+para mim também! Quero dizer com isso que eu não sou nenhum mestre-hacker
+que tem uma alma caridosa e que vou ensinar todos os segredos do
+underground. Sou apenas um newbie e o que passo neste texto é um simples
+roteiro que eu sigo e que acho conveniente pra começar a se fazer coisas
+divertidas! :)
+
+   Uma coisa que é bastante útil de você saber e que não está diretamente
+relacionado à computação é o inglês. A esmagadora maioria das informações
+boas estão em inglês. Neste texto eu tento ao máximo passar indicações de
+textos em português, mas na impossibilidade eu passo indicação de textos
+em inglês mesmo.
+
+   Infelizmente, hoje em dia, o termo hacker está sendo usado muito
+prejorativamente. E como brasileiro dá um jeitinho pra tudo, logo arrumou
+um termo substituto: fuçador. Eu, particularmente, acho fuçador um nome
+mais bacaninha, e é este que uso.
+   Uma coisa importante:
+
+		0s h4c|<3rS |\|Ã0 3sCr3v3m 4sS|m!!
+
+   Não sei porque (deve ser atraso mental) mas existe muitas pessoas que
+gostam de escrever desta maneira. Isso talvez tenha graça para quem tem
+entre 3 e 9 anos. Mas cá entre nós, isso é muito chato e cansativo de
+ler!
+   Outra coisa importante:
+
+	Hackers não se juntam em grupinhos que se auto-entitulam
+	elites e ficam escondendo informações!
+
+   O propósito principal do fuçador é liberar toda informação para que
+todo mundo tenha acesso! Sem ficar se fechando em grupinhos que tem como
+atividade principal ficar alterando páginas com o único propósito de
+ganhar fama! Fique atento irmão! não se torne um destes! ;)
+
+
+   É preciso deixar claro que este texto é voltado ao ambientes UNIX's.
+
+   Sempre que quiser trocar umas idéias vá ao fórum da Unsekurity Scene:
+
+http://www.unsekforum.cjb.net
+
+   Ao usar o fórum para tirar dúvidas, faça o favor de consultar todas
+informações que você tiver alcance para depois perguntar. Isso será bom
+pra você, pois ao consultar mais informações vai aprender mais com isso;
+e para os participantes do fórum, que gastarão seu tempo com perguntas
+mais cabeludas e não com coisas básicas que são facilmente resolvidas com
+a leitura de documentos facilmente encontrados.
+
+
+
+
+
+2. --> Primeiro: Unix
+
+   A primeira coisa que você tem que fazer é aprender a usar o sistema
+operacional normalmente, ou seja, se sentir a vontade e fazer com ele
+tudo que você faz em um computador. Como a maneira mais fácil de adquirir
+um Unix é conseguindo um GNU/Linux, então aprenda GNU/Linux! E como o que
+estamos querendo é nos tornar fuçadores, eu aconselho as distribuições
+Slackware ou Debian. As URLs:
+
+http://www.slackware.com
+http://www.debian.org
+
+   Mas tem uma coisa que acontece com muita gente é que eles instalam o
+o GNU/Linux em suas máquinas junto com o Windows e aí fazem tudo com o
+Windows e só quando não têm nada para fazerem eles "brincam" com o
+GNU/Linux um pouquinho. E isso você não deve fazer! Instale o GNU/Linux
+e aprenda-o ao máximo. Use-o para suas tarefas corriqueiras também (como
+ler email, navegar, etc).
+   A seguir uma URL que tem dois guias muito bons, em português, sobre o
+GNU/Linux. Um para iniciantes e outro para intermediários:
+
+http://www.metainfo.org/focalinux
+
+   Não fique afobado pra aprender tudo ao mesmo tempo! Portanto pegue
+este guia, leia-o calmamente e aprenda tudo que conseguir.
+   E preste muita atenção quando estiver lendo sobre permissões de
+arquivos! É muito importante, para se começar na fuçação, a entender
+direitinho como funcionam as permissões de arquivos. E foi por isso que eu
+escrevi um texto sobre permissões de arquivos UNIX (que ainda não está do
+jeito que eu quero, prometo atualizá-lo quando tiver tempo). Você pode
+encontrá-lo em:
+
+http://unsekurity.virtualave.net/txts/permissoes.txt
+
+   Este texto pode ter umas coisas que você pode não entender (a parte
+que aborda programação em linguagem C), mas não se preocupe com isso.
+Apenas não dê muita importância à parte que fala sobre a linguagem C
+(pelo menos agora, depois que souber programar você volta ao texto).
+
+   No começo é aquela coisa mais a nível de usuário, porém mais tarde
+você vai ter que começar a aprender um pouco sobre administração de
+sistema. E para isso existe um guia muito bom em:
+
+http://www.ibiblio.org/pub/Linux/docs/LDP/system-admin-guide/translations/pt
+
+   Como um opcional desta etapa do seu treinamento Shao Lin (hehehe!)
+você pode aprender Shell Scripts. Eles são bastante úteis! Estou tentando
+escrever um texto sobre isso (mais especificamente sobre o bash) mas
+enquanto não o termino você se vira com o que já existe (que já é o
+suficiente). Os seguintes textos me foram muito úteis (em inglês):
+
+Bash-Prog-Intro-HOWTO
+Adv-Bash-Scr-HOWTO
+
+Ambos (e muitos outros) podem ser encontrados em:
+
+http://www.linuxdoc.org
+
+Ou se você já tem um linux instalado, procure no diretório:
+
+/usr/doc/Linux-HOWTOs
+
+
+
+
+
+3. --> Segundo: Programação
+
+   Bom, já que você está lendo este texto é porque quer se tornar um
+fuçador (ou então já é um). E para programar é bom aprender a linguagem
+preferida de 9 em cada 10 fuçadores: a linguagem C. O 1 que sobra dos 10
+fuçadores prefere PERL. Eu não conheço nada de PERL mas reconheço que é
+uma linguagem muito boa para tarefas administrativas. Infelizmente não
+sei de bons links para se aprender PERL.
+
+   Mas voltando à linguagem C... Eu aprendi a programar em C aqui:
+
+http://ead1.eee.ufmg.br/cursos/C
+
+   Realmente um ótimo lugar para se começar. Mas lógicamente você não vai
+querer parar com o básico, e vai querer consultar outras fontes. Uma
+ótima fonte alternativa é (em inglês):
+
+http://www.cs.cf.ac.uk/Dave/C/CE.html 
+
+   Quando começar a se sentir a vontade com a linguagem C, você vai
+querer aprender a usar system calls. E para isso o Nash (alô irmão!)
+escreveu um texto muito bom:
+
+http://unsekurity.virtualave.net/txts/prog_basica.txt
+
+   Vocês devem perdoar o Nash, pois ele é um cara muito metidão a ser
+underground e por isso escreve uns códigos muito feios de se ler! :)
+Mas o importante é que funcionam! ;)
+
+
+
+
+
+4. --> Terceiro: Redes
+
+   Agora chegamos numa parte que eu ainda estou aprendendo o básico,
+portanto não posso dizer muito sobre isso. Você já deve saber que a
+família de protocolos que é usada na Internet é TCP/IP. Existem muitos
+textos sobre TCP/IP em português por aí. Existem dois na página da unsek
+scene, um do klogd e outro do xf:
+
+http://unsekurity.virtualave.net/txts/texto_tcpip_basico.txt
+http://unsekurity.virtualave.net/txts/tcpipI.txt
+
+   Tem outro (em duas partes) que fala sobre hardware de redes e pode ser
+útil pra você. O problema é que o desgraçado do Hekodangews escreveu o
+texto com mais do que as 80 colunas habituais e o texto fica horrível de
+se ler no console (que cara mané! :P ):
+
+http://unsekurity.virtualave.net/txts/rede_basico.txt
+http://unsekurity.virtualave.net/txts/rede_basico2.txt
+
+   Mas isso é muito pouco pra você, que está ávido por informações! Por
+isso, use seu site de busca predileto e encontre algo. Se achar algum
+texto bom não esqueça de indicá-lo lá no fórum! ;)
+
+   Depois desta parte meio teórica está na hora de por a mão na massa e
+programar com sockets. Aqui estão os textos que você deve ler (este
+primeiro é meio teórico, mas é bom):
+
+http://unsekurity.virtualave.net/txts/sock.txt
+http://unsekurity.virtualave.net/txts/sockets.txt
+http://unsekurity.virtualave.net/txts/sockets2.txt
+http://unsekurity.virtualave.net/txts/Csockets.txt
+
+   No meio destes textos você pode encontrar algumas informações
+repetidas, mas leia tudo assim mesmo (e pratique bastante também!).
+   E se você é daqueles que gostam de PERL, também tem este texto:
+
+http://unsekurity.virtualave.net/txts/socketsperl.txt
+
+
+
+
+
+5. --> Outras fontes
+
+   Em determinadas partes (inclusive na parte de TCP/IP e sockets) você
+precisará de umas máquinas remotas para fazer uns testes. Pois é, dê uma
+conferida nestas páginas aqui que você achará uma maneira para fazer seus
+testes sem nenhum medo de possíveis problemas legais (muita atenção para o
+sentido da palavra "legais" ;P ). Em inglês:
+
+http://www.hackerslab.org/eorg
+http://www.pulltheplug.com
+
+e em português:
+
+http://www.lockabit.coppe.ufrj.br
+
+   Nestas páginas tem uma espécie de jogo que serve pra você praticar seus
+conhecimentos. É bem bacaninha. ;)
+
+   Talvez vocês queiram ler este texto, escrito por Eric S. Raymond, pode
+ser bom pra você (em inglês):
+
+http://tuxedo.org/~esr/faqs/hacker-howto.html
+
+tem uma tradução deste mesmo texto para o português em:
+
+http://www.linux.ime.usp.br/~rcaetano/docs/hacker-howto-pt.html
+
+   Dê uma conferida nas páginas a seguir que você vai encontrar muitas
+informações boas.
+
+   Um guia de como cobrir seus rastros (em inglês):
+http://www.thehackerschoice.com/papers/COVER-1.TXT
+http://www.thehackerschoice.com/papers/COVER-2.TXT
+
+   Página que contém algumas informações boas:
+http://www.absoluta.org
+
+   The alt.2600 F.A.Q. (muito legal!):
+http://corky.net/hack/
+ou
+ftp://rtfm.mit.edu/pub/usenet-by-group/alt.2600
+
+   Muitos outros FAQs em:
+ftp://rtfm.mit.edu
+http://www.faqs.org
+
+   E é claro: a página da Unsekurity Scene!
+http://unsekurity.virtualave.net
+
+
+
+
+5. --> Conclusão
+
+   Se você fizer tudo isto que foi indicado, já estará pronto pra ler a
+maioria dos textos que são publicados na página da Unsekurity Scene.
+   Você deve ficar atento que dentro destes textos que enumero aqui
+há várias referências para outras informações. Seria bom ler estas
+também.
+
+   Observe que para fazer tudo que é indicado neste texto você pode levar
+meses e/ou anos! Não, amigo! Isto não é da noite para o dia! E tem mais
+um detalhe para te (des)animar. Isto é somente o primeiro degrau! Você
+também terá que aprender assembly, administração de redes, criptografia,
+se aprofundar mais em programação... Enfim: ainda tem muito a ser feito e
+com a vantagem de que isso nunca vai acabar! É isso mesmo amiguinho! O
+aprendizado nunca tem fim! Você NUNCA, eu disse N-U-N-C-A, vai saber
+TUDO! Portanto este primeiro degrau que você subirá é o primeiro de uma
+escada infinita! Você só parará de subir esta escada quando chegar ao
+céu, ou seja, quando você morrer! :)
+
+   Bem... Acho que é só isso que tenho a dizer neste texto...
+
+   Espero que você seja um ótimo fuçador e ajude a comunidade o máximo
+que você puder!
+
+Um abraço aos manos das antigas e boas vindas aos manos de agora!
+
+Até a próxima,
+meleu.
+
+                             --< EOF >---

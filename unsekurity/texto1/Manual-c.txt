@@ -1,0 +1,3415 @@
+,*************,
+| Manual de C |
+'*************'
+
+Autor: Dimitri Vashnov  a.k.a  xf86config
+
+Email: palwaaktaar@bol.com.br
+
+Thanks Unsekurity Team!
+
+
+0. Introducao
+
+
+Bem, se vc eh elite, nao tem muito o que fazer aqui, este manual eh para que
+nao sabe programar em C ou para aqueles que acham que nao sabem. Se tiverem
+duvidas, utilizem-se da tentativa-erro, ou entao pesquisem outros tuts.
+Atrevo-me a escrever este tutorial pensando naqueles que como eu nao
+dispuseram de um manual de C em portugues de facil leitura e acesso..
+naqueles que querem aprender mas nao querem perder tempo catando tutoriais
+ou pedacos.. ao que cansaram de procurar ajuda em canais de irc inuteis.
+
+Este tutorial foi feito para aqueles que querem programar em C
+preferencialmente em Linux Slackware ou qualquer outro que nao seja RHL (Red
+Hat Like) como o Conectiva, pq o Conectiva nao foi feito para voce, amigo
+fussador. Eles nao instalam nenhum compilador c.
+
+Nada de perder tempo, vamos logo ao que interessa!
+
+
+1. Criando e Compilando seu programa.
+
+
+1.1 Criando
+
+Crie seu programa em um editor de textos qualquer que voce tenha a sua
+disposicao. Para o Linux existe o joe, pico e jed, tem tambem o vi, e o vim,
+mas nao os recomendo caso voce seja iniciante.
+
+Comece assim: 'joe programa.c'. No joe, para salvar, digite ctrl+k+d, e
+para salvar e sair, digite ctrl+k+x, e para abandonar as mudancas e sair,
+digite ctrl+c.
+
+A extensao do arquivo deve ser .c caso seu programa seja feito em C, e .cpp
+caso ele seja feito em c++.
+
+1.2 Compilando
+
+Existem diversos compiladores disponiveis. O compilador cc feito pela SUN
+existe na maioria das plataformas UNIX, e o gcc, feito pela GNU, existe em
+todos os linux e SO's de codigo aberto.
+
+Os compiladores c++ mais comuns sao o CC (feito pela SUN, observe que neste
+caso eh tudo maiusculo) e o g++, feito pela GNU.
+
+A linha de comando basica para compilar um programa em C eh a seguinte:
+
+$ gcc arquivo.c
+
+Serah gerado ai um arquivo executavel chamado a.out! Execute-o digitando
+./a.out. Caso voce queira dar um nome ao arquivo executavel em vez de a.out,
+a linha de comando eh
+
+$ gcc arquivo.c -o arquivo
+
+Ex.: gcc pcrack.c -o pcrack
+
+Se voce esta usando a ferramenta cc, o procedimento eh o mesmo:
+
+$ cc arquivo.c -o arquivo
+
+1.3 Entendendo as etapas de compilacao
+
+A compilacao de um programa eh feita pelo gcc em algumas etapas das quais
+iremos falar logo adiante:
+
+Etapa 1) O pre-processador
+
+O pre-processador remove comentarios do programa e interpreta diretivas
+especiais do pre-processador. Estas diretivas sao iniciadas por #, veja:
+
+#include <stdio.h>
+
+Com certeza voce jah deve ter visto isso sempre no comeco de um programa em c.
+Essa eh uma diretiva interpretada pelo pre-processador. A diretiva #include
+inclui naquele local um dado arquivo texto. No caso acima, no lugar da linha
+ele coloca o conteudo do arquivo stdio.h, que eh um header file (arquivo de
+cabecalho). Quando este arquivo estah envolvido por < > eh porque o arquivo
+estah no diretorio padrao, no linux este diretorio eh /usr/include, mas isso
+pode mudar de versao pra versao.
+
+Existe tambem a diretiva #define que eh assim:
+
+#define MAX_SIZE 100
+
+Faz uma substituicao completa por todo arquivo trocando MAX_SIZE por 100.
+Iremos discutir mais detalhes sobre o preprocessador mais adiante !
+
+Etapa 2) Compilador C
+
+O Compilador C recebe o codigo jah peneirado do pre-processador e converte
+para assembly.
+
+Etapa 3) Assembler
+
+O Assembler cria um arquivo objeto, de extensao .o em Unix'es e .obj no DOS.
+Este arquivo jah estah em binario.
+
+Etapa 4) Linkador
+
+Se o programa faz referencia a funcoes que estejam definidas em outros
+arquivos objetos (como as bibliotecas padroes libc5 e glibc2) entao o linka-
+dor une tudo fazendo um executavel! Nosso programa estah pronto.
+
+1.4 Alguns parametros uteis dos compiladores cc e gcc.
+
+Com certeza voce irah precisar de parametros adicionais nas suas aventuras.
+
+-lbiblioteca --> esta eh a mais interessante, permite voce linkar seu programa
+com uma biblioteca pre-compilada, de extensao .so, geralmente dentro do seu
+/usr/lib. Apos o -l vem o nome da biblioteca.
+
+Ex.: gcc pcrack.c -o pcrack -lcrypt    --> aqui crypt se refere a biblioteca
+que encontramos em /usr/lib/libcrypt.so. Para saber o nome da biblioteca, re-
+mova o 'lib' do inicio do nome do arquivo e a extensao '.so'!
+
+-Ldiretorio --> estah eh muito util, voce pode indicar ao linkador o diretorio
+por onde ele deve procurar as bibliotecas que voce quer linkar. O padrao eh
+/lib e /usr/lib, se voce acrescentar varias opcoes, ele vai procurar nos
+diretorios padroes e nos que voce especificou.
+
+Ex.: gcc pcrack.c -o pcrack -L/home/username/mylibs -L.
+
+-Idiretorio --> tb muito legal, voce informa onde o pre-processador deve
+procurar os headers files, aqueles arquivos que voce usou no #include.
+
+Ex.: gcc pcrack.c -o pcrack -I/home/username/myheaders -I.
+
+Vejam ai nos dois exemplos anteriores o que fizemos: -L. e -I.
+
+Este . eh o diretorio atual do arquivo que estah sendo compilado.
+
+-D --> Quando vc usa -Dmacro ou -Dmacro=valor eh o mesmo que colocar dentro
+do arquivo a linha #define macro ou #define macro valor ! Isso eh bom pra
+portabilidade do seu codigo.
+
+
+1.5 Usando as bibliotecas.
+
+Praticamente todos os linux vem com bibliotecas padroes p/ C instaladas. Estas
+bibliotecas contem funcoes variadas que fazem diversas coisas, isso lhe pou-
+pa o trabalho de ter que refazer funcoes!
+
+Caso voce tenha duvida de como usar alguma funcao, digite man 3 nome-da-funcao
+ou man nome-da-funcao -S 3.
+
+Ex.: Se voce digitar man free nao vai cair no help que deseja. Digite entao
+man 3 free.
+
+Quando voce inclui um header no seu programa, todas as funcoes e declaracoes
+definidas naquele header passam a fazer parte de seu programa, podendo usar mais
+funcoes. O processo basico eh o seguinte:
+
+Passo 1) Voce inclui o header que contem a familia de funcoes que voce quer usar
+Passo 2) Usa a funcao de acordo com a sintaxe.
+Passo 3) P/ os headers que nao fazem parte da biblioteca padrao C voce terah que
+especificar a biblioteca que tem q linkar por meio de -l, quando for compilar.
+Por exemplo, quando fizemos, quando fizemos #include <stdio.h> nao
+precisamos especificar a biblioteca por meio de -l, mas quando fizemos
+#include <crypt.h> tivemos que colocar -lcrypt na nossa linha de comando p/
+compilar corretamente. Eh que a biblioteca crypt nao eh padrao.
+
+
+2. Nocoes basicas de C
+
+
+2.1 A estrutura basica de um programa em C
+
+Todo programa em C tem que ter a seguinte estrutura:
+
+* Diretivas do Preprocessador
+* Definicao de tipos
+* Prototipos das funcoes
+* Variaveis
+* Funcoes
+
+Devemos ter obrigatoriamente uma funcao main() pois esta eh a primeira
+funcao a ser executada quando executamos o programa. Aqui vai um exemplo
+para voce se familiarizar:
+
+Nome do arquivo: file1.c
+--cut--
+#include <stdio.h>
+
+/*
+   Os comentarios podem ficar em qlq lugar.
+   Observe que toda linha fora do comentario terminha em ponto e
+   virgula ; (isso nao vale pra diretivas do precompilador como a acima).
+*/
+
+int i;
+
+void main(int argc, char *argv[]) {  /* este void que voce ve eh o tipo de
+					 dado que a funcao main() retorna */
+
+   i = 0; /* inicializacao da variavel inteira i */
+
+   printf("O primeiro argumento eh %s \n",argv[1]); /* imprime na tela
+						    o primeiro argumento */
+
+   i += 10; /* soma 10 ao valor de i */
+
+   printf("O valor de i eh %d \n",i);  /* imprime na tela o valor de i*/
+
+} /* os { e } delimitam o bloco de codigo da funcao main() */
+--cut--
+
+O programinha acima pode ser compilado com o comando 'gcc file1.c -o file1'
+
+Vamos com mais calma. Uma funcao tem a seguinte forma:
+
+tipo nome_da_funcao(parametros)
+{
+declaracao das variaveis locais.
+comandos em c.
+}
+
+Esse 'tipo' indica que tipo de valor a funcao irah retornar, se eh inteiro,
+se eh um caractere, um texto, um numero racional, etc! Os 'parametros' indicam
+que variaveis de entrada o programa deve receber, separados por virgula.
+
+Entre as chaves { e } ficam as instrucoes (em C) que serao executadas quando 
+a funcao for chamada. Sempre nessas instrucoes, as declaracoes de variaveis
+sao feitas antes. Vejamos aqui um exemplo de funcao:
+
+int soma(int a, int b) {
+ int resultado;
+ resultado = a + b;
+ return resultado;
+}
+
+Vemos acima que a funcao soma() retorna um valor inteiro (eh por isso que ha
+um int antes da palavra soma), recebe dois parametros inteiros, a e b, e no
+seu bloco de codigo, declara uma terceira variavel inteira chamada
+resultado, soma os valores de a e b e joga a resposta na variavel resultado,
+e com o comando 'return resultado;' ele faz a funcao retornar aquele valor
+armazenado em return. Apos retornar uma vez, a funcao termina sua execucao.
+
+2.2 Operadores
+
+Se voce jah programou em alguma linguagem qualquer, deve saber o que
+chamamos de operadores. Um operador eh um simbolo que quando utilizado quer
+indicar que uma tarefa, uma operacao deve ser realizada. Vejamos aqui alguns
+operadores da linguagem C:
+
+2.2.1 Operador de Atribuicao.
+
+Um operador de atribuicao serve exatamente para atribuir valores a
+variaveis. Na linguagem C, este operador eh o simbolo = . Este eh um
+operador binario que atribui o valor encontrado a direita do simbolo a
+variavel encontrada a esquerda do mesmo. Ex.:
+
+int funcao1(void) { 
+int valor1, valor2;
+x = 1;
+y = 3;
+valor1 = x + y;
+valor2 = valor1 + 18;
+return valor2;
+}
+
+Vimos acima a atribuicao do valor 1 a variavel x, e assim por diante.
+Uma operacao de atribuicao sempre retorna o valor atribuido. Assim, a
+expressao (a = b) retornara o valor de a apos a operacao.
+
+2.2.2 Operador de Igualdade.
+
+Um operador de igualdade serve para comparar dois valores, se sao ou nao
+iguais. Na linguagem C, temos dois operadores de igualdade: == e != .
+
+No caso == , o valor retornado pela expressao (a == b) eh 1 se a e b sao
+iguais ou 0 se forem diferentes, enquanto que com !=, o valor retornado pela
+expressao (a != b) eh 0 se forem iguais e 1 se forem diferentes. Veja a
+tabela verdade:
+
+	Tabela 1.
+,-------------------------,
+| a | b | a == b | a != b |
+|-------------------------|
+| 0 | 0 |   1    |    0   |
+| 0 | 1 |   0    |    1   |
+| 1 | 0 |   0    |    1   |
+| 1 | 1 |   1    |    0   |
+'-------------------------'
+
+Assim, a operacao (y == 3) retorna 1 se o valor de y eh 3, e retorna 0 caso
+contrario. Isso eh especialmente importante mais adiante quando formos ver
+controladores de fluxo.
+
+2.2.3 Operador de Negacao.
+
+Se voce quer negar uma expressao (ou seja, trocar 0 para 1 e 1 para 0),
+basta colocar o sinal ! antes da expressao. Eh importante que voce delimite
+a area da expressao a ser negada. Ex.:
+
+A expressao !(x == 1) nega a expressao (x == 1), ou seja, se x for 1,
+!(x == 1) retorna 0, e caso x seja diferente de 1, retornara 1.
+
+Podemos perceber claramente que !(a==b) tem a mesma tabela verdade de (a!=b)
+e !(a!=b) tem a mesma tabela verdade de (a==b).
+
+Uma propriedade importante eh que !(!a) tem a mesma tabela verdade de a,
+qualquer que seja a expressao a.
+
+Podemos tambem omitir os parentesis caso esteja claro a expressao !x pode
+ser feito para negar x, caso x seja um valor ou variavel.
+
+Em C, tudo que eh nao nulo eh considerado, para fins logicos, como 1, e tudo
+que eh nulo (como 0, NULL ou '' ou "") eh considerado 0.
+
+Assim, se tivermos a expressao !x e a variavel x tiver o valor 2, !x serah
+0, e se x tiver o valor 0, !x terah o valor 1.
+
+2.2.4 Operadores Aritmeticos.
+
+Os operadores aritmeticos servem para realizar operacoes aritmeticas, ou
+seja, aquelas que envolvem as operacoes basicas que aprendemos logo nos
+primeiros anos da escola: soma, subtracao, multiplicacao e divisao. As
+expressoes sao do tipo (membro1 operador membro2) e o valor retornado pela
+expressao eh exatamente o resultado da operacao..
+
+	Tabela 2.
+,---------,--------------,-----------------,-----------,
+|  Soma:  |  Subtracao:  |  Multiplicacao: |  Divisao: |
+|------------------------------------------------------|
+| (a + b) |   (a - b)    |     (a * b)     |   (a / b) |
+'---------'--------------'-----------------'-----------'
+
+
+Ex.:
+
+int metade(int x) {
+x = x / 2;
+return x;
+}
+
+No caso acima, temos 2 operadores numa unica linha:
+
+x = x / 2;
+
+Mas eles nao tem parentesis.. Como saberemos qual operacao foi realizada
+primeiro? Eh aih que nos deparamos com a precedencia dos operadores. Algumas
+operacoes tem precedencia sobre as outras na sua valoracao. No caso acima, 
+a divisao eh feita antes e a atribuicao depois. No topico 2.3 iremos
+analisar minusciosamente as precedencias. 
+
+Atentemos agora para um recurso muito importante em C que eh a abreviacao
+desses operadores:
+
+Podemos trocar (x = x + z) simplesmente por (x += z) quando queremos somar z
+a x, e identicamente para as outras operacoes:
+
+Soma: x += y
+Subtracao: x -= y
+Multiplicacao: x *= y
+Divisao: x /= y
+
+Estes sao os operadores aritmeticos mais basicos. Temos tambem o operador de
+resto, que eh o %, que dada a expressao (a % b) nos retorna o resto da
+divisao dos inteiros a e b. Este operador tambem pode ser abreviado como os
+anteriores:
+
+Resto: x %= y
+
+
+2.2.5 Operadores de Incremento e Decremento.
+
+Estes operadores servem para somar 1 ou subtrair 1. Eh um tipo de abreviacao
+para os operadores de adicao e subtracao:
+
+++x significa x += 1 ou x = x + 1
+--y significa y -= 1 ou y = y - 1
+
+No caso destes operadores de incremento, vemos um pequeno detalhe muito
+importante. Eles podem ser usados das seguintes maneiras:
+
+++x, x++, --x, x--
+
+O que difere entre ++x e x++ eh o valor retornado. Se colocamos ++ antes da
+expressao, o valor eh incrementado antes e soh entao eh retornado. Se
+colocarmos ++ depois da expressao, o valor eh retornado, e soh entao eh
+incrementado. Identicamente para o --. Vejamos:
+
+int x;
+x = 1;
+++x; /* retorna 2 */
+x++; /* retorna 2 */
+x == 3; /* retorna 1 */
+
+Outro exemplo:
+
+int x, y;
+x = 1;
+y = 3;
+x = y++;
+
+Aqui, o valor de x eh 3 e o valor de y eh 4. Continuando....
+
+y = ++x;
+
+Agora o valor de y eh igual a 4, e o de x tambem.
+
+2.2.6 Operadores Relacionais
+
+
+Estes servem para examinar as relacoes de ordem entre valores, como maior,
+menor, maior ou igual, menor ou igual.
+
+MAIOR: >
+MENOR: <
+MAIOR OU IGUAL: >=
+MENOR OU IGUAL: <=
+
+O valor retornado pela expressao eh 1 caso a expressao seja verdadeira, e 0
+caso contrario. Ex.:
+
+int x,y,z;
+y = 2;
+z = 3;
+x = y < z;
+
+O valor de x eh 1.
+
+2.2.7 Operadores Logicos AND e OR (E e OU)
+
+
+Em C, o operador logico E eh o && e o operador logico OU eh o ||.
+
+O operador E eh caracterizado pela seguinte tabela verdade:
+
+ Tabela 3.
+,---,---,--------,
+| a | b | a && b |
+|---|---|--------|
+| 0 | 0 |   0    |
+| 0 | 1 |   0    |
+| 1 | 0 |   0    |
+| 1 | 1 |   1    |
+'---'---'--------'
+
+Assim, a expressao (x < y) && (z >= x) sera 1 se e somente se x for menor
+que y e, simultaneamente, z for maior ou igual a x. Ou seja, se ambas as
+expressoes forem verdadeiras. 
+
+O operador OU eh caracterizado pela seguinte tabela verdade:
+
+ Tabela 4.
+,---,---,--------,
+| a | b | a || b |
+|---|---|--------|
+| 0 | 0 |   0    |
+| 0 | 1 |   1    |
+| 1 | 0 |   1    |
+| 1 | 1 |   1    |
+'---'---'--------'
+ 
+Assim, a expressao (x < y) || (x < z) serah 1 se e somente se pelo menos uma
+das expressoes for verdadeira. Sera 0 se e somente se ambas forem falsas.
+
+2.2.8 Operador sizeof
+
+Este operador serve para determinar o tamanho de uma variavel, tipo ou
+constante. O valor retornado eh em bytes.
+
+Ex.1: 
+
+long int x;
+x = sizeof(x);
+
+Acima, o valor de x serah 4, ou 4 bytes, que dah 32bits, ou seja, x eh um
+inteiro de 32 bits, considerando que voce esteja usando um sistema
+semelhante ao nosso.
+
+Ex.2:
+
+int x;
+x = sizeof(int);
+
+Aqui x assume o valor que as variaveis do tipo int (inteiro) assumem por
+padrao. Neste caso, x serah 4.
+
+Ex.3:
+
+int x;
+x = sizeof("Oi");
+
+Isso fara x igual a 3 (3 bytes) jah que cada caractere eh 1 byte e o 3o byte
+eh o caractere finalizador: '\0' cujo valor eh 0.
+
+Ex.4:
+
+int x;
+x = sizeof("Unsekurity Team!");
+
+Neste caso, x terah o valor 17. 
+
+2.2.9 Operador unario & 
+
+Este operador serve-nos para obter o endereco do 1o byte de memoria onde uma
+dada variavel estah armazenada. Este endereco eh em hexadecimal.
+
+Ex.1:
+
+int x;
+printf("%x",&x);
+
+O exemplo acima imprime na tela o endereco da variavel x. Veremos logo a
+seguir mais sobre este tipo de operador.
+
+2.3 Precedencia e Associatividade dos Operadores.
+
+Esse lance de precedencia de operadores eh muito legal e serve para voce
+poupar parentesis e o tempo que voce usaria para digitar parentesis
+desnecessarios. A associatividade tambem evita que voce tenha que ficar
+associando desnecessariamente e com isso voce pode enxugar ainda mais seu
+codigo..
+
+,-------------------------------------,-------------------------,
+| Operadores			      |     Associatividade	|
+|-------------------------------------'-------------------------|
+| () [] ->				Esquerda para a direita	|
+|								|
+| ! ~ ++ --  * & (tipo) sizeof		Direita para a esquerda |
+|								|
+| obs.:  * e & sao os simbolos que 				|
+| usamos com ponteiros..					|
+| (tipo) significa int, float, e 				|
+| essas declaracoes.. 						|
+| 								|
+| * / %					Esquerda para a direita |
+|								|
+| + -					Esquerda para a direita |
+|								|
+| << >>					Esquerda para a direita |
+|								|
+| < <= > >=				Esquerda para a direita |
+|								|
+| == !=					Esquerda para a direita |
+| 								|
+| &					Esquerda para a direita |
+|								|
+| ^					Esquerda para a direita |
+|								|
+| |					Esquerda para a direita |
+|								|
+| &&					Esquerda para a direita |
+|								|
+| ||					Esquerda para a direita |
+|								|
+| ?:					Direita para a esquerda |
+|								|
+| = += -= *= /= %= &= ^= |= <<= >>=	Direita para a esquerda |
+| 								|
+'---------------------------------------------------------------'
+
+Na mesma linha estao operadores de igual precedencia, e de cima pra baixo,
+a precedencia diminui (os de cima sao mais prioritarios do que os de baixo,
+assim como na vida real, hehe)
+
+Vamos explicar um pouco sobre a lista acima.
+
+A expressao 
+
+x = 1 + 2;
+
+equivale a
+
+(x = (1 + 2));
+
+Veja que no caso do = nos associamos parentesis da direita para a esquerda..
+
+Vejamos outro caso.. A expressao agora eh..
+
+*y = 1 + 2 * 3 + 5 * 4; /* y eh um ponteiro para um inteiro ok? */
+
+e equivale a
+
+((*y) = ((1 + (2 * 3)) + (5 * 4)));
+
+A precendencia diz que operacoes tem precedencia sobre as outras.. No nosso
+caso, 1 + 2 * 3 + 5 * 4, a multiplicacao tem mais prioridade, entao
+calculamos antes das somas.
+
+A associatividade eh usada quando temos 2 operacoes de igual prioridade. Ou
+seja, se vc ver 2 * 3 * 4 voce estarah na verdade vendo ((2 * 3) * 4), pois
+temos duas multiplicacoes de igual precedencia, e a multiplicacao tem
+associatividade da esquerda para a direita, ou seja, associamos primeiro a
+multiplicacao que estava a esquerda, e depois a seguinte.
+
+Outro bom exemplo eh 2 / 3 * 4, que eh ((2 / 3) * 4), jah que a divisao e a
+multiplicacao tem a mesma precedencia.
+
+Um exemplo de associatividade classico eh o seguinte:
+
+x = y += 4 
+
+Seria equivalente a (x = (y += 4)) jah que como = e += tem a mesma
+precendencia, a prioridade eh dada entao a quem estiver mais a direita, e
+assim por diante.
+
+2.4 Constantes
+
+As constantes em C podem ser basicamente de 4 tipos:
+
+	a) inteiro
+	b) caractere
+	c) racional
+	d) string
+
+2.4.1 Constantes inteiras
+
+Uma constante inteira pode estar na base octal, decimal ou hexadecimal. Uma
+constante na base octal eh representada por um numero no qual o primeiro eh
+0 e os seguintes sao os digitos de 0 a 7. 
+
+Ex.1: 017262 eh uma constante octal valida. 09267 nao eh uma constante octal
+valida.
+
+Uma constante na base decimal ou eh 0 ou eh comecada com um digito nao nulo,
+de 0 a 9. 
+
+Ex.2: 0 e 180289 sao constantes decimais validas. 01928 nao eh uma constante
+decimal.
+
+Uma constante na base hexadecimal eh comecada com 0x ou 0X e seguido de
+digitos de 0 a 9 e caracteres a, b, c, d, e, f.
+
+Ex.3: 0xffffff eh uma constante hexadecimal valida. 0xg ou 0x01 sao
+constantes hexadecimais invalidas.
+
+Uma constante unsigned termina em u ou U e uma constante long termina em l
+ou L.
+
+Ex.4: 8273L representa uma constante long int valida.
+
+2.4.2 Constantes caracteres
+
+Um caractere pode ser representado por um valor inteiro definido pela tabela
+ascii, ou atraves da representacao entre '' (aspas simples).
+
+Ex.1: 'a' ou 'A' ou '8' sao caracteres ascii validos.
+
+Caracteres ocupam 1 byte de memoria,  e tem mais 2 maneiras de serem
+representados, soh que dessa vez tendo em conhecimento apenas seus valores
+em ascii.
+
+'\ooo' onde ooo eh um numero em octal.
+
+Ex.3: '\013' ou '\005' sao caracteres ascii validos. '\19' nao eh um
+caractere ascii valido. '\51' representa o fecha parentesis ). Observe que
+'\051' eh o mesmo que '\51'.
+
+'\xhh' onde hh eh de um a dois digitos hexadecimais (de 0 a 9,  a .. f,
+A .. F).
+
+Ex.4: '\xb' ou '\xx5' sao caracteres ascii validos.
+
+Alguns caracteres devem ser representados com um \ na frente, para que nao
+haja confusao no programa:
+
+'\\'  -> eh uma \
+'\?'  -> eh uma ? 
+'\''  -> eh um ' (apostrofo ou aspas simples)
+'\"'  -> eh um " (aspas)
+
+2.4.2.1 Sequencias de escape
+
+Sequencias de escape produzem caracteres nao graficos, que realizam
+determinadas acoes especiais. Sao geralmente usados como marcadores para
+indicar uma nova linha, o fim de um arquivo, etc.
+
+\a (alerta) -> Produz um alerta visivel ou audivel. 
+\b (backspace) -> Muda a posicao atual 1 caractere antes.
+\f (form feed) -> Move a posicao atual para o inicio da proxima pagina.
+\n (new linha) -> Move a posicao atual p/ posicao inicial da proxima linha.
+\r (carriage return) -> Move a posicao atual p/ a posicao inicial da linha.
+\t (horizontal tab) -> Move a posicao atual p/ a proxima posicao de
+tabulacao definida na linha.
+\v (vertical tab) -> Move a posicao atual p/ a proxima posicao de tabulacao
+vertical definida.
+
+Ex.1: '\n' eh um caractere de nova linha. Quando impresso, uma nova linha eh
+criada e a escrita eh iniciada dela.
+
+2.4.2.2 Sequencias de trigrama
+
+Todas as ocorrencias num arquivo fonte das seguintes sequencias de tres
+caracteres (trigrama) sao substituidas pelo caractere correspondente.
+
+,----------,-----------,
+| Trigrama | Caractere |
+|----------|-----------|
+|    ??=   |     *     |
+|    ??(   |     [     |
+|    ??/   |     \     |
+|    ??)   |     ]     |
+|    ??'   |     ^     |
+|    ??<   |     {     |
+|    ??!   |     |     |
+|    ??>   |     }     |
+|    ??-   |     ~     |
+'----------'-----------'
+
+Substituicao eh feita no momento da compilacao, e as sequencias trigramas
+foram criadas porque alguns conjuntos de caracteres nao continham os
+caracteres aqui representados. Se voce utiliza um sistema novo,
+provavelmente isso nao passarah apenas de curiosidade. Eh apenas para fins
+de compatibilidade.
+
+2.4.3 Constante racional
+
+Uma constante pode ser tambem racional. Para isso, representamos com um .
+(ponto) no meio do numero.
+
+Ex.1:
+
+float x;
+x = 1.0;
+
+Veja que 1.0 eh um float valido. Dependendo da precisao do float, podemos
+colocar mais ou menos decimais, e tambem podemos colocar l ou L para
+especificar que a constante eh long double, ou f ou F para especificar que a
+constante eh float. Sem sufixo, a constante eh considerada double.
+
+Ex.2: 1.0L eh um long double, 1.0 eh double e 1.0f eh float.
+
+Podemos tambem usar expoentes, com (aeb), onde a eh um float, e b eh um
+inteiro que indica a potencia de 10 que deve ser multiplicada a a. Ex.:
+
+Ex.3:
+1e-2 significa 1 x 10^-2 = 1 x 0.01 = 0.01
+
+Ex.4:
+1.0e-1 significa 1.0 x 10^-1 = 1.0 x 0.01 = 0.01 
+
+2.4.4 Constantes string 
+
+Existem constantes que representam textos, em C. Sao textos entre aspas "".
+
+Ex.1: "Unsekurity Team!" eh uma string constante.
+
+Ex.2: "" eh uma string constante nula.
+
+
+3. Controle de Fluxo
+
+
+Chegamos finalmente a um otimo capitulo. Sem dominar controle de fluxo, voce
+nao programara bem em C. Controle de fluxo eh o termo que usamos para
+designar os meios que temos para alterar o fluxo de um programa. Fluxo eh a
+ordem em que o seu programa eh executado.
+
+Bem, suponhamos que voce queira fazer uma tarefa repetitiva.. Digamos, criar
+um arquivo texto com cada linha e seu respectivo numero. Para fins
+didaticos, vamos supor que tenhamos 10 linhas e queiramos que a 1a linha
+seja 0, a 2a seja 1, a 3a seja 2, e assim por diante ate que a ultima seja
+9.
+
+Sem controle de fluxo, voce teria de escrever isto:
+
+--corte aqui--
+
+#include <stdio.h>
+#include <stdlib.h>
+
+
+int main(int argc, char **argv, char **env) {
+ FILE *exemplo;
+
+ exemplo = fopen("exemplo1.txt","w"); /* funcao que abre um arquivo chamado
+					exemplo1.txt para escrita (w), mas
+				       se o arquivo nao existir, ele cria */
+
+ fprintf(exemplo,"%d\n",0);
+ fprintf(exemplo,"%d\n",1);
+ fprintf(exemplo,"%d\n",2);
+ fprintf(exemplo,"%d\n",3);
+ fprintf(exemplo,"%d\n",4);
+ fprintf(exemplo,"%d\n",5);
+ fprintf(exemplo,"%d\n",6);
+ fprintf(exemplo,"%d\n",7);
+ fprintf(exemplo,"%d\n",8);
+ fprintf(exemplo,"%d\n",9); /* funcao que escreve para o arquivo. */
+
+ fclose(exemplo); /* funcao que fecha o arquivo */
+
+ exit;
+
+}
+
+--corte aqui--
+
+
+Bem, deu para fazer, afinal, para nossos fins, que eh nos entrosar logo no
+mundo C e Hacking, o que importa eh que funcione! 
+
+Agora imagina ai se voce quisesse escrever 10000 numeros num arquivo.. Seria
+sacal, pra nao dizer impossivel, fazer do jeito que fizemos acima: escrever
+numero por numero. Ai entram os controles de fluxos para realizarmos tarefas
+repetitivas e tambem para tomadas de decisoes sobre que caminhos o fluxo
+deve seguir.
+
+Voce pode estar pensando: bah, mas que coisa idiota seria escrever 10000
+numeros num arquivo, eu nao me interesso nisso.. Entao seria a hora para
+parar e pensar: Como vc scanearia 10000 portas de um servidor numa dada rede
+? Faria um por um? Com certeza nao mano, ai vc se ve em apuros se nao souber
+controle de fluxo.
+
+Para mostrar a vantagem do controle de fluxo, veja como eu faria o programa
+anterior agora usando controles de fluxo:
+
+--corte aqui--
+
+#include <stdio.h>
+#include <stdlib.h>
+
+
+int main(int argc, char **argv, char **env) {
+ FILE *exemplo;
+ int i;
+
+ exemplo = fopen("exemplo1.txt","w"); /* funcao que abre um arquivo chamado
+                                        exemplo1.txt para escrita (w), mas
+                                       se o arquivo nao existir, ele cria */
+for(i=0;i<10;i++) {
+
+ fprintf(exemplo,"%d\n",i); /* funcao que escreve para o arquivo. */
+
+}
+
+ fclose(exemplo); /* funcao que fecha o arquivo */
+
+ exit;
+
+}
+
+--corte aqui--
+
+Poxa, nos livramos de muitos bytes!! Voce deve estar pensando: bah, sao
+apenas alguns bytes, prefiro do jeito anterior.. Ai vc tem que se lembrar do
+seu tempo: tempo eh dinheiro.. tempo eh precioso. Agora se vc disser: bah,
+tenho tempo e dinheiro de sobra.. Entao tah bem mano, faca como quiser!
+
+
+3.1 Bloco de comandos.
+
+Voce pode agrupar um conjunto de tarefas, comandos, etc.. usando chaves { }.
+
+O seguinte conjunto de comandos:
+
+x = y = 0;
+x++;
+++y;
+
+podem ser agrupadas em
+
+{
+x = y = 0;
+x++;
+++y;
+}
+
+3.2 IF-ELSE
+
+Bem, if-else eh um controlador do fluxo com o qual podemos fazer com quem
+um bloco de comandos seja executado se uma dada condicao for obedecida, e
+tambem pode fazer com que um bloco de comandos alternativo seja executado
+caso a condicao seja desobedecida.
+
+A sintaxe eh a seguinte:
+
+if (expressao) 
+  comando1
+else
+  comando2
+
+Ex.1:
+
+if (x == 2)
+ x += 1;
+else
+ x -= 1;
+
+Ex.2:
+
+if (!x) 
+{
+ ++x;
+ y = 1;
+}
+else 
+{
+ x = y = 0;
+}
+
+Ex.3:
+
+if (x=y)
+;
+
+Ex.4:
+
+if (x>1) {
+ x = 0;
+}
+
+No exemplo 1, se x for 2 (ou seja, se a expressao for verdadeira, ou >0)
+entao soma-se 1 a x. Caso contrario, diminui-se 1 de x.
+
+No exemplo 2, se !x for verdadeiro (ou seja, se x for falso, ou =0) entao o
+bloco de comandos 
+
+{
+ ++x;
+ y = 1;
+}
+
+eh executado. Caso contrario (ou seja, se !x for falso) entao o segundo
+bloco de comandos eh executado:
+
+{
+ x = y = 0;
+}
+
+No exemplo 3, se o valor retornado pela atribuicao x = y for nao nulo, entao
+nada eh feito. Caso contrario, nada eh feito tb! O comando ; que nao tem
+nada simplesmente nada faz.
+
+3.3 IF-ELSE-IF
+
+Esta eh uma tecnica para vc encadear varios if-else. As condicoes
+(expressoes) vao sendo verificadas ateh q uma das condicoes seja verdadeira,
+entao um bloco de comandos particular serah executado:
+
+if (expressao1) 
+  bloco1
+else if (expressao2)
+  bloco2
+else if (expressao3)
+ bloco3
+...
+else if (expressaon)
+ blocon
+else
+ blocofinal
+
+Vamos exemplificar:
+
+Ex.1:
+
+if (x == -1) 
+{
+  ++x;
+}
+else if (x == 0) 
+;
+else if (x == 1) 
+{
+ --x;
+}
+else
+{
+ x = 0;
+}
+
+O Exemplo acima faz com que x seja 0 no final.
+
+
+3.4 switch
+
+Esse controlador de fluxo eh uma estrutura de decisao multipla, que verifica
+se uma dada expressao combina com qualquer um dos possiveis resultados
+constantes, e desvia o fluxo do programa de acordo. A sintaxe:
+
+switch (expressao) {
+ case constante1:
+  comandos1
+ case constante2:
+  comandos2
+ default:
+  comandos
+}
+
+Se a expressao for igual a constante1, entao todos os comandos apartir de
+comandos1 sao executados, a nao ser q vc saia com o uso de break;
+Se a expressao nao for igual a contante1 mas for igual a
+constante2, entao comandos2 em diante eh executado.
+
+Ex.1: No exemplo 1 do topico 3.3 podemos fazer assim:
+
+switch (x) {
+ case -1:
+  ++x;
+  break;
+ case 0:
+  break;
+ case 1:
+  --x;
+  break;
+ default:
+  x = 0;
+}
+
+No exemplo acima, se x for -1, ele incrementa 1 e sai logo do switch com um
+break; de forma que os comandos logo adiante nao sao executados. Se x for 0
+ele apenas sai com um break; e se for 1, ele decrementa e sai. Se nenhum
+destes casos bater com a expressao, entao x eh zerado.
+
+Muita atencao com o break!
+
+switch (y) {
+ case 'a': case 'b': case 'c':
+ y = 'd';
+ break;
+ case 'e': 
+ case 'f':
+ case 'g':
+ y = 'h';
+ break;
+}
+
+No caso acima, se o caractere y for a b ou c, entao atribuimos 'd' a ele e
+com o break saimos do switch.
+
+Se vc tiver com duvidas nos topicos discutidos agora, recomendo que voce use
+da tentativa-erro: tente, erre, ateh aprender. Tambem pergunte a alguem que
+saiba mais que voce e possa ajuda-lo (nem sempre quem sabe quer ajudar).
+
+3.5 while
+
+while eh uma estrutura de laco (loop) que permite que um bloco de comandos
+seja executado enquanto uma expressao for verdadeira.
+
+while (expressao) 
+ blocodecomandos
+
+Ex.1:
+
+--corte aqui--
+#include <stdio.h>
+#include <stdlib.h>
+
+
+int main(int argc, char **argv, char **env) {
+ FILE *exemplo;
+ int i;
+
+ exemplo = fopen("exemplo1.txt","w"); /* funcao que abre um arquivo chamado
+                                        exemplo1.txt para escrita (w), mas
+                                       se o arquivo nao existir, ele cria */
+
+ i = 0
+ while (i<10)
+ {
+  fprintf(exemplo,"%d\n",i); /* funcao que escreve no arquivo */
+  i++;
+ }
+
+ fclose(exemplo); /* funcao que fecha o arquivo */
+
+ exit;
+
+}
+--corte aqui--
+
+
+No programa acima, enquando a expressao i<10 for verdadeira, o bloco de
+comandos 
+
+ {
+  fprintf(exemplo,"%d\n",i); /* funcao que escreve no arquivo */
+  i++;
+ }
+
+eh executado. 
+
+Podemos substituir o while anterio pelo seguinte:
+
+ while (i++<10)
+ {
+  fprintf(exemplo,"%d\n",i); /* funcao que escreve no arquivo */
+ }
+
+Entendeu ai? Ele primeiro compara i com 10 e depois de ter comparado, e a
+expressao ter sido valorada, entao ele incrementa i. Elimina a necessidade
+de colocar i++; dentro do bloco de comandos.
+
+Com a estrutura while jah eh possivel fazer muitas coisas! Quando voce
+quiser deixar um loop causado pelo while, vc usa break; Geralmente voce
+fara isso caso uma condicao excepcional ocorra..
+
+
+while (1)
+{
+ i++;
+ if (i == 20) break;
+}
+
+A estrutura acima faz com que o bloco de comandos seja executado ateh que i
+seja 20, e entao o fluxo escapara do loop. Veja que a estrutura acima nao eh
+recomendavel pois caso i comece com um valor 20 ou maior antes de entrar no
+loop, entao o break nunca ocorrera e o loop serah infinito! Pelo menos
+teoricamente, pq ateh la seu computador terah queimado ou vc tera morrido.
+
+3.6 for
+
+Esta eh uma estrutura de controle essencial para o newbie. Com ela, vc pode
+executar um bloco de comandos enquanto uma condicao for satisfeita, e
+quando nao for satisfeita, o fluxo pula fora do loop.
+
+for (inicializacao;condicao;incremento)
+ blocodecomandos
+
+A inicializacao consiste de um comando que eh executado antes de comecar o
+loop. A condicao eh aquela na qual o loop se mantem e o incremento eh o
+comando realizado sempre no termino da execucao de cada ciclo do loop.
+
+Ex.1:
+
+for (i=0;i<10;i++) 
+{
+ printf("%d\n",i);
+}
+
+Uma estrutura for para o loop infinito eh
+
+Ex.2:
+
+for (;;)
+{
+/* comandos vem aqui */
+}
+
+pode ser tb assim:
+
+Ex.3:
+
+for (;;)
+;
+
+
+Outra estrutura for:
+
+Ex.4:
+
+for(i=10000;i==0;--i) {
+ /* comandos vem aqui */
+}
+
+Observe tambem que voce pode aninhar estruturas de loop como while e for,
+para obter um loop de varias dimensoes.
+
+Ex.5:
+
+for (x=0;x<5;x++)
+{
+ for (y=0;y<7;y++)
+ {
+  /* comandos vem aqui */
+ }
+}
+
+Podemos combinar while, if, for, etc.. um dentro do outro, sem limitacoes
+logicas (apenas fisicas, q eh o seu computador).
+
+Dispomos tambem de um recurso mais avancado mas que muitos nao conhecem.
+Podemos, ao declarar uma estrutura for no seu codigo, colocar multiplas
+inicializacoes, incrementos e condicoes.
+
+Para multiplas inicializacoes, separamos por virgula as inicialicacoes.
+O mesmo faz-se para o incremento, e para colocar multiplas condicoes, basta
+fazermos uso do operador && ou ||, sinta-se a vontade.
+
+Um exemplo do que falo eh o seguinte:
+
+for (i=0,j=10;(i<10)&&(j==4);i++,++j) {
+
+/* comandos vem aqui */
+
+}
+
+3.7 do-while
+
+Bem, esta estrutura de loop (repeticao ou laco) chamada do-while eh equivale
+ao while, ou seja, executa um bloco de comandos enquanto uma condicao for
+satisfeita, mas no while, a condicao eh testada antes do loop, e no
+do-while a condicao eh testada sempre no final do loop. A sintaxe eh
+
+do 
+ bloco
+while (condicao);
+
+Ex.1:
+
+do {
+i++;
+}
+while (i<5);
+
+No do-while, o bloco de comandos sempre eh executado no 1o loop, e os demais
+loops soh haverao dependendo da condicao no final.
+
+
+3.8 break e continue
+
+Faz-se necessario a existencia de comandos que permitam-nos sair de um loop
+ou pular um loop sem executar o codigo. Para isso existem os comandos break
+e continue.
+
+Quando o fluxo encontra um comando break; no bloco de comandos da estrutura
+de loop, entao o fluxo desvia para fora da estrutura de loop, e nenhum
+codigo mais eh executado dakela estrutura nem nenhuma condicao eh
+verificada. 
+
+Jah quando o fluxo do programa encontra um comando continue; a acao tomada
+eh abandonar a execucao e pular para o proximo caso, ou seja, pular para o
+fim do bloco de comandos. O fluxo, porem, continua na estrutura de loop.
+
+O break pode ser usado em for, while, do e switch. Jah o comando continue
+nao se aplica a switch.
+
+Ex.1:
+
+for (x=0;x<y;x++) {
+ if (nota[x] < 7) {
+  continue;
+ }
+ printf("Nota %d eh %d \n",x,nota[x]);
+}
+
+O exemplo acima imprime na tela apenas as notas maiores ou iguais a 7.
+
+
+3.9 goto
+
+Bem, o goto eh um comando que utilizamos para pular incondicionalmente para
+qualquer regiao do programa. A comunidade de programadores desrecomenda o
+uso de goto's por sujar o codigo, mas se voce estah fazendo sua
+ferramentazinha e coisas soh para voce, voce tem total liberdade de usar
+goto's.
+
+Goto's apontam para Rotulos ou Labels, que sao marcadores num programa. Se
+voce jah viu em assembly, cada instrucao tem um endereco de memoria. O que
+um rotulo faz eh referenciar aquela regiao da memoria numa string que pode
+ser acessada de qualquer parte do programa. O programador em C nao tem que
+se preocupar com esses problemas da programacao em assembly, mas eh sempre
+bom aqui dar uns toques para que voce se acostume logo que a linguagem C eh
+apenas logica, pq a linguagem real eh assembly.
+
+Considero exemplos o melhor meio de aprender a programar em C. Muita
+explicacoes para mim nunca foram suficientes ou tao esclarecedoras quanto
+alguns exemplos corretos. Vejamos:
+
+Ex.1:
+
+if (x>10) 
+{
+goto ponto1;
+}
+else 
+{
+x++;
+}
+ponto1:
+printf("%d",x);
+
+Espero que este exemplo tenha sido bastante esclarecedor. Nao podemos usar
+goto sem usar pelo menos um label, e o que chamo label eh uma palavra
+qualquer terminada em dois pontos.
+
+este_eh_um_label:
+
+Tendo um label, para fazermos o fluxo do programa pular para onde ele
+aponta, basta usar o seguinte
+
+goto este_eh_um_label;
+
+O fluxo eh desviado imediatamente e qualquer loop serah abandonado.
+
+A desvantagens do uso de goto's eh a dificuldade que voce tera em ler depois
+o seu codigo. Muitos labels sao de dificil localizacao, e assim voce levara
+mais tempo. Por isso, recomenda-se o uso das estruturas anteriormente
+explanadas. Pode-se fazer praticamente tudo sem o uso de goto's. 
+
+Bem, este eh o fim deste capitulo, tente treinar muito usando todas estes
+controladores de fluxo. Mais uma vez, gostaria de lembra-lo que nem sempre
+todos estao com vontade de ajuda-lo nesta caminhada, entao eh bom ser
+realista! Nao se iluda atras de ajuda no IRC. Recomendo voce procurar amigos
+de verdade que possam ajuda-lo. Mas tambem nao seja amigo de alguem soh pq
+ela sabe das coisas.
+
+
+4. Variaveis
+
+
+Este capitulo visa expor a voce os diversos tipos de variaveis que podemos
+declarar em C e como declara-las. Mais uma vez tento abrir-lhe os olhos para
+que nao soh leia mas tambem pratique! Force os valores que as variaveis
+possam receber e tente entender como a coisa funciona. 
+
+4.1 Variaveis e Escopo
+
+As variaveis em C sao declaradas sempre antes de comecar as linhas
+de comando propriamente ditas. Podemos declarar uma variavel dentro ou 
+fora de uma funcao. Se, por exemplo, voce declarar uma variavel dentro de 
+uma funcao (entre as chaves dela) entao voce devera fazer isso sempre 
+logo apos o "abre chaves", ou seja, sempre no comeco da funcao. Estas 
+variaveis declaradas dentro de funcoes sao chamadas variaveis locais. 
+
+O Escopo de uma variavel local (Escopo de uma variavel eh a area do codigo 
+em que ela pode ser usada..) eh a regiao que vai desde sua declaracao ateh 
+o fim da funcao, que termina com um }. Voce pode tambem declarar variaveis 
+fora das funcoes, e estas declaracoes devem ser feitas antes de todas as 
+funcoes, logo no comeco do arquivo. Estas sao as variaveis globais, e pelo 
+nome, o escopo destas variaveis eh a regiao desde sua declaracao ateh o 
+fim do arquivo, ou mesmo no fim de outros arquivos. Uma variavel global 
+pode ser usada dentro das demais funcoes do programa, mas nao pode
+ser inicializada fora de uma funcao. Assim, recomenda-se inicializar sua
+variavel na funcao main() que eh a primeira funcao a ser executada quando 
+seu programa eh rodado.
+
+Duas variaveis tem o mesmo escopo se e somente se seus escopos terminam no
+mesmo ponto.
+
+Podemos tambem declarar variaveis dentro de blocos de comandos, como em
+estruturas if e for, e o escopo de tais variaveis serah apenas este bloco.
+
+4.2 Tipos de variaveis
+
+Os tipos mais comuns de variaveis sao os seguintes:
+
+        a) inteiro
+        b) racional
+        c) caractere
+
+Existe tambem um outro tipo, que eh apenas uma variacao usada para certos
+fins:
+
+	d) ponteiro (apontador)
+
+Toda variavel eh declarada assim:
+
+(especificador-de-tipo) (tipo)  nome_da_variavel;
+
+E pode ser declarada e inicializada assim:
+
+(especificador-de-tipo) (tipo) nome_da_variavel = (constante);
+
+Onde (constante) eh uma constante do tipo (tipo).
+
+Ex.1:
+
+int x = 1;
+
+int x, y=2, z;
+
+char m = 'a';
+
+4.2.1 Inteiro
+
+Uma variavel inteira eh aquela que assume valores inteiros.
+
+O tipo basico para um inteiro eh int, ou seja, declaramos um inteiro assim:
+
+int x;
+
+ou
+
+long int x;
+
+O valor de um inteiro assim declarado eh um inteiro de 32bits (estou
+considerando aqui os Linuxes cujo kernel eh 2.2.* num Pentium II) ou seja,
+pode ir de -2147483648 a 2147483647. Inteiros de 16 bits ainda podem ser 
+declarados, bastando anexar a palavra short antes de int:
+
+short int x;
+
+ou
+
+short x;
+
+Isso faz com que x varie de -32768 a 32767. Um inteiro pode ser
+declarado para ser positivo apenas, bastando colocar a palavra unsigned 
+(sem sinal).
+Portanto
+
+unsigned shor int m;
+
+seria uma declaracao no qual os valores de m podem ir de 0 a 65535 (2^16 -
+1) e ..
+
+unsigned long int n;
+
+seria uma declaracao no qual os valores de n podem ir de 0 a 4294967296
+(2^32 - 1).
+
+Segue aqui uma tabela com os principais tipos de declaradores para inteiros:
+
+,---------------------,--------------------,
+|       16 bit        |       32 bits      |
+|---------------------|--------------------|
+| short               | long               |
+| short int           | long int           |
+| unsigned short int  | unsigned long int  |
+| signed short int    | signed long int    |
+|                     | unsigned int       |
+|                     | signed int         |
+'---------------------'--------------------'
+
+4.2.2 Racional
+
+Uma variavel racional (ou ponto flutuante) eh aquela que assume valores
+racionais.
+
+Podemos declarar assim:
+
+float x1;
+
+ou
+
+double x2;
+
+Na primeira declaracao, temos x1 um ponto flutuante de precisao simples, 
+e x2 um ponto flutuante de precisao dupla, ou seja, x2 pode ter 
+mais casas decimais do que x1. Voce tambem pode usar unsigned, long e 
+short para float:
+
+unsigned float x3;
+
+,----------------,-----------------,
+| float          | double          |
+| short float    | short double    |
+| long float     | long double     |
+| unsigned float | unsigned double |
+| signed float   | signed double   |
+'----------------'-----------------'
+
+4.2.3 Caractere
+
+Um caractere em ASCII - American Standart Code for Information
+Interchange, tem um valor que varia de 0 a 255. Ou seja, quando voce declara
+um caractere, voce estah na verdade declarando um inteiro de 0 a 255.
+
+char letra;
+
+Eh importante voce saber boa parte da tabela ASCII, principalmente se voce 
+quer lidar com baixo nivel. O seguinte programa em C exibe a tabela
+para voce:
+
+-- corte aqui --
+#include <stdio.h>
+#include <stdlib.h>
+
+void main(int argc, char **argv) {
+ unsigned char i;
+ for (i=0;i<255;++i) {
+  printf("%d -> %c\n",i,i);
+ }
+ exit(0);
+}
+-- corte aqui --
+
+Para compilar o programa acima, no linux, digite gcc arquivo.c -o
+arquivo. (voce pode trocar o gcc por cc, que existe em mais ambientes 
+UNIX). A linha de execucao preferida eh ./arquivo > ascii.txt, pois assim 
+basta ler o conteudo de ascii.txt para analisar a tabela.
+
+Por exemplo, a letra A (maiusculo) tem o valor 65. Assim, apos
+declarado a variavel
+
+unsigned char c;
+
+voce poderia ter feito..
+
+c = 'A';
+
+ou
+
+c = 65;
+
+pois o resultado seria o mesmo.
+
+4.2.4 Ponteiro 
+
+Um ponteiro, ou apontador (sao as notacoes que mais uso), eh uma variavel
+que aponta para uma determinada area da memoria. Seu valor eh um endereco da
+memoria, que eh um inteiro em hexadecimal. Por ser inteiro, pode-se realizar
+algumas operacoes aritmeticas, como se fosse realmente um inteiro (mas
+mantenha em mente que eh um endereco de memoria). Chamamos de apontador
+porque podemos utilizar o operador unario * para acessar ao valor da memoria
+que o nosso ponteiro armazena. Como a memoria eh enderecada em bytes, este
+operador * retorna do byte para o qual o ponteiro 'aponta'. A declaracao eh
+simples, basta colocar um asterisco * antes do nome da variavel:
+
+int *x;
+float *y;
+char *s;
+
+Podemos tambem colocar o * no final do declarador. Ex.:
+
+int* x;
+float* y;
+char* s;
+
+Feito a declaracao, teremos que x conterah o endereco da memoria do 1o byte
+no qual estah um inteiro. Como um inteiro ocupa 4 bytes (32 bits), entao x
+conterah o endereco apenas do 1o byte. Para acessar, *x conterah o valor 
+dos 4 bytes. O mesmo para y e s.
+
+Para um inteiro, o valor nulo eh 0, para um float, eh 0.0, para um char, eh
+'\0', mas e para um ponteiro? Nesse caso eh NULL, que eh definido em
+/usr/include/malloc.h como (char *)0. Assim, se vc comparar um ponteiro
+qualquer e ele apontar para NULL, entao ele nao apontarah para nada.
+
+4.2.4.1 Operador unario &
+
+Apenas recordando, & eh um operador unario utilizado junto a variaveis para
+determinar o endereco de memoria onde estao armazenadas. Sua sintaxe eh a
+seguinte:
+
+Ex.1: &x eh o endereco de memoria de uma variavel declarada com int x; ou
+char x;
+
+4.2.4.2 Operador unario *
+
+Este operador aqui eh novo neste tutorial. Eh utilizado para acessar ao
+valor da memoria para o qual um ponteiro aponta.
+
+Ex.1:
+
+int *pointerx;
+
+pointerx armazena o endereco de memoria
+*pointerx armazena o valor contido nakele endereco de memoria (nao apenas o
+valor daquele byte e sim o daquele byte e os seguintes ateh alcancar um int)
+
+Ex.2:
+
+arquivo.c
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+int *pointerx, *pointery;
+int i;
+for(i=0;i<10;i++) {
+printf("%x -> %d\n",pointerx++,*pointerx);
+printf("%x -> %d\n",pointery++,*pointery);
+}
+exit;
+}
+---corte aqui---
+
+Compilando com 
+
+gcc arquivo.c -o arquivo
+
+Temos:
+
+unsekurity:~# ./arquivo
+80494c4 -> 134517992
+80494b0 -> 0
+80494c8 -> 1073818640
+80494b4 -> -1
+80494cc -> 1073781264
+80494b8 -> 0
+80494d0 -> 1074716332
+80494bc -> -1
+80494d4 -> 134513426
+80494c0 -> 0
+80494d8 -> 1073943016
+80494c4 -> 134517992
+80494dc -> 1074153896
+80494c8 -> 1073818640
+80494e0 -> 134513474
+80494cc -> 1073781264
+80494e4 -> 0
+80494d0 -> 1074716332
+80494e8 -> 1
+80494d4 -> 134513426
+unsekurity:~#
+
+Preste atencao que o valor inicial de pointerx eh um endereco de memoria
+cujo valor eh 134517992, ou seja, jah existe algo armazenado la. Isso pq o
+apontador para inteiro nao foi inicializado (foi somente declarado). Para
+isso voce tem q atribuir a ele um endereco de memoria livre. Existem
+basicamente 2 metodos para isso.
+
+1o metodo -> declarando um inteiro e fazendo o apontador apontar para este
+inteiro.
+
+Ex.3: 
+int x, *y; /* sim, podemos declarar um inteiro e um apontador para inteiro
+              na mesma linha */
+y = &x; /* faz y apontar para x */
+
+Isso eh especiamente util pois assim as outras funcoes e programas nao vao
+mecher nakela area de memoria, jah que estah sendo oficialmente ocupada por
+uma variavel (isso se voce nao alterar a tal variavel criada). Tambem vale
+para outros tipos de variaveis:
+
+Ex.4:
+char a, *b;
+b = &a;
+
+2o metodo -> usar uma funcao especial para retornar um endereco de memoria
+que caiba este inteiro (ou qlq tipo que desejar). Esta funcao eh um alocador
+de memoria.
+
+Os alocadores de memoria mais comuns sao malloc e calloc, que iremos
+explicar mais adiante, mas por enquanto, voce pode utilizar o seguinte:
+
+Ex.5:
+int *x;
+x = malloc(4);
+
+A funcao malloc (Memory ALLOCation) separa um espacozim na memoria
+suficiente para 4 bytes, e retorna o endereco do primeiro desses bytes. Voce
+pode utilizar assim tambem:
+
+Ex.6:
+char *y;
+y = malloc(sizeof(char));
+
+ou
+
+Ex.7:
+float *f;
+f = malloc(sizeof(float));
+
+Apos ter feito uso do apontador, voce pode liberar a memoria com a funcao
+free():
+
+free(f);
+free(y);
+free(x);
+
+O unico parametro de free() eh o apontador cuja memoria foi separada com
+malloc.
+
+4.3 Variaveis multidimensionais
+
+Acabamos de ver anteriormente os 4 tipos basicos de variaveis. Mas os tipos
+que aprendemos sao simples. Soh armazenam um unico valor. Se, por exemplo,
+queremos guardar informacoes sobre as portas de um servidor. Supondo que
+tenhamos scaneado 1024 portas, e queiramos guardar tudo o que sabemos em
+variaveis. Voce declararia 1024 variaveis uma por uma? Com certeza nao,
+entao voce teria que precisar das arrays ou listas de variaveis. Muitos
+chamam de vetor ou matriz, mas aqui preferimos chamar de array.
+
+4.3.1 Unidimensionais
+
+Uma variavel unidimensional eh mais conhecida por lista ordenada. Uma lista
+de inteiros pode ser declarada da seguinte forma:
+
+Ex.1:
+
+int nome[10];
+
+Ex.2:
+
+int variavel[1024];
+
+Assim sao criadas, numa soh declaracao, multiplas variaveis. Para
+acessa-las, usamos o nome da variavel e o indice da variavel que queremos
+manipular. Os indices comecam a ser contados do 0.
+
+No exemplo 1, a primeira variavel da lista eh referenciada como nome[0], a
+segunda eh nome[1], a terceira eh nome[2], a quarta eh nome[3], e assim por
+diante, ateh a decima, que eh nome[9]. A variavel nome[10] nao existe.
+
+No exemplo 2, o mesmo se verifica, e assim, a ultima variavel eh
+variavel[1023].
+
+Podemos utilizar estas variaveis como se fossem simples inteiros:
+
+nome[0] = 1;
+nome[1] = nome[0] + nome[2];
+
+Em lugar do indice podemos usar uma variavel inteira, como a seguir:
+
+for (i=0;i<10;i++) {
+ nome[i] = nome[i] + i;
+}
+
+Assim como declaramos e usamos uma lista de inteiros e seus membros, o mesmo
+podemos fazer para racionais e caracteres. Para os racionais, a semelhanca
+eh muito forte, entao nao iremos perder tempo discutindo o sexo dos anjos.
+
+4.3.2 Multidimensionais
+
+Quando falamos anteriormente de variaveis unidimensionais, nos referimos a
+variaveis cuja listagem cresce numa soh dimensao. Agora nos referimos a
+variaveis multidimensionais a variaveis com multiplos indices, que se
+expandem em multiplas diferentes direcoes independentes.
+
+Declaramos uma variavel multidimensional colocando quantos [numero] a
+direita quantos forem as dimensoes:
+
+Ex.1:
+
+char var[18]; 
+
+Aqui, var tem 1 dimensao, com 18 itens.
+
+Ex.2:
+
+char var[14][15];
+
+Aqui, var tem 2 dimensoes, e tem 14 x 15 = 210 itens.
+
+Ex.3:
+
+float f[10][10][10];
+
+Aqui, f tem 3 dimensoes, e tem 10 x 10 x 10 = 1000 itens.
+
+4.3.3 Apontadores e Arrays
+
+Quando declaramos um array, digamos:
+
+int x[3];
+
+No referenciamos a x[0], x[1] e x[2] aos 3 inteiros criados. O nome x
+referencia-se ao endereco de memoria do 1o byte do 1o item do array. Ele eh
+que armazena o endereco da memoria onde comeca o array.
+
+Ex.1:
+
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[], char *envp[]) {
+int x[3];
+printf("%p %p\n",x,&x[0]);
+exit;
+}
+---corte aqui---
+
+O programinha acima mostra que x contem o endereco de memoria do primeiro
+byte do primeiro item da lista x.
+
+O mesmo obviamente ocorre com listas de outros tipos. 
+
+Ex.2:
+
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char argv[][], char envp[][]) {
+char str[] = "Unsekurity Team";
+printf("%s %s\n",str,&str[0]);
+exit;
+}
+---corte aqui---
+
+Ex.3:
+
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[], char *envp[]) {
+char str[] = "Unsekurity Team";
+if (str == &str[0]) {
+printf("Yeah\n");
+}
+else {
+printf("Oh shit\n");
+}
+exit;
+}
+---corte aqui---
+
+Verifique o programa acima! Ele mostra que str eh igual ao endereco do
+1o byte do 1o item da lista str[].
+
+4.3.4 O operador sizeof
+
+O operador sizeof tambem pode ser utilizado para saber o tamanho em bytes de
+um array. O valor que eh retornado eh o total de itens multiplicado pelo
+tamanho de cada item.
+
+Ex.1:
+
+int x[10], y;
+y = sizeof(x);
+
+O valor de y serah 40, que eh 4 (tamanho de um inteiro) vezes 10 (tamanho do
+array).
+
+Ex.2:
+
+int x[14][15];
+
+Neste caso, o sizeof(x) sera 14 x 15 x 4 = 210 x 4 = 840 bytes.
+
+4.4 Strings
+
+Strings sao arrays de caracteres. Simples, nao? Qualquer texto pode ser
+representado como uma lista ordenada de caracteres.
+
+Ex.1:
+
+char titulo[20];
+
+A declaracao acima cria uma lista de 20 caracteres. Com essa array, voce
+podera representar todas as palavras que tenham ateh 20 digitos. 
+
+A atribuicao de valores a strings podem ser feitos assim:
+
+Ex.2:
+
+titulo[0] = 'U';
+titulo[1] = 'n';
+titulo[2] = 's';
+titulo[3] = 'e';
+titulo[4] = 'k';
+titulo[5] = 'u';
+titulo[6] = 'r';
+titulo[7] = 'i';
+titulo[8] = 't';
+titulo[9] = 'y';
+titulo[10] = ' ';
+titulo[11] = 't';
+titulo[12] = 'e';
+titulo[13] = 'a';
+titulo[14] = 'm';
+titulo[15] = '!';
+titulo[16] = '\0';
+
+Mas este tipo de atribuicao nao compensa. Muito desgastante e obviamente
+desperdica nosso tempo. Qual seria entao o outro meio mais facil de atribuir
+valores a uma string?
+
+Para fazer a atribuicao corretamente, temos que fazer uso da funcao strcpy
+ou strncpy, que logo mais discutiremos mais a fundo e dos perigos que voce
+corre! Estas funcoes tem defeitos que permitem a voce acesso root.. Mas se
+acalme e continue lendo pq nao eh assim facil como voce tah pensando.
+
+4.4.1 strcpy e strncpy
+
+A funcao strcpy copia uma string para uma string. Vejamos sua sintaxe:
+
+Digite 'man strcpy' no seu terminal unix. 
+
+-------------
+NAME
+       strcpy, strncpy - copy a string
+
+SYNOPSIS
+       #include <string.h>
+
+       char *strcpy(char *dest, const char *src);
+
+       char *strncpy(char *dest, const char *src, size_t n);
+
+DESCRIPTION
+The  strcpy() function copies the string pointed to be src (including
+the terminating 0' character) to the
+array pointed to by dest.  The strings may not overlap, and the
+destination string dest must be large enough
+to receive the copy.
+
+The strncpy() function is similar, except that not more than n bytes
+of src are copied. Thus, if there is no
+null byte among the first n bytes of src, the result wil not be
+null-terminated.
+
+In the case where the length of src is less than that of n, the
+remainder of dest will be padded with nulls.
+
+RETURN VALUE
+The strcpy() and strncpy() functions return a pointer to the
+destination string dest.
+-------------
+
+A sintaxe ai eh
+
+       char *strcpy(char *dest, const char *src);
+
+Isso significa que o primeiro parametro eh uma string e o segundo eh uma
+string constante. Uma string constante eh o que vemos assim: 
+
+
+"Unsekurity Team!"
+
+ou
+
+"Joaquim"
+
+Portanto, para fazer o que fizemos no exemplo 2 anteriormente, bastaria o
+seguinte:
+
+
+strcpy(titulo,"Unsekurity team!");
+
+
+Esse comando resumiria todos os outros. O valor retornado pela funcao eh um
+ponteiro (jah jah iremos explicar) para a string de destino.
+
+A funcao strncpy eh identica, mas ela copia n caracteres apenas.
+
+Agora voce deve ter se perguntado: o que acontece se voce tentar encher uma
+string com uma maior que ela? Ai que vem muitos conceitos que cercam o
+hacking, como o buffer overflow. Nosso objetivo aqui nao eh enfatizar essa
+tecnica, mas outros textos do Unsekurity Team falam muito melhor do que falo
+aqui sobre o assunto.
+
+Mas o problema que vemos aqui com o strcpy eh que esta funcao vai copiando
+para uma dada regiao da memoria os caracteres ateh que ela encontre um
+caractere finalizador, conhecido como '\0' ou cujo valor eh 0. Podemos com
+isso sobrescrever areas da memoria importantissimas, e com isso, obter algum
+tipo de poder sobre o sistema.
+
+Portanto, tenha muito cuidado no uso desta funcao. Verifique sempre o
+tamanho do buffer e do texto que iremos passar para o buffer.
+
+4.4.2 Declarando e Inicializando strings
+
+A declarao de uma string consiste na sintaxe
+
+char nome_da_string[numero];
+
+Mas tambem podemos declarar uma string e atribuir-lhe logo seu valor inicial
+(que chamamos de inicializar uma variavel). Para isso, usamos a seguinte
+sintaxe:
+
+char nome_da_string[numero] = {
+
+'U', 'n', 's', 'e', 'k', 'u', 'r', 'i', 't', 'y',
+' ', 'T', 'e', 'a', 'm', '!'
+
+};
+
+ou mais simplesmente
+
+char nome_da_string[numero] = "Unsekurity Team!";
+
+4.4.3 Nao ha meio mais simples que strcpy ou strncpy ?
+
+Nao podemos simplesmente fazer 
+
+nome_da_string = "Unsekurity Team!";
+
+Pois nome_da_string, como vimos antes, eh o endereco de memoria em
+que comeca a string (cujo final eh '\0' ou 0, e dai precisamos apenas saber
+onde comeca uma string), e qualquer texto entre aspas "" eh uma string
+constante cujo endereco na memoria eh outro local. Assim, como
+nome_da_string eh o endereco de memoria que nao muda, nao podemos
+atribuir-lhe outro endereco de memoria distinto do seu (e que eh
+temporario). Alias, nao podemos mudar o endereco da memoria em q um inteiro,
+um caractere ou um racional reside! Eh para isso que existem ponteiros.
+
+Agora vc deve estar se perguntando como funciona a funcao strcpy. Ela
+funciona copiando caractere por caractere apenas os seus valores (e nao o
+endereco de memoria de cada caractere) para cada item da string, que eh um
+array de caracteres.
+
+4.5 Aplicacoes especiais dos apontadores
+
+4.5.1 Apontadores para caracteres
+
+Existe algo especial no conceito de apontadores que ainda nao visualizamos
+no texto. Ja podemos criar variaveis multidimensionais, mas que tem tamanho
+fixos. Mas quando precisarmos de variaveis multidimensionais de tamanhos
+variaveis? Para isso usamos apontadores para caracteres. Podemos com
+apontadores simular variaveis multidimensionais de tamanhos variaveis, cujo
+tamanho pode alterar no decorrer da execucao do programa.
+
+Sabemos que a memoria de um computador da arquitetura Von Neumann eh uma
+sequencia de bytes ordenados, ou seja, temos um 1o byte, temos um 2o byte, e
+assim por diante. Sabemos que um caractere ocupa o tamanho de 1 byte. Assim,
+podemos armazenar uma 'string' que eh uma sequencia de caracteres com uma
+sequencia de bytes consecutivos, bastando apenas saber onde comeca a string
+e onde termina. Para saber onde comecaremos a ler a string, basta saber o
+endereco do byte no qual estah armanzenado o 1o caractere. Para saber onde
+termina, nao precisamos do endereco do ultimo byte, basta apenas que o
+ultimo byte da sequencia armazene o valor 0 ou '\0' em ascii, que eh o
+delimitador do final de arquivos, de strings, etc.
+
+Jah sabendo como uma string eh armazenada na memoria, o apontador de
+caractere nos prove um meio muito pratico (porem as vezes complicado) para
+acessar a string localizada naquela area da memoria. Para isso, basta termos
+acesso ao endereco do byte do 1o caractere. Nosso apontador para caracteres
+vai apontar inicialmente para este byte, e se formos somando 1 unidade, o
+apontador irah passar a apontar para o proximo byte, e se subtrairmos 1
+unidade, o apontador ira passar a apontar o byte anterior. Ou seja, apenas
+usando o operador ++ e -- iremos lendo os caracteres que desejamos. Vamos
+assim usando ++ pra ir lendo o string ateh encontrarmos um caractere nulo
+'\0' ou 0.
+
+O uso de apontadores para caracteres a fim de substituir o uso de array de
+caracteres soh deve ser feito se voce dominar plenamente esta tecnica, que
+as vezes se torna essencial para realizar coisas mais avancadas.
+
+No topico 4.3.3, vimos que se declararmos um array, o nome do array servirah
+para nos referirmos ao endereco do 1o item da lista. Com isso, quando
+declaramos uma string via array de caracteres, o nome do array conterah o
+endereco da memoria onde a string estarah armazenada, e esse endereco pode
+ser atribuido a um ponteiro.
+
+Veja:
+
+char nome[] = "Unsekurity Team";
+char *nomep;
+
+A atribuicao
+
+nomep = nome;
+
+eh valida, jah que a variavel nome contem o endereco da string declarada, e
+nomep eh um apontador que, logicamente, passarah a apontar (ou a se
+referir) a string nome.
+
+Mas a atribuicao
+
+nome = nomep;
+
+eh invalida, jah que nome eh o endereco onde estah armazenado o array
+nome[], e assim, nao pode mudar. Ou seja, a basica diferenca entre um array
+e um apontador eh que o endereco armazenado numa eh constante (nao muda)
+enquanto que o endereco na outra eh alteravel.
+
+Muitas funcoes recebem como parametro um apontador para caracteres, e isso
+jah eh suficiente para que a funcao tenha acesso a string armazenada na
+memoria.
+
+Vejamos alguns exemplos que podem ajuda-lo a consolidar mais as ideias:
+
+apontador1.c
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[], char *envp[]) 
+{
+ int i;
+ char *var1;
+ char var2[] = "Unsekurity Team";
+ printf("String var2 eh:\n");
+ for(i=0;;i++)
+ {
+  if (!var2[i]) /* se var2[i] eh 0 */
+  {
+   printf("\nFim da string var2\n");
+   break;
+  }
+  else /* se var2[i] nao eh 0 */ 
+  {
+   printf("%c ",var2[i]);
+  }
+ }
+ var1 = var2; /* aqui var1 passarah a apontar p/ a string var2 */
+ printf("String apontada por var1 eh:\n");
+ for(i=0;;i++) 
+ {
+  if (!*(var1+i)) /* se *(var1+i) eh 0 */
+  {
+   printf("\nFim da string var1\n");
+   break;
+  }
+  else
+  {
+   printf("%c ",*(var1+i));
+  }
+ }
+}
+---corte aqui---
+
+Compilando e executando, temos:
+
+unsekurity:~# gcc apontador1.c -o apontador1
+unsekurity:~# ./apontador1
+String var2 eh:
+U n s e k u r i t y   T e a m
+Fim da string var2
+String apontada por var1 eh:
+U n s e k u r i t y   T e a m
+Fim da string var1
+unsekurity:~#
+
+Verifique que quando fazemos
+
+var1 = var2;
+
+Entao var1+0 serah o endereco de memoria do item var2[0], que eh &var2[0],
+var1+1 serah o endereco de memoria do item var2[1], que eh &var2[1], e de
+uma forma geral, var1+i eh o endereco de memoria do item var2[i], que eh
+&var2[i]. Isso pq o tamanho do item que tratamos eh unitario (um caractere
+mede um byte). Se estivessemos tratando com inteiros de 32 bits, em vez de
+somar de 1 em 1 para ir lendo os valores, teriamos que somar de 4 em 4.
+
+Assim, *(var1+0) serah var2[0], *(var1+1) serah var2[1], *(var1+2) serah
+var2[2], *(var1+3) serah var2[3] e assim por diante. *(1) eh o valor que
+estah no primeiro byte de memoria, *(2) eh o valor que estah no segundo, e
+assim por diante.
+
+Para ir lendo a memoria atraves de apontadores, recomenda-se manter
+inalterado o valor do local da memoria em que voce comecou a analisar, sob
+risco de voce nao saber mais voltar ao inicio. Assim, evite construcoes como
+
+*(var1++);
+
+ou
+
+*(++var1);
+
+ou alterar o valor do apontador em si. Para ir lendo, eh melhor que faca:
+
+*(var1+i);
+
+e ir incrementado o valor de i. Assim, o valor do apontador se mantem
+inalterado, e a expressao var1+i retorna um endereco, que atraves do
+operador unario *, pode-se acessar o valor.
+
+Como aqui nao estamos alterando o valor do apontador, pode-se utilizar var2,
+jah que *(var2+i) eh o mesmo que var2[i].
+
+Quando voce faz
+
+*(var1++);
+
+O apontador passarah a apontar o 2 caractere, enquanto que em
+
+*(var1+(i++));
+
+O apontador continuarah a apontar sempre o 1 caractere, apesar da expressao
+acima retornar o i-esimo caractere.
+
+Para finalizar, vejamos o seguinte esquema:
+
+          _________________
+         |                 |
+         |                 V
+ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+|_|_|_|_|_|_|_|_|_|_|_|_|_|U|n|s|e|k|u|r|...
+         A                 B
+
+
+ ,---> este eh um apontador para char.
+ _        _
+|_| ---> |_| -> cada um dessas casinhas eh um char.
+         |_|
+         |_|
+         |_|
+         |_|
+         |_|
+
+
+4.5.2 Apontadores para apontadores.
+
+Voce deve ter visto acima a semelhanca entre um apontador e um array
+(qualquer que seja o tipo). Um apontador para um tipo simples de variavel
+(apontador para um tipo nao apontador) simula muito bem uma lista de
+variaveis, ou seja, um array, um vetor. Isso possibilita arrays de tamanhos
+variaveis, que podem mudar no percurso do programa. Mas e as variaveis
+multidimensionais, aquelas que tem 2 ou mais dimensoes, como podemos
+simula-las?
+
+Para isso, usamos uma tecnica muito importante chamada apontadores para
+apontadores. Sim. Vejamos o seguinte esquema:
+
+ ,--> apontador para apontadores de caracteres.
+ |        ,-> apontadores de caracteres.
+ |        |                  
+ _        _                  _ _ _ _ _ _
+|_| ---> |_| -------------> |_|_|_|_|_|_| ... -> caracteres.
+         |_| ------------,     _ _ _ _ _
+         |_| ----------, '--> |_|_|_|_|_| ... 
+         |_|           |         _ _ _ _ _ 
+         |_|           '------> |_|_|_|_|_| ...
+         |_|
+         |_|   ...
+
+
+Isso simula muito bem uma estrutura multidimensional, fazendo-se necessario
+apenas o uso de marcadores de fim de lista (como o 0 para caracteres).
+
+char **nomes;
+
+Acima voce ve a declaracao de um apontador para apontadores de caracteres.
+Devido a flexibilidade de se usar um apontador, voce pode inserir quantos
+itens desejar, e estes itens nao obedecem um limite de tamanho fixo.
+
+Ex.1:
+
+apontador2.c
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char **argv)
+{
+char **x;
+x = malloc(16);
+*(x+0) = "Joao";
+*(x+1) = "Maria";
+*(x+2) = "Joe";
+printf("%s %s %s\n",*(x+0),*(x+1),*(x+2));
+printf("%c %c %c %c\n",*(*(x+0)+0),*(*(x+0)+1),*(*(x+0)+2),*(*(x+0)+3));
+printf("%c %c %c %c %c\n",*(*(x+1)+0),*(*(x+1)+1),*(*(x+1)+2),*(*(x+1)+3),*(*(x+1)+4));
+printf("%c %c %c\n",*(*(x+2)+0),*(*(x+2)+1),*(*(x+2)+2));
+free(x); /* esta funcao libera a memoria reservada via malloc */
+exit;
+}
+---corte aqui---
+
+No exemplo acima, com um apontador para apontador de caracteres, declarado
+como
+
+char **x;
+
+Usamos *(x+i) para acessar a i-esima string e *(*(x+i)+j) para acessar o
+j-esimo caractere da i-esima string.
+
+Podemos tambem utilizar um array de apontadores para caracteres (este
+recurso, porem, eh mais limitado do que usar um apontador para apontador).
+
+Ex.2:
+
+char *nomes[];
+
+Que pode ser inicializado assim:
+
+char *nomes[] = { "Joao", "Maria", "Joe" }; 
+
+No caso acima, teriamos um numero fixo (3) de strings cujos tamanhos podem
+variar.
+
+Os recursos e vantagens deste topico serao discutidos mais a fundo no
+tutorial de algoritmos em C, que eh um manual mais avancado para aqueles que
+concluirem este manual.
+
+4.6 Classes de memoria
+
+A classe de memoria determina o tempo de vida da memoria associada ao
+objeto, que pode ser uma variavel ou uma funcao. Existe 2 classes de
+memoria: a automatica e a estatica. As variaveis automaticas (aquelas cuja
+classe de memoria eh automatica) sao locais ao bloco em que foram definidas,
+e sao logo esquecidas no termino da execucao do bloco. As variaveis
+estaticas (aquelas cuja classe de memoria eh estatica) podem ser locais a um
+dado bloco ou externa a todos (nesse caso, eh uma variavel global), e por
+serem ditas estaticas, seus valores sao mantidos quando blocos e funcoes
+terminam ou recomecam sua execucao. Ou seja, se voce usar uma variavel
+estatica dentro de uma funcao, da proxima vez que esta funcao for executada,
+o valor da variavel nao terah mudado (mas a variavel continua local, ou
+seja, seu escopo eh limitado).
+
+Uma variavel estatica pode ter ligacao interna ou externa. Quando a ligacao
+eh interna, ela nao pode ser acessada de fora do seu escopo. Ou seja, seu
+escopo eh apenas o bloco no qual foi definida, e ela nao existirah fora de
+tal bloco. Quando a ligacao eh externa, ela pode ser consultada de fora de
+seu escopo normal, que seria o bloco em que ela fosse definida.
+
+Existem 5 especificadores de classe de memoria, que sao palavras que devemos
+colocar no comeco da declaracao de uma variavel. Soh podemos usar no maximo
+uma por vez (nao eh possivel fazer combinacoes).
+
+4.6.1 auto
+
+O especificador de classe de memoria auto define quando uma variavel eh
+automatica, ou seja, quando a execucao foge seu escopo, ela deixa de
+existir. Por definicao, toda variavel declarada dentro de um bloco de
+comando sem a utilizacao da palavra-chave auto eh do tipo auto. Este
+especificador soh pode ser utilizado dentro de uma funcao.
+
+Ex.1:
+
+int nome_da_funcao(int parametro) {
+ auto int x;
+ /* comandos vem aqui */
+}
+
+Apos a execucao da funcao, a variavel x eh perdida.
+
+4.6.2 extern
+
+Jah sabemos o que sao variaveis externas: sao variaveis com ligacao externa.
+Bem, mas como fazer para acessa-las? Eh para isso que serve o especificador
+extern. O extern serve para aumentar o escopo de uma variavel externa.
+A classe de memoria de uma variavel declarada com extern eh automatica, ou 
+seja, terminado seu escopo, ela deixa de existir.
+
+O especificador extern pode ser usado dentro de uma funcao, para se referir
+a variaveis definidas fora da tal funcao, mas tambem pode ser usado fora de
+qualquer funcao, para se referir a variaveis definidas em outros arquivos
+fontes.
+
+Ex.1:
+
+arquivo1.c:
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+extern float x;
+extern float metade(void);
+
+int main(int argc, char argv[]) {
+x = 1.0;
+x = metade();
+printf("x eh %f\n",x);
+exit;
+}
+---corte aqui---
+
+arquivo2.c
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+float x;
+
+float metade(void) {
+return x/2;
+}
+---corte aqui---
+
+Compile os arquivos acima com a linha de comando 
+
+gcc arquivo1.c arquivo2.c -o exemplo_extern
+
+E execute com ./exemplo_extern
+
+unsekurity:~# ./exemplo_extern
+x eh 0.500000
+unsekurity:~#
+
+O exemplo acima serve para ilustrar o uso do extern. A variavel x definida
+em arquivo2.c tem inicialmente como escopo todo o arquivo2.c, mas por ser
+variavel externa (com ligacao externa) pode ser acessado pelo arquivo1.c,
+bastando para isso a declaracao de x usando extern em arquivo1.c. Apos o uso
+do extern, o escopo da variavel x deixou de ser apenas o arquivo2.c para ser
+ambos os arquivos.
+
+Ex.2:
+
+Voce poderah ver exemplos praticos do uso de extern em arquivos de cabecalho
+(que tem extensoes .h) tais como o stdio.h, cujos trechos disponibilizamos
+logo abaixo (verifique o /usr/include/stdio.h):
+
+--- corte aqui ---
+...
+/* Read a character from STREAM.  */
+extern int fgetc __P ((FILE *__stream));
+extern int getc __P ((FILE *__stream));
+
+/* Read a character from stdin.  */
+extern int getchar __P ((void));
+...
+--- corte aqui ---
+
+Estas funcoes estao definidas nas bibliotecas glibc2 ou libc5, dependendo do
+seu linux (se for novo, deverah ser glibc2).. 
+
+Eh importante observar que uma declaracao de variavel usando extern nao
+separa memoria nem inicializa os dados. Apenas amplia o escopo de uma
+variavel externa jah existente. Tambem eh bom frizar que voce soh pode usar
+isso para ampliar o escopo de variaveis externas apenas, e nunca o escopo
+das locais.
+
+4.6.3 static
+
+Uma variavel externa declarada com static tem seu escopo limitada ao arquivo
+fonte onde a variavel eh definida. Isso faz com que as variaveis externas
+declaradas com static nao possam ser acessadas com o uso de extern apartir
+de outros arquivos fonte.
+
+Ex.1:
+
+arquivo3.c
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+int x, y;
+extern int funcao(void);
+
+int main(int argc, char argv[]) {
+ y = funcao();
+ printf("x eh %d, y eh %d\n",x,y);
+ exit;
+}
+---corte aqui---
+
+arquivo4.c
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+static x;
+
+int funcao(void) {
+ x = 3;
+ return x;
+}
+---corte aqui---
+
+Isto eh especialmente util se, por exemplo, num arquivo fonte voce precisa
+de funcoes que usam variaveis cujos nomes devem permanecer livres para o uso
+em outros arquivos fonte. Ou seja, com static em variaveis externas, as
+variaveis tornam-se invisiveis para livre uso do programador (isto nao seria
+possivel sem o static, pois haveria conflito entre nomes).
+
+Uma variavel local (nao externa, cujo escopo eh apenas uma funcao) declarada
+com static obtem classe de memoria estatica, ou seja, elas nao perdem seus
+valores quando do termino da execucao da funcao.
+
+Ex.2:
+
+arquivo5.c
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+
+int retornar(int y) {
+ static int x;
+ x += y;
+ printf("Valor de x: %d\n",x);
+ return x;
+}
+
+int main(int argc, char argv[]) {
+retornar(1);
+retornar(4);
+retornar(-2);
+exit;
+}
+---corte aqui---
+
+Compile com a seguinte linha de comando: gcc arquivo5.c -o arquivo5 e
+execute com ./arquivo5
+
+unsekurity:~# ./arquivo5
+Valor de x: 1
+Valor de x: 5
+Valor de x: 3
+unsekurity:~#
+
+Voce pode verificar que o valor da variavel estatica x preservou-se mesmo
+tendo a funcao ter sido iniciado e terminado sua execucao 3 vezes.
+
+4.6.4 register
+
+Bem, algumas variaveis que sao acessadas frequentemente, como os contadores
+de estruturas for, podem ser armazenadas no processador, mais
+especificamente em um registrador, local cujo acesso eh mais veloz que a
+memoria convencional (RAM ou SWAP). A sintaxe eh:
+
+register int x;
+
+ou
+
+register char y;
+
+Ou seja, basta colocar a palavra-chave 'register' antes da declaracao. Este
+tipo de declaracao obedece a limites de hardware, ou seja, depende do
+processador que rodarah o programa. Processadores mais novos sempre tem
+registradores maiores, e por isso, sao mais potentes.
+
+Nao eh possivel, no entanto, retornar o endereco de memoria de uma variavel
+declarada com register, exatamente porque a variavel nao estah na memoria, e
+sim num registrador. Ou seja, mais adiante voce aprenderah o operador unario
+& e verah que ele nao poderah ser utilizado com variaveis em registradores.
+
+Voce nao pode usar declaracoes register para variaveis globais, ou seja,
+akelas cujo escopo eh o arquivo inteiro, e deve, portanto, usar register
+apenas para variaveis locais e para os parametros de uma funcao.
+
+Ex.1:
+
+int funcao(register int x) {
+ register char y;
+ /* codigo vem aqui */
+}
+
+4.6.6 typedef
+
+Em declaracoes com typedef, nenhuma variavel eh criada. Em compensacao,
+criam-se novos identificadores que resumem outros tipos de variaveis.
+
+Ex.1:
+
+typedef long int novo_tipo;
+
+Assim, verificaremos que
+
+long int x;
+e
+novo_tipo x;
+
+sao sinonimos.
+
+Ou seja, typedef eh apenas um recurso para criar novos nomes de tipo mais
+complexos apartir do que jah dispomos.
+
+Ex.2:
+
+Com
+
+typedef char caractere;
+
+verificaremos que
+
+caractere a, b[10];
+
+eh sinonimo de
+
+char a, b[10];
+
+Ex.3:
+
+Com
+
+typedef float racional;
+
+teremos que
+
+racional metade(racional x) {
+ return x/2;
+}
+e
+float metade(float x) {
+ return x/2;
+}
+
+sao a mesma coisa.
+
+4.7 Molde
+
+Molde eh um operador unario para fins de conversao entre tipos de valores.
+Podemos converter caracteres em inteiros, inteiros em caracteres, float em
+inteiros, etc.. Basta para isso a seguinte expressao:
+
+(nome-do-tipo) expressao
+
+Ex.1:
+
+int x; /* x eh inteiro */
+double y;
+y = sqrt((double) x)
+
+Se voce verificar bem, verah que a funcao sqrt recebe um valor do tipo
+double e retorna outro double, correto? Mas x eh inteiro.. Observe entao que
+(double)x eh uma expressao que retorna o valor inteiro de x como se fosse
+double.
+
+Ex.2:
+
+int valor_caractere(char a)
+{
+ return (int)a;  
+}
+
+A funcao acima retorna o valor inteiro referente a um dado caractere a.
+
+Ex.3:
+
+int x;
+unsigned int y;
+y = (unsigned int) x - 1000;
+
+Aqui, do valor de x eh retirado 1000 unidades, e o valor inteiro eh
+convertido para o tipo unsigned int.
+
+Molde tambem pode ser chamado de 'Cast'. Assim, quando vc ver a palavra
+'without cast' numa mensagem de erro do seu compilador, eh pq o erro
+provem de uma atribuicao de tipos inaceitavel.
+
+
+5. Funcoes 
+
+
+5.1 Conceitos basicos
+
+Bem, jah vimos no capitulo 2 algo sobre Funcoes. Apenas relembrando, sabemos
+que uma funcao tem a seguinte forma:
+
+declaradores_de_tipo nome_da_funcao(parametros) 
+{
+/* comandos vem aqui */
+}
+
+Os declaradores de tipo definem certas propriedades de uma funcao. Eh
+praticamente igual ao que vimos nos declaradores de variaveis. Uma funcao
+que retornarah um numero inteiro eh da seguinte forma:
+
+int nome_da_funcao(parametros) 
+{
+ /* comandos vem aqui */
+}
+
+Quando retorna um caractere eh da seguinte forma:
+
+char nome_da_funcao(parametros)
+{
+/* comandos vem aqui */
+}
+
+5.1.1 A funcao main()
+
+Sabemos que um programa eh um conjunto de funcoes e variaveis. Ao ser
+executado, existe uma funcao que eh executada primeiro, e por padrao, esta
+eh a funcao main, e sem esta, o programa nao eh executavel. Voce deve assim
+declarar sempre uma funcao main() em pelo menos um de seus arquivos fontes,
+e o especificador de tipo pode ser qualquer um que voce queira, desde int,
+char, float, void, .. Ex.:
+
+int main(int argc, char *argv[], char *env[]) 
+{
+ /* comandos vem aqui */
+}
+
+ou
+
+char main(int argc, char *argv[], char *env[]) 
+{
+ /* comandos vem aqui */
+}
+
+O valor retornado pela funcao main eh o valor retornado pelo programa.
+
+5.1.2 Parametros
+
+Com certeza voce deverah ter visto alguns programas que recebem parametros
+na linha de comando. Para isso, voce tem que declarar os parametros da
+funcao main como a seguir:
+
+(tipo) main(int argc, char *argv[], char *env[]) 
+{
+/* comandos vem aqui */
+}
+
+Onde (tipo) eh qualquer um do tipos de valores que podem ser retornados.
+Veja que quando colocamos esta como sendo a sintaxe da funcao main, o
+inteiro argc assume o numero total de parametros recebidos. Um array de
+strings eh definido por argv, de forma que argv[0] eh o primeiro parametro,
+argv[1] eh o segundo, e assim por diante. Deve-se frisar que o primeiro
+parametro eh o nome do executavel. O array de strings definido com env
+fornece-nos os valores das variaveis de sistema, aquelas que voce pode
+acessar do seu console digitando 'env':
+
+unsekurity:~# env
+PWD=/root
+HZ=100
+HOSTNAME=unsekurity.virtualave.net
+MOZILLA_HOME=/usr/lib/netscape
+ignoreeof=10
+LS_OPTIONS= --color=auto -F -b -T 0
+QTDIR=/usr/lib/qt
+OPENWINHOME=/usr/openwin
+MANPATH=/usr/local/man:/usr/man/preformat:/usr/man:/usr/X11R6/man:/usr/openwin/man
+LESSOPEN=|lesspipe.sh %s
+PS1=\h:\w\$
+PS2=>
+KDEDIR=/opt/kde
+LESS=-M
+USER=root
+LS_COLORS=no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.cmd=01;32:*.exe=01;32:*.com=01;32:*.btm=01;32:*.bat=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.bz2=01;31:*.rpm=01;31:*.deb=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.jpg=01;35:*.gif=01;35:*.bmp=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.mpg=01;37:*.avi=01;37:*.mov=01;37:
+CPLUS_INCLUDE_PATH=/usr/lib/qt/include:
+MACHTYPE=i386-slackware-linux-gnu
+MAIL=/var/spool/mail/root
+LOGNAME=root
+SHLVL=1
+HUSHLOGIN=FALSE
+MINICOM=-c on
+SHELL=/bin/bash
+HOSTTYPE=i386
+OSTYPE=linux-gnu
+TERM=linux
+HOME=/root
+PATH=/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/usr/X11R6/bin:/usr/openwin/bin:/usr/games:/opt/kde/bin
+_=/usr/bin/env
+unsekurity:~#
+
+O seguinte programa mostra como eh feito essa atribuicao aos parametros da
+funcao main:
+
+parametros.c
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+main(int argc, char *argv[], char *env[]) 
+{
+ printf("Existem %d parametros.\n",argc);
+ if (argc)
+ {
+  int i;
+  for (i=0;i<argc;i++) {
+   printf("O parametro %d eh %s\n",i,argv[i]);
+  }
+ }
+ printf("%s\n",env[0]);
+ printf("%s\n",env[1]);
+ printf("%s\n",env[2]);
+}
+---corte aqui---
+
+Compilando com 
+
+gcc parametros.c -o param 
+
+e executando com ./param temos:
+
+unsekurity:~# ./param
+Existem 1 parametros.
+O parametro 0 eh ./param
+PWD=/root
+HZ=100
+HOSTNAME=unsekurity.virtualave.net
+unsekurity:~# ./param parametro1
+Existem 2 parametros.
+O parametro 0 eh ./param
+O parametro 1 eh parametro1
+PWD=/root
+HZ=100
+HOSTNAME=unsekurity.virtualave.net
+unsekurity:~# ./param parametro1 parametro2
+Existem 3 parametros.
+O parametro 0 eh ./param
+O parametro 1 eh parametro1
+O parametro 2 eh parametro2
+PWD=/root
+HZ=100
+HOSTNAME=unsekurity.virtualave.net
+unsekurity:~#
+
+Observe que env[0] eh a 1a linha, env[1] eh a 2a linha, e assim por
+diante, do que eh retornado quando digitamos env numa shell.
+
+5.2 Comando return
+
+Funcoes podem retornar valores como inteiros, caracteres, etc. Para isso,
+utilizamos o comando return:
+
+return expressao;
+
+Onde expressao eh uma expressao qualquer cujo tipo seja o mesmo do
+declarador da funcao em que o return serah usado. Apos ser usado o comando
+return, a funcao termina sua execucao.
+
+Ex.1:
+
+float metade(float x) {
+ return (x/2);
+}
+
+Ex.2:
+
+float metade(int x) {
+ float y;
+ y = (float)x;
+ y /= 2;
+ return y;
+}
+
+Devo salientar que a funcao acima nao estah na sua forma mais simplificada.
+Fica como exercicio tornar a funcao o mais simples que voce puder. Isso
+economiza tempo de processamento e com isso seu programa se torna mais
+rapido.
+
+5.3 void
+
+A palavra 'void' significa 'nada' ou 'vazio'. Serve para declarar que uma
+funcao nao retornarah valor de especie alguma.
+
+Ex.1:
+
+void imprimirtexto(char nome[]) {
+ printf("%s\n",nome);
+}
+
+Como voce ve, nao ha necessidade de retornar valor algum para o que queremos
+fazer. A palavra void pode ser usada tambem para especificar que uma funcao
+nao recebera parametros:
+
+void marca_registrada(void) {
+ printf("Unsekurity Team!");
+}
+
+Geralmente as funcoes retornam algum tipo de valor para controle de erros,
+mas sendo declarada com void, a funcao nao retornarah valor algum.
+
+5.4 Classe de memoria
+
+Discutimos no topico 4.6 o que eh classe de memoria e para que servem. Vamos
+aqui apenas destacar que classe de memoria tambem se aplicam a funcoes.
+Neste caso, teremos funcoes com ligacao interna e outras com ligacao
+externa. Uma funcao tem ligacao interna quando ela nao pode ser acessada por
+outros arquivos fonte exceto aquele no qual ela eh definida. Como a funcao
+fica invisivel para os demais arquivos, eh possivel reutilizar o nome da
+funcao para uma variavel ou mesmo uma outra funcao em outro arquivo. Uma
+funcao tem ligacao externa quando ela pode ser acessada livremente por
+qualquer arquivo do programa, mesmos os quais ela nao existe.
+
+5.4.1 extern
+
+Uma funcao com ligacao externa pode ser acessada por outros arquivos.
+
+O arquivo que farah a chamada pela funcao deve colocar um prototipo da
+funcao com a palavra extern na frente:
+
+Ex.1:
+
+extern int nome_da_funcao(int parametro1, char parametro2[]);
+
+O arquivo fonte tem que ser compilado junto com o arquivo fonte no qual
+eh definido a funcao que se deseja acessar via extern. Ou linka-se ou
+compila-se, as instrucoes para isso foram anteriormente expostas.
+
+A declaracao com extern serve para ampliar o escopo de uma funcao atraves
+dos outros arquivos.
+
+5.4.2 static
+
+Uma funcao declarada com static fica com ligacao interna. Serve para manter
+uma funcao oculta em no arquivo fonte onde foi definida. Assim, o nome da
+funcao fica livre para outros usos, sem que haja conflito.
+
+Ex.1:
+
+static int nome_da_funcao(int parametro1, char parametro2[]) 
+{
+ /* comandos vem aqui */
+}
+
+A funcao definida acima nao pode ser acessada apartir de outros arquivos
+fontes. 
+
+5.5 Recursividade
+
+Recursividade eh o que chamamos de uma expressao que utiliza a si propria.
+Uma funcao que faz chama a si mesma eh dita recursiva. Ex.:
+
+Ex.1:
+
+int maior_divisor_impar(unsigned int x) {
+ int resto;
+ resto = x % 2;
+ if (resto) return x;
+ else {
+  x /= 2;
+  maior_divisor_impar(x);
+ }
+}
+
+Esta funcao acima retorna o maior divisor impar de um numero inteiro
+positivo qualquer. Veja a chamada a si mesma dentro do bloco else.
+
+Ex.2:
+
+int fibonacci(int x) {
+ int primeiro = 1, segundo = 1;
+ int soma;
+ if (x<3) {
+  return 1;
+ }
+ else {
+  soma = fibonacci(x-1) + fibonacci(x-2);
+  return soma;
+ }
+}
+
+Esta funcao acima retorna o x-esimo valor da sequencia de fibonacci,
+definida da seguinte maneira: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, ... onde o
+um dado termo eh a soma dos 2 anteriores.
+
+A recursividade em C eh permitida pois quando chamamos uma funcao dentro
+dela mesma, as novas variaveis locais criadas nao tem nada a ver com as
+antigas, e por isso nao ha interferencia nenhuma entre as chamadas pela
+mesma funcao. Devemos prestar atencao que as variaveis estaticas internas a
+uma funcao mantem seu valor mesmo que a funcao termine sua execucao.
+
+Este topico serah discutido mais a fundo num segundo tutorial sobre
+algoritmos em C, sendo um passo mais avancado sobre programacao em C.
+
+5.6 Apontadores de Funcoes
+
+Podemos tambem estudar um novo tipo de apontadores: apontadores para funcoes.
+Um pouco complicado no início para entender, mas eh isso mesmo. Uma variavel
+que aponta para uma funcao.
+
+Visualizemos um exemplo pratico:
+
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+int (*soma) (int a, int b) {
+ return a+b;
+}
+int (*diferenca) (int a, int b) {
+ return a-b;
+}
+
+int operacao(int a, int b, int(*funcao)(int x, int y)) {
+ return (*funcao)(a, b);
+}
+
+int main(int argc, char **argv) {
+ int x, y, a, b;
+ if(argc<3) {
+  return 0;
+ }
+ a = atoi(argv[1]), b = atoi(argv[2]);
+ x = operacao(a,b,(int(*)(int,int))soma);
+ y = operacao(a,b,(int(*)(int,int))diferenca);
+ printf("%d + %d = %d e %d - %d = %d\n",a,b,x,a,b,y);
+}
+---corte aqui---
+
+Veja que a funcao operacao() tem 3 parametos: dois inteiros a,b e
+um apontador para uma funcao.
+No nosso caso, int(*funcao)(int x, int y) nos diz que funcao eh um
+apontador para uma funcao de 2 parametros x e y.
+
+O molde, no nosso caso, eh (int(*)(int,int)). isso converte o nome
+de qualquer funcao para um apontador de funcao de 2 parametros inteiros.
+Assim, o molde geral eh (declaradores_de_tipo(*)(parametros)). Isso
+convertera qualquer funcao para um apontador de funcao.
+
+A declaracao basica de um apontador de funcao eh:
+
+int (*ptfuncao)(parametros);
+
+E a atribuicao adequada seria
+
+ptfuncao = (int(*)(parametros))nomedafuncao;
+
+Assim, uma chamada
+
+(*ptfuncao)(parametros);
+
+seria equivalente a
+
+nomedafuncao(parametros);
+
+Ex.:
+
+int (*cmp)(void*,void*);
+cmp = (int(*)(void*,void*))strcmp;
+
+Assim, cmp eh um apontador para strcmp.
+
+
+5.7 Funcoes retornando vetores
+
+Ateh a pouco tempo me deparava com duvidas quando desejava criar uma
+funcao retornando um vetor. Para que a funcao retornasse um apontador,
+bastaria acrescer * no fim do seus declaradores de tipo:
+
+char* funcao(parametros) 
+ou
+char *funcao(parametros)
+
+sao declaracoes identicas.
+
+Declaracoes literalmente retornando vetores nao sao permitidas (se eu
+estiver errado, corrija-me) O que se permite eh retornar um apontador 
+para o elemento inicial de um vetor.
+
+Tente compilar uma funcao com a seguinte declaracao:
+
+int funcao()[] { ... }
+
+E obterah um erro como o seguinte:
+
+"`funcao' declared as function returning an array".
+
+5.8 Funcoes com numero variavel de parametros
+
+Esse eh um topico muito interessante e que eh a causa do format bug.
+Assim, para entender essa especie de bug que tanto falam, eh 
+importante que voce dobre sua atencao neste topico, jah que aqui
+mostraremos como escrever uma funcao que aceite uma lista 
+variavel de argumentos, assim como a funcao printf.
+
+A declaracao de uma funcao com varios argumentos eh
+
+declarado_de_tipo funcao(alguns_parametros, ...) 
+
+onde esses tres pontos ... significa que a funcao
+espera receber um numero variavel de parametros.
+Esse ... soh pode aparecer no final de uma lista de parametros.
+
+O funcionamento de tal funcao serah de percorrer uma lista
+de argumentos que nem tem nome. O header <stdarg.h> ajuda a
+funcao a percorrer tal lista de argumentos. Assim, voce deve
+incluir tal arquivo da seguinte maneira:
+
+#include <stdarg.h>
+
+no arquivo que tem a funcao anterior.
+
+Existe um tipo chamado va_list, declarado em stdarg.h, que eh
+usado para declarar uma variavel que referir-se-a a cada um dos
+parametros. Eh como poderiamos chamar de um apontador de parametro.
+
+Vejamos um exemplo:
+
+#include <stdarg.h>
+
+int myprintf(char *format, ...) {
+ va_list ap;
+
+}
+
+No nosso caso, ap (apontador de parametro) eh do tipo va_list.
+Usamos entao a macro va_start para atribuir a ap o valor do primeiro
+parametro.
+
+
+#include <stdarg.h>
+
+int myprintf(char *format, ...) {
+ va_list ap;
+ va_start(ap,format);
+}
+
+Assim ap aponta para o primeiro parametro.
+
+A chamada va_arg retorna um parametro e faz ap apontar para o proximo, 
+e deve conter o tipo de valor a ser retornado. Assim,
+
+
+#include <stdarg.h>
+
+int myprintf(char *format, ...) {
+ va_list ap;
+ int x;
+ va_start(ap,format);
+ x = va_arg(ap,int);
+}
+
+Cada chamada va_arg retorna um parametro (convertendo-o ao tipo especificado)
+e faz o apontador de parametros apontar para o proximo. 
+
+O perigo reside no fato que os parametros estao todos armazenados numa pilha.
+Vao sendo retirados a cada chamada a va_arg. Se retirarmos parametros demais, 
+estaremos retirando na verdade valores da Stack, ou Pilha, que armazena os
+parametros de todas as funcoes sendo chamadas no computador.
+
+O pequeno grande defeito das funcoes printf, sprintf, etc.. eh que se voce
+passar como primeiro parametro adicional uma string que contem um formato 
+(ou seja, se voce passar "%s blabla %d mais blabla") a substituicao eh feita
+e podemos ler mais valores alem do permitido pela funcao, e inclusive
+altera-los. Nosso objetivo, no entanto, eh o estudo da linguagem C, e tal
+assunto foge um pouco ao objetivo deste texto. Recomendo que leiam um texto
+do Unsekurity sobre o assunto, http://unsekurity.virtualave.net.
+
+
+6. Estruturas
+
+
+6.1 Declarando e Acessando estruturas
+
+Estruturas sao nada mais que tipos complexos de dados, que podem
+conter variaveis de diferentes tipos, inclusive apontadores.
+
+A definicao eh da seguinte forma:
+
+struct estrutura {
+...
+};
+
+Veja que cada struct termina em ponto-e-virgula.
+
+Um exemplo pratico eh:
+
+struct pessoa {
+float altura;
+float peso;
+char* nome;
+int idade;
+};
+
+Isso define um novo tipo de variavel, chamada pessoa.
+Podemos 'criar' uma pessoa da seguinte forma:
+
+struct pessoa dv;
+
+E podemos modificar os subvalores de dv:
+
+dv.altura = 1.70;
+dv.peso = 60;
+dv.nome = "Dimitri Vashnov";
+dv.idade = 18;
+
+Obviamente podemos criar estruturas que contenham outras estruturas:
+
+struct grupo {
+ struct pessoa chefe;
+ int tamanho;
+};
+
+Assim, poderiamos declarar dv o chefe o grupo assim:
+
+struct grupo grupo_do_dv;
+
+grupo_do_dv.chefe = dv;
+grupo_do_dv.tamanho = 1;
+
+Assim, a idade do chefe seria
+
+grupo_do_dv.chefe.idade
+
+
+6.2 Apontadores para estruturas
+
+Podemos tambem ter apontadores para estruturas diversas, bastando
+adicionar * logo apos todos os declaradores de tipo.
+
+Ex.:
+
+struct ponto {
+ int x, y;
+};
+
+struct ponto *mouse;
+
+Assim mouse eh um apontador para uma estrutura ponto.
+
+Podemos acessar os subvalores da estrutura apontada por mouse de 2 formas:
+
+(*mouse).x
+ou
+mouse->x
+
+Ambas as formas sao validas, mas eh recomendavel o uso da ultima.
+Assim, mouse->x e mouse->y sao inteiros.
+
+Podemos ter uma sequencia de . e -> se alternando, bastando prestarmos
+atencao se a estrutura da qual queremos acessar o objeto eh nao-apontador
+ou apontador, respectivamente.
+
+6.3 Lista Encadeada (Linked Lists)
+
+Esta eh a parte mais importante deste topico. Eh possivel declarar dentro
+de uma estrutura um apontador para outra estrutura do mesmo tipo. Dificil
+de compreender? Vejamos com um exemplo:
+
+struct item {
+ int valor;
+ struct item *proximo;
+};
+
+Uma declaracao recursiva, voce diria. Isso nos fornece uma lista de itens
+no qual o primeiro tem um apontador para o segundo, o segundo tem um 
+apontador para o terceiro, e assim por diante. O ultimo item tem apontador
+NULL.
+
+Vejamos isso na pratica:
+
+struct item a, b, c, d;
+
+a.valor = 12;
+a.proximo = &b;
+b.valor = 28;
+b.proximo = &c;
+c.valor = -4;
+c.proximo = &d;
+d.valor = 2000;
+d.proximo = NULL;
+
+Assim, podemos acessar o valor do primeiro item assim:
+
+a.valor, 
+
+e o valor do segundo item assim:
+
+a.proximo->valor;
+
+e o valor do terceiro item assim:
+
+a.proximo->proximo->valor;
+
+e o valor do quarto assim:
+
+a.proximo->proximo->proximo->valor;
+
+Obviamente, podemos percorrer toda a lista ateh encontrar um elemento
+cujo campo proximo seja NULL.
+
+Um exemplo ilustrativo seria:
+
+       ,-------,
+       |       |
+|A|_|_|B|_|D|_|C|
+ |     |   |   |
+ '-----'   '---'
+
+A seguir segue o codigo fonte de uma implementacao de lista encadeada.
+
+---corte aqui---
+#include <stdio.h>
+#include <stdlib.h>
+
+#define LEDSIZE 100
+
+struct item {
+  int valor; /*valor armazenado pela estrutura*/
+  struct item *prox; /*ponteiro para proximo item*/
+};
+
+struct nocabeca {
+  int valor;
+  int nocabeca;
+  struct item *prox;
+};
+
+struct nocabeca *vago;
+
+struct item *ocupar(void) {
+ struct item *pt;
+ if(vago->prox != NULL) {
+  pt = vago->prox;
+  vago->prox = vago->prox->prox;
+  pt->prox = NULL;
+ }
+ else {
+  printf("Overflow\n");
+  exit;
+ }
+ return pt;
+}
+
+void desocupar(struct item *pt) {
+ pt->prox = vago->prox;
+ vago->prox = pt;
+}
+
+int main(int argc, char *argv[])
+{
+ struct item temp[LEDSIZE];
+ int i;
+ vago = malloc(sizeof(struct nocabeca));
+ /*inicializa LED de LEDSIZE itens*/
+ (*vago).valor = 0;
+ (*vago).nocabeca = 1;
+ vago->prox = &temp[0];
+ for(i=0;i<LEDSIZE-1;i++) {
+  temp[i].valor = 0;
+  temp[i].prox = &temp[i+1];
+ }
+ temp[LEDSIZE-1].prox = NULL;
+ /*alocada LED de LEDSIZE itens*/
+ 
+ system("PAUSE");
+ return 0;
+}
+---corte aqui---
+
+No codigo acima, LED significa Lista de Espacos Disponiveis.
+Nada mais do que uma lista de espacos na memoria que podemos ocupar()
+ou desocupar().
+
+Isso torna a alocacao de memoria muito simples. Listas encadeadas
+tem tambem muitas outras aplicacoes.
+
+Este assunto eh alvo do proximo tutorial de C, sobre 
+Estruturas de Dados.
+
+6.4 Enumeracoes
+
+Enumeracao eh um tipo cujos valores pertecem a um conjunto de 
+constantes rotuladas chamadas enumeradores de valores inteiros.
+
+A declaracao eh feita pela palavra-chave enum:
+
+enum flag {
+ ROTULO1 [= valor1],
+ ROTULO2 [= valor2],
+ ...
+};
+
+Os valores em colchetes sao opcionais. Caso o valor seja especificado,
+aquele rotulo significarah aquele valor inteiro. Caso o valor nao seja
+espeficidado, o tal rotulo tomara o valor do rotulo anterior mais 1.
+Se nenhum rotulo tiver seu valor especificado, o primeiro toma o valor 0
+e os seguintes seguem numa progressao aritmetica de ordem 1.
+
+Ex.:
+
+enum x { A,B,C=20,D,E };
+
+Assim, A serah 0, B serah 1, C serah 20, D serah 21, E serah 22.
+Os nomes dos rotulos devem ser distintos entre todos os enumeradores.
+Assim,
+
+enum x { A,B,C=20,D,E };
+enum y { D=23,K,H };
+
+nao seria permitido.
+
+Ex.:
+
+
+enum x { A,B,C=20,D,E };
+printf("%d,%d,%d,%d,%d\n",A,B,C,D,E);
+
+Eh notavel a semelhanca entre #define e enum, a diferenca eh que enum
+automatiza a atribuicao dos valores aos rotulos, enquanto que para 
+o #define voce precisa atribuir o valor um a um.
+
+Assim, 
+
+enum x { A,B,C=20,D,E };
+
+seria identico a
+
+#define A  0
+#define B  1
+#define C  20
+#define D  21
+#define E  22
+
+
+6.5 Unioes
+
+Uniao (Union) eh um tipo de dado que pode armazenar diferentes tipos de 
+valores usando o mesmo espaco reservado na memoria. Obviamente, soh
+podemos armazenar dado de um tipo ao mesmo tempo. A declaracao eh feita
+assim:
+
+union item {
+ int valorint;
+ float valorfloat;
+ char *valorchar;
+} item1, *item2;
+
+A variavel do tipo item terah tamanho suficiente para armazenar o maior dos
+tres tipos, mas soh armazena apenas um dos tres. Os meios de acesso sao 
+identicos ao de estruturas struct:
+
+item1.valorint 
+
+item2->valorchar
+ou 
+(*item2).valorchar
+
+Deve-se frisar que uma uniao contem apenas um dos valores listados, de forma
+que nao poderemos acessar 2 ou + tipos de dados ao mesmo tempo. Uma uniao
+soh pode ser inicializada com o valor do tipo do seu primeiro mesmo. Ou seja,
+
+union item relogio = 4;
+
+eh uma inicializacao valida, mas
+
+union item pente = 5.2;
+
+nao eh. 
+
+Assim, se voce fizer
+
+relogio.valorchar = "Unsekurity";
+
+entao o valor que estava em relogio.valorint serah perdido. O tipo certo do
+dado armazenado eh de conhecimento do programador e nao da maquina.
+
+Obviamente, voce pode criar estruturas que contenham unioes e unioes
+que contenham estruturas:
+
+O exemplo mais comum eh
+
+===
+struct in_addr {
+	union {
+		struct { u_char s_b1,s_b2,s_b3,s_b4; } S_un_b;
+		struct { u_short s_w1,s_w2; } S_un_w;
+		u_long S_addr;
+	} S_un;
+#define s_addr  S_un.S_addr
+#define s_host  S_un.S_un_b.s_b2
+#define s_net   S_un.S_un_b.s_b1
+#define s_imp   S_un.S_un_w.s_w2
+#define s_impno S_un.S_un_b.s_b4
+#define s_lh    S_un.S_un_b.s_b3
+};
+===
+
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ Este tutorial estah incompleto,
+ porem, jah contem mais informa-
+ coes do que o anteriormente pu-
+ blicado. Possiveis erros, con-
+ tactem o Unsekurity Team ou a
+ mim via E-mail. Se houver algum
+ trecho mal explicado, por favor,
+ contactem-nos. Este texto nao eh
+ traducao de nenhum livro ou tu-
+ torial e foi feito na integra
+ por Dimitri Vashnov a.k.a
+ xf86config.
+ Email: palwaaktaar@bol.com.br
+
+ Visite:
+ http://unsekurity.virtualave.net
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*

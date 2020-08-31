@@ -1,0 +1,371 @@
+			######### UNSEKURITY SCENE #########
+			# http://unsekurity.virtualave.net #
+			####################################
+
+
+
+
+
+Entenda a comunicação em Uma Rede IP
+
+
+1 Introduçao
+1.1 A API de programacao do TCP/IP
+ 1.1.2  A interface Socket
+2 Comparacao entre UDP e TCP
+ 2.1 TCP
+  2.2 UDP
+3 Estrutura e funcao do protocolo de rede IP.      
+ 3.1 IP
+4 ARP
+
+5 ICMP
+
+Texto indicado para iniciantes ou seja newbies mesmo, nem falo o seguinte: 
+"elite nao leia" pois ja' disse que esse texto e' dirigido a newbies que 
+querem entender um pouquinho de TCP/IP e rede. Espero que gostem se nao 
+gostarem , tem muitos outros textos ai na internet apenas quis dar minha 
+contribuicao fiz esse texto com muito gosto ficarei muito feliz se alguem 
+conseguir aprender algo com ele :-).
+Em breve estarei dando continuidade a esse texto pois TCP/IP e' um assunto 
+muito abrangente e quem quer ser um fucador tem que entender muito bem TCP/IP,
+bom nao vou me alongar mais leiam e torco para que entendam. 
+
+# 1 Aqui escreverei uma visao geral do TCP/IP, depois explicarei a "mecanica"
+da comunicação IP.
+
+
+
+# 1.1 A API de programacao do TCP/IP
+
+Observando uma rede podemos pensar que existe muitos aplicativos de 
+comunicacao, desempenhando funcoes misteriosas, Mas na realidade na maioria 
+das redes sao executadas tarefas simples como:
+
+# transferencia de arquivo
+# simulacao de terminal
+# e-mail
+# execucao de programas remotamente
+# gerenciamento de rede
+
+Tudo que se pode fazer numa rede e necessario a execucao de algum software, 
+e esse software precisa entender o funcionamento da rede, e para isso foi 
+criada uma API (Interface para programacao de aplicacao) ,de programacao 
+para softwares de rede. As diversas implementacoes do TCP/IP estao disponiveis 
+para DOS, UNIX, e muitos outros sistemas.
+Sera que todos esses sistemas usam a mesma API?
+Nao, Sabemos que o TCP/IP foi desenvolvido para UNIX, para UNIX foi 
+desenvolvida uma API chamada Socket Interface.
+O TCP/IP foi portado para diversos ambientes, o mais recente porte de TCP/IP 
+foi para Windows, e essa API chama-se winsock.
+
+# 1.1.2 A Interface Socket
+
+A interface socket, foi implementada primeiramente no sistema BSD 4.1c do 
+UNIX em 1982.Foram feitas muitas modificacoes nesta API, A primeira versao da 
+Interface Socket nao era dedicada a TCP/IP.
+Bom vou acabar com essa babozeira de contar estorias, agora vo mostrar uma 
+figura ilustrando os servicos da interface socket oferece 3 servicos
+TCP/IP:
+
+#cadeias TCP
+#Datagramas UDP
+#conexao direta de datagrama para IP.
+
+Fig 1.
+
+###Cadeias
+
+          Abrir------|
+	  Enviar-----|
+	  Receber----|
+	  Status-----|
+	  Fechar-----|  Datagrama    Datagrama
+	  Abortar----|      |        |
+		     |      |	     |
+		 _______________________
+		| TCP	|  UDP  |  RAW  |	
+		|_______|_______|_______|
+		|          IP		|
+		|_______________________|
+		|Software Driver de Rede|
+		|_______________________|
+		|   Hardware de rede    |	
+		|_______________________|
+APIs Socket.
+
+# 1.2 Comparacao entre TCP e UDP.
+
+ 1.2.1 TCP
+
+O servico socket mais complexo e' o TCP Streams. TCP e' um servico de conexao 
+multiesta'gio que tem como vantagem conexao de ser um servico que verifica 
+erros, assim transfere dados de maneira confiavel, e termina a conexao de 
+forma "limpa".Durante a transferencia de dados, ha um controle do fluxo de 
+dados assim ela verifica e corrige erros.
+Quem desenvolver aplicativos evolvendo o TCP devem usar o TCP se quiserem 
+uma tranferencia de de dados "confiavel".
+
+1.2.2 UDP
+
+UDP e' um servico simples e basico, protocolo que nao necessita de comunicacao 
+fisica.Por que UDP e' simples? Por que UDP simplesmente recebe e envia dados 
+nao faz correcao de erros.mas pode-se desenvolver correcao de erros no UDP , 
+implentar todas as vantagens do TCP, fica a criterio.
+Porem UDP e' mais rapido que UDP o desenvolvedor que quiser ganhar perfomance 
+usaram UDP
+
+
+# 1.3 Estrutura e funcao dos principais protocolos de rede: IP e ICMP
+
+O protocolo ip foi desenhado pra transportar informacoes de 1 maquina pra 
+outra, supondo que a rede de computadores possa envolver todas as partes da 
+rede dando suporte a diferentes tecnologias.
+O protocolo ip basico oferece 3 servicos:
+
+# Entrega sem conexao fisica, pode ser chamado de datagrama.
+# Mecanismo de fragmentacao e remontagem.
+# Enderecamento e rota dos pacotes.
+
+O trafego orientado a sessao que usa IP nao terao como certo que os 
+datagramas chegarao na mesma em que foram transmitidos, ou que os datagramas 
+nao chegaram corrompidos.As redes IP podem cobrir o mundo passando por 
+diferentes tecnologias com FDDi, Ethernets Token Rings, roteadores etc.
+
+fig. 2
+
+O endereco IP
+Pegue 32bits
+
+# # * * # * # * * * # * * * # * * * * # * * # # * * * * # * * * 
+# # * * # * # * * * # * * * # * * * * # * * # # * * * * # * * *
+# # * * # * # * * * # * * * # * * * * # * * # # * * * * # * * *
+
+Separe 4 octetos
+
+# # * * # * # *			
+# # * * # * # *
+# # * * # * # *
+
+ai va dividindo em sequencias como o 1 acima.
+
+Os enderec,os IP tem sempre 32bits de comprimento, mas nem sempre ele aparece 
+dessa forma isso por causa de uma convencao a chamada "dotted decimal notation"
+( notacao decimal com ponto) com essa convencao ele aparecem 
+assim 200.200.200.200 .
+
+Identificacao de rede e computador
+Quando os enderecos IP usados pelo software soao usados e sua forma binaria 
+
+As classes do enderecamento
+
+*Enderecos de Classe A tem como identificacao de rede 8 bits
+*Enderecos de Classe B tem como identificacao de rede 16 bits
+*Enderecos de Classe C tem como identificacao de rede 24 bits
+
+Como todo endereco IP tem 32 bits sendo assim a subtracao da identificacao 
+de rede por 32 bits resulta na Identificacao de Computador na rede por 
+exemplo *Enderecos Classe A tem identificacao de computador de 28 bits
+
+Determinando Classes de enderecos
+
+Para se dizer que um endereco IP e de classe A, B,C e' necessario usar uma 
+tecnica para que o software possa determinar rapidamente existe Tipo uma lei 
+assim o', pega-se os primeiros bits, ou seja os mais significativos do 
+endereco IP.Vejam como e feita a divisao
+
+Valor do primeiro Byte (decimal)
+1.... 127				Classe A
+128... 191				Classe B
+192....223				Classe C
+224...239				Classe D
+
+E' assim que se divide
+A voce viu ai que apareceu a Classe D nao, e' essa e usada para multidifusao 
+IP algo que falarei mas a frente.
+ 
+# 1.3.1 Formato dos Pacotes IP
+
+A camada de rede IP e independente de qualquer tecnologia que se use para 
+transferencia seja ela, Ethernet,Token ring, FDDI e etc. Mas o pacote ip tem 
+que ter uma representacao correta na Camada de Enlace para que possam existir 
+na tecnologia LAN especifica olhem o encapsulamento Generico do endereco IP
+
+fig. 3
+ ____________________________________________________________
+|Cabecalho do   | Multiplexacao|Pacote IP|   Fechamento	    |
+|Enlace de Dados| do Protocolo |         |do enlace de Dados|
+|_______________|______________|_________|__________________|	      
+ 
+Encapsulamento Gene'rico do Pacote IP.
+
+*O cabecalho e o fechamento do Enlace de dados existe pra permitir que o 
+datagrama IP seja conduzido num LAN WAN, Essa figura acima mostra o pacote 
+para uma rede LAN, e isso mudara para uma rede Ethernet, Token Ring e etc
+mas o conceito e' parecido.
+
+Um pacote IP , ou datagrama tem pelo menos 20 bytes e ele e' mais ou menos 
+assim:
+
+
+0	  4	   8		 16			    32
+|---------|--------|--------------|--------------------------|
+|   VERS  |  LEN   |     TOS      |    Comprimento Total     |
+|---------|--------|--------------|----------|---------------|
+|	  Identificacao		  |Marcadores|Conpensacao de |
+|          	                  |          |  fragmentos   |
+|---------------|-----------------|----------|---------------|
+|	TTL	| Protocolo       | 	Cabecalho da soma    |
+|               |		  |	Controle	     |
+|---------------|-----------------|--------------------------|
+|			Endereco IP de Origem                |
+|------------------------------------------------------------|
+|			Endereco IP de Destino		     |
+|------------------------------------------------------------|
+|			Opcoes de Preenchimento		     |
+|------------------------------------------------------------|
+Formato do Datagrama IP
+
+Formato do Datagrama IPEncapsulamento Gene'rico do Pacote IP.
+
+
+VERS: Numero da versao
+
+LEN: O comprimento do Cabecalho IP medido em unidades de 32 bits, este campo 
+nao inclui dados, server para medir o comprimento do campo opcoes, e os outros 
+campos ja tem tamanhos definidos
+
+TOS: Tipo de servico, campo que tem uma estrutura muito complexa e ainda nao 
+esta implementada pelo software IP do computador, o computador pode usar esse 
+campo para especificar o Retardo, Rendimento e comfiabilidade do caminho da 
+comunicacao.
+
+Comprimento Total: Como o nome diz e o comprimento total do datagrama IP 
+medido em bytes, e este comprimento inclui os campos de cabecealho e de dados
+
+Identificacao: Usado na fragmentacao e remontagem de pacotes
+
+Marcadores: Marcadores de controle que sao usados para indicar se um datagrama 
+pode ou nao ser fragmentado e se ele e' o ultimo na sequencia de datagramas 
+fragmentados.
+
+Compensacao de Fragmentos: Contem o numero de pedacos de 64 bits incluindo 
+bytes do cabecalho IP dos fragmentos anteriores, este campo permite que os 
+fragmentos possam chegar ao ponto de montagem fora da sequencias e serem 
+armazenados num buffer pra aguardarem o resto dos fragmentos restantes.
+
+Tempo de Vida ( Time to live - TTL ): Campo que e' usado para eliminar os 
+loops permanentes de pacote, e' nesse campo que se determina o numero de 
+segundos que o pacote pode existir na rede. O roteadores descartaram 
+pacotes cujo tamanho seja igual a 0 e valor inicial recomendado e' 32
+
+Protocolo: Indica o protocolo de nivel nu'mero mais elevado por exemplo TCP=6, 
+UDP=17, para qual o software deve entregar o datagrama, a lista completa dos 
+valores pode ser encontrada no RFC1060 .
+
+Soma de Controle do cabec,alho: esta soma de controle so'e' calculada no 
+cabec,alho IP, sendo que uma vez que o processo de soma de controle nao 
+pode incluir a propria soma de controle entao logo esse campo seja zero.
+
+Endereco IP de Origem: Como o nome diz e'o endereco IP de 32 bits do remetente.
+
+Endereco IP de Destino: Como o nome diz tambem e' o endereco IP de 32 bits 
+para onde o datagrama vai
+
+Opc,oes: O campo de opcioes e' opcional , as principais opc,oes sao de 
+seguranca que incluem Kerberos Security, Loose Source Routing, Strict Source 
+Routing e Record Route.
+
+Preenchimento: Como o preenchimento do campo Opcoes do IP e' variavel sao 
+usados zeros para preencher o datagram ate completar-se os 32 bits.
+
+
+### ARP Protocolo para resolucao de endereco
+
+O objetivo do ARP e' recolher o endereco MAC de uma estacao que esteja no 
+mesmo segmento de rede , o funcionamento do ARP 
+O ARP funciona de maneira bem simples e' o seguinte , a uma troca de 2 
+informacoes em 2 estagios:
+1. A uma solicitacao ARP por parte do REMETENTE que conhece o endereco 
+IP do RECPTOR e para determinar o endereco MAC do receptor , o REMETENTE 
+transmite uma solicitacao ARP.
+2 O RECEPTOR recebe a solicitacao ARP, reconhece seu proprio IP dentro da 
+solicitacao em envia uma resposta ARP
+
+Depois disso o computador armazena todas as informacoes em uma tabela de 
+enderecos IP e enderecos MAC essa tabela se chama CACHE ARP, funcionando 
+assim como o cache do seu browser internet .
+
+O envelhecimento do cache ARP
+
+O ARP da a possibilidade para que os computadores aprendam a relacao entre 
+endercos IP e MAC, e se algum dia o computador que aramazenou essas 
+informacoes , sera' possivel algum dia ele esquecer essas informacoes? claro 
+que sim no caso de uma falha na interface de rede LAN por exemplo, em um 
+computador em particular? a interface e' substituida por uma nova diferente 
+da anterior, ai os computadores que tem o cache da interface antiga nao 
+conseguiram achar a interface velha . Este e' um problema que pode ser 
+facilmente resolvido usando o seguiente procedimento , o procedimento de 
+envelhecimento, acontece o seguinte nesse procedimento, o cache e'envelhecido 
+a cada 5 minutos por exemplo dependendo do programa usado na sua rede por 
+exemplo o OSS/2 LAN Manager, assim a 5 min o cache e' novamente processado.
+
+Os caches ARP permitem entradas esta'ticas ( entradas que sao inseridas 
+manualmente ), que nao sao envelhecidas este tipo de entrada e' u'til para 
+reduzir a quantidadede tra'fego ARP na rede, outra maneira de conseguir isso
+e' aumentando o tempo de envelhecimento para horas ou mesmo dias, para que 
+uma entrada ARP seja removida. So se deve fazer isso se sua rede estiver bem 
+estruturada e ocorram poucas falhas nas interfaces.
+
+###ICMP ( internet control message protocol )
+
+Protocolo muito importante para diagnostico na rede e' esse o protolo que o 
+programa ping usa para determinar se o computador que ele manda a requisicao 
+responde. Voce pode ler algo sobre ICMP na RFC 792, o ICMP penso que 
+obrigatoria em quar implementacao IP, no inicio o ICMP foi projetado 
+somente para relacionar erros e informar aos sistemas terminais que 
+determinado roteado, computador ou rede, nao pode ser encrontada, de uns 
+tempos pra ca' o ICMP cresceu muito e assim foi se aumentando a funcionalidade 
+e oferecendo muitos outros servicos numa rede, algumas funcionalidades mais 
+comuns do ICMP:
+
+# Informar que determinada rede, roteador ou computador nao foi encontrado ai 
+  aparece a seguinte mensagem (HOST UNREACHABLE, NETWORK UNREACHABLE)
+
+# No programa ping testa roteadores pela rede: (ECHO REQUEST, ECHO REPLY).
+
+# Solicitar controle de fluxo do computador que envia (SOURCE QUENCH).
+
+# Informar ao computador que a uma rota melhor (REDIRECT).
+
+# Informar ao computador qual e' a mascara de subrede para o segmento 
+  (ADDRESS MASK REQUEST).
+
+# Permitir que computadores,roteadores se descubram dinamicamente 
+  (ROUTER DISCOVERY).
+
+Continuacao do texto em Breve
+
+# bibliografia: Internet, Internetworking Com TCP/IP
+
+## contato: klogdbr@yahoo.com.br
+
+##Beijinhos e agradecimentos: pro meu pai, pra minha mae, e especialmente pra 
+vc xuxa, hehhehehhehe, Unsekurity Scene, Emmanuele :-*, LoLLabuny :-*, 
+e tambem para meus amigos:  xf86config, module, slater, 
+nashleon, meleu, luis_ifer hehehe, esc2, e muitos outros mais.
+
+##Links:
+ftp://ftp.ietf.rnp.br/rfc
+http://www.absoluta.org
+http://www.rnp.br
+http://www.unsecurity.org
+http://shadowpenguin.backsection.net
+
+http://core.defusion.org
+http://www.jonathas.com.br
+http://coracaodeleao.virtualave.net
+
+
+
+

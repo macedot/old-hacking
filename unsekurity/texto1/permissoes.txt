@@ -1,0 +1,1247 @@
+.----------------------------.
+| Permissões de Arquivos UNIX `-----------------------------------------------,
+| Por MELEU <meleuzord@yahoo.com>                                     12/2001 |
+`-----------------------------------------------------------------------------'
+
+
+
+
+          ___ ___                     __                __ __
+         |   |   |.-.---.-----.-----.|  |--.--.--.-.--.|__|  |_.--.--.
+         |   |   ||     |__ --|  -__||    <|  |  |   _||  |   _|  |  |
+         |_______||__|__|_____|_____||__|__|_____|__|  |__|____|___  |
+                                                               |_____|
+                        _______
+                       |     __|.----.-----.-.---.-----.
+                       |__     ||  __|  -__|     |  -__|
+                       |_______||____|_____|__|__|_____|
+
+
+                      <http://unsekurity.virtualave.net>
+
+
+
+
+                          - = <  Í N D I C E  > = -
+
+                        0. Intro
+                          0.1. Changelog
+                          0.2. ToDo
+
+                        1. Identificações
+
+                        2. Permissões de Arqvivos
+                          2.1. Permissões Básicas
+                          2.2. Permissões Especiais
+
+                        3. Sobre Alguns Comandos
+                          3.1. chmod
+                          3.2. ls
+                          3.3. find
+                          3.4. test
+                          3.5. Outros Comandos
+
+                        4. Usando C
+                          4.1. Informações sobre Arquivos
+                          4.2. Mudando Permissões
+
+                        5. Esquemas Úteis
+
+                        6. Referências
+
+                        7. Considerações Finais
+
+                        Apêndice. Arquivos de Dispositivo
+
+
+-------------------------------------------------------------------------------
+
+
+1. Intro
+   ^^^^^
+
+   Como vocês podem ver isso é assunto bem NewBie mesmo, arrisco dizer que 
+é um assunto de Wannabe Newbie. Só estou escrevendo sobre isto pois quando
+precisei saber detalhes sobre permissões de arquivos não encontrei nada em
+português que me ajudasse muito (confesso que não procurei muito :P ).
+E pode ser que esse texto venha a ajudar alguém numa consulta rápida sobre
+determinada permissão...
+   Se você já é aquele fuçador tarimbado pode ser que você não encontre
+nenhuma novidade na parte que descrevo as permissões, porém a parte que
+envolve C pode ser de alguma utilidade. ;)
+   E se você é elite, com certeza já sabe que não é bem vindo no unsekurity.
+
+Agradecimentos: Nash (por tudo), module (aindo vou morar na sua casa), eSc2
+(vulgo Escape Duplo), xf (se pedir por favor eu até faço :P ), Blind_Bard
+(e nossa partida de D&D?!), Hekodangews (quer aprender, saia do IRC), klogd
+(pela companhia nas altas madrugadas :) ), hts (pela dica do pulltheplug),
+Zarro (simplesmente por ter vontade de aprender e correr atrás), Cs0 (meleca
+é você seu bundão! :P ) a minha namorada (por não reclamar de eu ficar horas
+na frente do PC e por não me decepcionar debaixo dos lençóis :-) ), ao pessoal
+da mail list (cuja participação foi fundamental para a realização deste texto,
+me tiraram algumas dúvidas), a um cara chamado Ademar <www.ademar.org> (por
+ter dado uma lida no texto e ter me dado uns toques legais, aqui está a
+atualização), e a todos que ajudam a Scene (e que eu esqueci de mencionar) e
+não deixam que ela suma!
+
+   Aproveitando o espaco, aí vai uma frase de uma camisa da 2600
+<http://www.2600.com> que eu gostei muito:
+
+                      "Hack to learn not learn to hack."
+
+
+0.1. Changelog
+     ---------
+
+-> Correção de erros de português e acentuação das palavras;
+
+-> Correção de algumas informações erradas, incompletas, e/ou mal
+explicadas, como por exemplo a parte que falo sobre C (agora está mais
+organizadinho).
+
+-> Os códigos agora estão entre as tags do Phrack Extraction Utility;
+
+-> Inclusão da seção 1 "Identificações";
+
+-> Inclusão da seção 5 "Esquemas Úteis" (bem bacaninha!);
+
+-> Adicionados mais links no tópico 6. Referências.
+
+
+0.2. ToDo
+     ----
+
+   Coisas que faltam no texto para que eu o julgue completo:
+
+-> Falar sobre o comando chattr;
+
+-> Incluir informações sobre ACL's (antes eu preciso aprender mais sobre isso);
+
+-> Falar sobre outras system calls que têm alguma relação com permissões de
+arquivo e manipulação de ID.
+
+
+-------------------------------------------------------------------------------
+
+
+1. Identificações
+   ^^^^^^^^^^^^^^
+
+   Cada usuário cadastrado no sistema possui dois números relacionados ao seu
+login. Um é o UID (User IDentification) e o outro é o GID (Group
+IDentification). Isso é porque o UNIX não considera o nome do usuário para
+determinar suas permissões, ele só trabalha com números, neste caso o UID e
+o GID ou em outros casos o EUID (Efective User IDentification).
+   Você pode ver os ID's de um usuário digitando (adivinha!) "id" no prompt.
+
+/* -=-=-= exemplo =-=-=- */
+root@meleu:~# id
+uid=0(root) gid=0(root) groups=0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy)
+/* -=-=-= exemplo =-=-=- */
+
+   Você deve ter reparado que o UID do root é 0. Qualquer pessoa (não
+interessa o seu username) que tiver UID 0 terá PERMISSÃO TOTAL no sistema,
+ou seja, nível de super-usuário. Sempre que eu falar neste texto "nível de
+super-usuário" eu estou querendo dizer "UID igual a 0". Cada username
+cadastrado no sistema precisa de um, e somente um, UID.
+   Dá pra ver também que o root faz parte de vários grupos. Logo concluímos
+que um usuário pode ter vários GID's, quer dizer, um usuário pode pertencer
+a vários grupos.
+
+   Além destes dois há também o EUID. Este é usado com arquivos que
+contenham permissões especiais (explicadas no tópico 2.2). Você vai entender
+sobre EUID quando ler sobre arquivos com SUID, mais adiante.
+
+
+-------------------------------------------------------------------------------
+
+
+2. Permissões de Arqvivos
+   ^^^^^^^^^^^^^^^^^^^^^^
+
+   Primeiro devemos saber que todas as informações sobre os arquivos vêm de
+uma estrutura chamada inode. O inode contém informações sobre o UID e GID
+do arquivo, as permissões do arquivo, o tipo do arquivo e o timestamp
+do arquivo (informações sobre a última modificação, último acesso, etc).
+Para ver o número do inode de um arquivo basta um "ls -i".
+
+   Também devemos saber que as permissões possuem 3 "níveis":
+
++ Proprietário: só pode ser exatamente 1, o dono do arquivo;
++ Grupo: engloba todos os membros de um determinado grupo;
++ Outros: se refere a qualquer pessoa que não seja o proprietário e que não
+          pertença ao grupo.
+
+   O proprietário de determinado arquivo/diretório é responsável pelas suas
+permissões de acesso.
+
+   Basta um "ls -l" para ver as permissões, o dono do arquivo e o grupo.
+Vamos a um exemplo:
+
+/* -=-=-= exemplo =-=-=- */
+meleuzord:~$ ls -l
+total 28
+drwxr-xr-x   5 meleu    users        4096 Jul 25 10:26 GNUstep/
+drwxrwx---   2 meleu    staff        4096 Dec 22 06:58 myprogs/
+-rw-r--r--   1 meleu    users        4163 Nov 16 06:43 rfc1244.txt
+drwxr-xr-x   2 meleu    staff        4096 Dec 28 16:09 mylibs/
+-rw-------   1 meleu    users        1074 Dec 12 04:37 anotações.txt
+drwxr-x---   6 meleu    users        4096 Dec 28 16:12 textos/
+/* -=-=-= exemplo =-=-=- */
+
+   Note que todos os arquivos pertencem a "meleu" e uns arquivos pertencem ao
+grupo "users" enquanto outros pertencem ao grupo "staff"
+   As permissões são mostradas de fato depois do primeiro bit e sempre na
+sequência "rwx". O esquema é o seguinte, os 3 primeiros bits, depois do
+primeiro, descrevem as permissões do proprietário do arquivo; os 3 seguintes
+dizem respeito ao grupo; e os 3 últimos são referentes aos outros (que não
+seja o proprietário e nem pertença ao grupo). Note que em determinados itens
+aparece um 'd' antes das permissões, isso significa que isto é um diretório
+(outros tipos são explicados no tópico 3.2.).
+
+
+2.1. Permissões Básicas
+     ------------------
+
+   Vamos falar sobre as permissões básicas. São elas o 'r', 'w' e 'x'.
+Tais permissões possuem significados diferentes quando aplicadas a arquivos
+e a diretórios.
+
+ * r - Read (Leitura):
+   + Arquivo: significa que se pode ler o arquivo (através de um "cat" por
+              exemplo.
+
+   + Diretório: significa que se pode ver o conteúdo do diretório (através de
+                "ls" por exemplo). Porém observe a explicação sobre a
+                permissão de execução mais abaixo.
+
+
+ * w - Write (escrita, gravação)
+   + Arquivo: significa que se pode adicionar conteúdo e alterar um arquivo.
+
+   + Diretório: significa que se pode criar e/ou apagar qualquer, repito
+                QUALQUER, arquivo e/ou diretório que esteja dentro deste,
+                mesmo que não se tenha permissão alguma para o
+                arquivo/diretório a ser apagado. Observe a explicação sobre
+                permissão de execução abaixo e "sticky bit" em 2.2.
+                Dica: NUNCA deixe o seu diretório home com esta permissão para
+                outros (também conhecida como world-writable).
+
+
+ * x - eXecute (execução)
+   + Arquivo: pode-se executar o programa ou shell script (se um arquivo texto
+              não for um script e tiver esta permissão e você executar vai dar
+              um monte de "command not found").
+
+   + Diretório: significa que pode-se "entrar" no diretório. Esta permissão
+                é importante quando atribuída a um diretório. De nada adianta
+                uma permissão 'w' se não tiver 'x'. Já no caso do 'r' sem 'x'
+                ainda podemos ver o conteúdo do diretório, porém com algumas
+                limitações. Mas na hora de executar um "find" (tópico 3.3.)
+                precisamos ter 'r' e 'x'.
+                Veja o exemplo abaixo, observe as permissões do diretório
+                "pratica" (o comando "id" que aparece no começo é apenas
+                para mostrar "quem sou eu"):
+
+/* -=-=-= exemplo =-=-=- */
+meleuzord:/home/hack$ id
+uid=1000(meleu) gid=100(users) groups=100(users)
+meleuzord:/home/hack$ ls -l
+total 20
+drwxr-xr-x   5 hack     hack         4096 Jul 25 10:26 GNUstep/
+drwxrwx---   2 hack     hack         4096 Dec 22 06:58 ferramentas/
+drwxr-xrw-   2 hack     nogroup      4096 Dec 29 00:21 pratica/
+drwxr-xr-x   2 hack     users        4096 Dec 28 16:09 progs/
+drwxr-x---   6 hack     users        4096 Dec 29 00:51 textos/
+meleuzord:/home/hack$ ls -l pratica/
+/bin/ls: pratica/script.sh: Permission denied
+/bin/ls: pratica/arquivo: Permission denied
+/bin/ls: pratica/dir_teste: Permission denied
+/bin/ls: pratica/mais_um_arquivo_teste: Permission denied
+/bin/ls: pratica/arquivo_teste: Permission denied
+total 0
+meleuzord:/home/hack$ touch pratica/once_more_test
+touch: pratica/once_more_test: Permission denied
+/* -=-=-= exemplo =-=-=- */
+
+
+   Vamos usar o "progs" da saída do comando "ls -l" acima para uma ilustração,
+vamos ver o que significa cada bit:
+
+drwxr-xr-x   2 hack     users        4096 Dec 28 16:09 progs/
+
+1: 'd' --> diz que é um diretório;
+2: 'r' --> mostra que o dono deste diretório pode ver o seu conteúdo;
+3: 'w' --> mostra que o dono deste diretório pode criar e/ou apagar
+           arquivos/diretórios que estejam dentro do diretório "progs";
+4: 'x' --> mostra que o dono deste diretório pode entrar nele (através do
+           comando cd)
+5: 'r' --> mostra que qualquer integrante do grupo "users" pode ver o conteúdo
+           do diretório;
+6: '-' --> mostra que integrantes do grupo "users" não podem criar e/ou apagar
+           arquivos/diretórios que estejam no diretório "progs";
+7: 'x' --> mostra que integrantes do grupo "users" podem "entrar" no diretório;
+8: 'r' --> qualquer pessoa que não seja o dono do arquivo e nem pertença ao
+           grupo "users" pode ver o conteúdo do diretório;
+9: '-' --> "outros" não podem criar e/ou apagar arquivos/diretórios que
+           estejam no diretório "progs";
+10: 'x' --> "outros" podem "entrar" no diretório.
+
+   É importante perceber que "outros" não significa "qualquer pessoa logada
+no sistema". Como já foi dito, "outros" se refere a qualquer um que NÃO SEJA
+o dono do arquivo E NÃO PERTENÇA ao grupo que o arquivo/diretório está
+atribuido. Estou enfatizando isso porque eu já me confundi uma vez por isso.
+Vamos a um exemplo:
+
+/* -=-=-= exemplo =-=-=- */
+meleuzord:/home/hack$ id
+uid=1000(meleu) gid=100(users) groups=100(users),102(hack)
+meleuzord:/home/hack$ ls -l
+total 20
+drwxr-xr-x   5 hack     hack         4096 Jul 25 10:26 GNUstep/
+drwxrwx---   2 hack     hack         4096 Dec 22 06:58 ferramentas/
+drwxr-xrw-   3 hack     nogroup      4096 Dec 29 01:22 pratica/
+drwx---r-x   2 hack     hack         4096 Dec 28 16:09 progs/
+drwxr-x---   6 hack     hack         4096 Dec 29 00:51 textos/
+meleuzord:/home/hack$ cd progs/
+bash: cd: progs/: Permission denied
+/* -=-=-= exemplo =-=-=- */
+
+   Observe pela saída do "id" que eu (o usuário meleu) faço parte do grupo
+hack, note também que o grupo hack não possui nenhuma permissão no diretório
+"progs" e o resto do mundo possui permissão 'r' e 'x'. Isso quer dizer que
+as permissões são verificadas da esquerda pra direita, na sequência
+proprietário -> grupo -> outros.
+
+   O algoritmo desta verificação é mais ou menos assim:
+
+Começo
+   Se usuário é dono do arquivo Então
+      permissões do dono do arquivo é atribuída ao usuário;
+   Senão
+      Se usuário pertence ao grupo do arquivo Então
+         permissões do grupo do arquivo é atribuída ao usuário;
+      Senão
+         permissões de outros é atribuida ao usuário;
+Fim.
+
+
+2.2. Permissões Especiais
+     --------------------
+
+   Foram estas permissões que motivaram minha pesquisa e a escrita deste
+simples textículo (texto pequeno =] )... vamos a elas.
+   Antes é importante que se saiba que para qualquer um destes atributos ter
+efeito é necessário permissão de execução. Para o Sticky bit é necessário
+'x' para outros; para o SGID bit é necessário 'x' para o grupo; e para SUID
+é necessário 'x' para o proprietário.
+
+
+ * t - Save Text Attribute (vulgo "sticky bit")
+   + Arquivos: Retirado da manpage do chmod: "O 'sticky bit' não é descrito
+               pelo POSIX. O nome deriva do significado original: manter o
+               programa texto no dispositivo swap."
+               Isto deve ser para que o programa seja carregado mais
+               rapidamente quando executado várias vezes.
+
+   + Diretórios: significa que o usuário pode apagar apenas arquivos que ele
+                 seja o proprietário. Geralmente é usado em diretórios
+                 "world-writable" (por exemplo /tmp) para que não seja
+                 permitido que qualquer usuário apague arquivos que não lhe
+                 pertençam.
+
+
+ * s - Set ID Attribute
+   Este atributo possui significados diferentes quando está relacionado ao 
+proprietário do arquivo e quando está relacionado ao grupo, assim como
+também possui significados diferentes para arquivos e diretórios, em relação
+aos arquivos você deve saber que este atributo NÃO FAZ EFEITO em shell scripts
+(já ouvi rumores de que antigamente funcionava, mas desde que me tenho como
+fuçador [1999] nunca vi isto). Em todos os casos ele funciona como um "tempero"
+para a permissão de execução.
+
+   + SUID Attribute (relacionado ao dono do arquivo)
+     - Arquivos: SUID significa Set-User-ID, ou seja ele atribui ao EUID 
+                 (Efective User ID - ID Efetivo do Usuario) do usuário o UID
+                 do proprietário do arquivo quando o arquivo é executado e
+                 somente durante a execução do mesmo (logo, o arquivo precisa
+                 ser executável). Isso quer dizer que durante a execução do
+                 arquivo você tem acesso a tudo que o dono do arquivo tem.
+                 Mas lembre-se SOMENTE DURANTE A EXECUCAO DO ARQUIVO.
+     - Diretórios: SEM EFEITO.
+
+   + SGID Attribute (relacionado ao grupo)
+     - Arquivos: SGID significa Set-Group-ID, ele atribui ao EGID (Efective
+                 Group ID - ID Efetivo do Grupo) do usuário o ID do grupo
+                 quando o arquivo é executado e (assim como no SUID) somente
+                 durante a execução do mesmo.
+     - Diretórios: se forém criados arquivos dentro deste diretório o grupo
+                   do arquivo será o mesmo grupo do diretório.
+                   Não entendeu? Vamos a um exemplo:
+
+/* -=-=-= exemplo =-=-=- */
+meleuzord:~$ id
+uid=1000(meleu) gid=100(users) groups=100(users),102(hack)
+meleuzord:~$ mkdir teste
+meleuzord:~$ ls -l
+drwxr-x---   2 meleu    users        4096 Jan  2 09:49 teste/
+meleuzord:~$ chgrp hack teste
+meleuzord:~$ chmod g+s teste/
+meleuzord:~$ ls -l
+drwxr-s---   2 meleu    hack         4096 Jan  3 12:44 teste
+meleuzord:~$ cd teste/
+meleuzord:~/teste$ touch arquivo.teste
+meleuzord:~/teste$ ls -l
+total 0
+-rw-r-----   1 meleu    hack            0 Jan  2 09:50 arquivo.teste
+/* -=-=-= exemplo =-=-=- */
+
+Acho que você percebeu que o arquivo.teste pertence ao grupo hack. :)
+
+   Isso é tudo que eu sei sobre permissões de arquivos. Vamos agora a outro
+tópico que está relacionado a permissões...
+
+
+-------------------------------------------------------------------------------
+
+
+3. Sobre Alguns Comandos
+   ^^^^^^^^^^^^^^^^^^^^^
+
+   Aqui coloco algumas informações sobre a alguns comandos que estão
+relacionados a permissões de arquivos.
+
+3.1. chmod
+     -----
+
+   O chmod serve para que você possa mudar as permissões de um arquivo, para
+fazer isso você deve ser o dono do arquivo (ou o root). Bom... Não vou escrever
+sobre como usar o comando, isso você deve ver na man page, vou escrever sobre
+um "método" diferente de como usá-lo.
+   Se ligue na seguinte relação:
+
+                x = 1
+                w = 2
+                r = 4
+
+   Você pode usar esta relação para alterar as permissões de arquivos. Preste
+atenção na seguinte linha de comando:
+
+               chmod 644 arquivo.txt
+                     |||
+   dono do arquivo <-'|`-> outros
+                      `-> grupo
+
+   Cada dígito diz respeito a um nível. Repare que no comando acima eu usei um
+6, isso quer dizer que eu estou dando permissão de gravação (w = 2) e de
+leitura (r = 4) (4 + 2 = 6). Com o comando acima o "arquivo.txt" terá as
+seguintes permissões: -rw-r--r--
+
+   Veja esta tabela:
+
+               ,-------,-----------,---------,
+               | octal | permissão | cálculo |
+               |-------|-----------|---------|
+               |   0   |    ---    |    0    |
+               |   1   |    --x    |    1    |
+               |   2   |    -w-    |    2    |
+               |   3   |    -wx    |   2+1   |
+               |   4   |    r--    |    4    |
+               |   5   |    r-x    |   4+1   |
+               |   6   |    rw-    |   4+2   |
+               |   7   |    rwx    |  4+2+1  |
+               '-------'-----------'---------'
+OBS.: esta tabela só é valida para as permissões "básicas" (rwx).
+
+   Lembre-se de que cada dígito diz respeito a um nível! Logo no comando dado
+como ilustração acima "chmod 644 arquivo.txt" está sendo setado ao dono do
+arquivo a permissão de leitura e escrita e ao grupo e outros apenas a permissão
+de leitura.
+
+   Agora em relação as permissões "especiais". Observe a relação abaixo:
+
+       Sticky Bit = 1
+             SGID = 2
+             SUID = 4
+
+Veja um exemplo de um comando e a explicação de o que estamos fazendo:
+
+                        chmod 4755 programa
+                              ||||
+      SUID bit '--s------' <--'||`--> permissão 'r-x' para outros
+                               |`--> permissão 'r-x' para o grupo
+permissão 'rwx' para o dono <--'
+
+   Após este comando o "programa" terá as seguintes permissões: -rwsr-xr-x
+
+
+   O dígito relacionado às permissões especiais precisa ser o primeiro de
+quatro. Isso porque o chmod considera dígitos ausentes como 0. Exemplo:
+
+		$ chmod 4 arquivo.txt
+
+		     é equivalente a
+
+		$ chmod 0004 arquivo.txt
+
+
+   Outra tabelinha de lambuja:
+
+               ,-------,-----------,---------,
+               | octal | permissão | cálculo |
+               |-------|-----------|---------|
+               |   0   | --------- |    0    |
+               |   1   | --------t |    1    |
+               |   2   | -----s--- |    2    |
+               |   3   | -----s--t |   2+1   |
+               |   4   | --s------ |    4    |
+               |   5   | --s-----t |   4+1   |
+               |   6   | --s--s--- |   4+2   |
+               |   7   | --s--s--t |  4+2+1  |
+               '-------'-----------'---------'
+
+   Lembre-se: Os valores desta tabela são válidos apenas para o primeiro
+dígito de quatro, no comando chmod.
+
+
+3.2. ls
+     --
+
+   Essa parte é só pra você entender o que a saída de um "ls" significa.
+Vamos repetir aqui o primeiro exemplo dado neste texto:
+
+/* -=-=-= exemplo =-=-=- */
+meleuzord:~$ ls -l
+total 28
+drwxr-xr-x   5 meleu    users        4096 Jul 25 10:26 GNUstep/
+drwxrwx---   2 meleu    staff        4096 Dec 22 06:58 myprogs/
+-rw-r--r--   1 meleu    users        4163 Nov 16 06:43 rfc1244.txt
+drwxr-xr-x   2 meleu    staff        4096 Dec 28 16:09 mylibs/
+-rw-------   1 meleu    users        1074 Dec 12 04:37 anotações.txt
+drwxr-x---   6 meleu    users        4096 Dec 28 16:12 textos/
+/* -=-=-= exemplo =-=-=- */
+
+   Como já foi dito, este 'd' no primeiro bit de algumas linhas significa
+diretório. Agora vamos a uma tabela com todas as possibilidades.
+
+            ,-----------,---------------------------,
+            | Caractere |       Significado         |
+            |-----------|---------------------------|
+            |     -     |     arquivo regular       |
+            |     b     |   dispositivo de blocos   |
+            |     c     | dispositivo de caracteres |
+            |     d     |        diretório          |
+            |     l     |      symbolic link        |
+            |     p     |          FIFO             |
+            |     s     |         socket            |
+            '-----------'---------------------------'
+
+/* Só umas informaçõeszinhas a mais... ;)
+   Os dispositivos de blocos são periféricos (como um disco rígido, por
+exemplo) onde os dados são lidos e gravados, no próprio dispositivo como
+blocos (no disco rígido geralmente o bloco é de 1024 bytes). Nos dispositivos
+de caracteres os dados são lidos ou gravados em sequência e a I/O pode ser
+feita como bytes separados (um terminal virtual é um exemplo de dispositivo
+de caracteres). */
+
+   Observe também que no final do nome do diretório existe uma barra "/". Isto
+acontece quando é dado o paramatro -F ao comando "ls", e geralmente existe um
+alias que faz isso pra você.  
+Olhe uma tabela com outros caracteres que aparecem no final do nome para
+facilitar a identificação:
+
+                    ,---------,----------------,
+                    | Símbolo |  Significado   |
+                    |---------|----------------|
+                    |    *    |   executável   |
+                    |    /    |   diretório    |
+                    |    =    |    socket      |
+                    |    @    | symbolic link  |
+                    |    |    |      FIFO      |
+                    '---------'----------------'
+
+   Agora em relação a permissões, permissões especiais pra ser mais específico.
+Como já foi dito anteriormente, é necessário permissão de execução para que
+os atributos "especiais" tenham efeito. Portanto quando estes atributos estão
+sendo usados e não estão fazendo efeito algum eles aparecem em maiúsculo.
+Veja um exemplo:
+
+/* -=-=-= exemplo =-=-=- */
+meleuzord:~$ touch arquivo
+meleuzord:~$ chmod 7000 arquivo
+meleuzord:~$ ls -l arquivo
+---S--S--T   1 hack     users           0 Jan  4 09:55 arquivo
+/* -=-=-= exemplo =-=-=- */
+
+   Se quiser saber mais sobre o "ls" olhe a página man.
+
+
+3.3. find
+     ----
+
+   Este comando é uma benção! :) Realmente muito útil e vale a pena você dar
+uma lida na página man.... Mas vamos aqui a uma introduçãozinha só para você
+ter um gostinho.
+
+   Veja aqui uma lista dos argumentos mais usados:
+
+Argumento          Descrição
+
+-user <usuário>    procura por arquivos cujo dono seja <usuário>.
+-group <grupo>     procura por arquivos cujo grupo seja <grupo>.
+-name <padrão>     procura por arquivos de nome que combine com o <padrão>.
+-type <tipo>       procura por arquivos do tipo <type>
+-perm [-]<perms>   procura por arquivos de permissões <perms> (veja abaixo).
+
+Nota-1: o parâmetro <perms> precisa estar no formato octal, e se você colocar
+o '-' na frente o find procurará por arquivos que tenham *no mínimo* as
+permissões <perms> (veja exemplos abaixo).
+Nota-2: os tipos que são usados com o parâmetro -type são aquelas letras
+da tabela encontrada no tópico 3.2. (sobre ls), com a excessão do arquivo
+regular onde é usado o caracter 'f'.
+
+   É interessante que você use redirecionamento para poder consultar o
+resultado da pesquisa. Só pra lembrar: '>' redireciona a saída padrão e
+'2>' redireciona a saída de erro padrão. Assim, uma boa é usar sempre
+"2> /dev/null". ;)
+
+   Vamos a alguns exemplos... para maiores detalhes... nem precisa falar né?!
+
++ procurar por arquivos suid ou sgid:
+     find / -perm -4000 -o -perm -2000
+
++ procurar por arquivos suid do root executável para todos (ou seja, bons
+  arquivos para se colocar backdoors ;-) ):
+     find / -user root -perm -4001
+
++ procurar por arquivos world-writable que não sejam links simbólicos,
+  nem dispositivos de caracteres, nem sockets, e nem que possuam o sticky
+  bit (OBS-1: 0's a esquerda das permissões podem ser omitidos; OBS-2: a
+  exclamação '!' serve para negação de tudo que está entre parênteses;
+  OBS-3: o '-o' é o "ou lógico" do find)
+     find / -perm -2  ! \( -type l -o -type c -o -type s -o -perm -1000 \)
+
+
+   Eu uso muito o find para encontrar os suid files nos WarGames (ver
+referências), onde você tem que encontrar o suid file do level superior ao
+seu. Por exemplo, quando está no level3 e quer procurar o suid file do
+level4, use:
+     find / -user level4 -perm -4000 2> /dev/null
+
+
+
+3.4. test
+     ----
+
+   Este comando é muito usado nos shell scripts. E dá pra se fazer muita
+coisa interessante com ele. Não é o propósito deste texto ensinar
+Shell Scripting, portanto se não entender procure outras fontes (inclusive em
+<http://unsekurity.virtualave.net> ).
+   Como você deve saber (senão, fica sabendo agora :P ) o "test expressão" é a
+mesma coisa que usar "[expressão]" e esta última notação que irei usar. Como a
+página man explica tudo que se deve saber, não vou explicar sobre o test aqui.
+Mas aí vai um exemplo de script (o script é meio besta... somente para
+ilustração mesmo). Não esqueça de ler a man page.
+
+/* ------------------------------ */
+<++> Permissoes/perms.sh
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+  echo "Uso: `basename $0` filename" 1>&2
+  exit -1
+fi
+
+# -e verifica se o arquivo existe
+if ! [ -e $1 ]; then
+  echo "$1 não existe"
+
+# -k verifica se possui sticky bit
+elif [ -k $1 ]; then
+    echo "$1 possui \"sticky bit\""
+
+# -g verifica se possui SGID
+elif [ -g $1 ]; then
+    echo "$1 possui Set-Group-ID"
+
+# -u verifica se possui SUID
+elif [ -u $1 ]; then
+    echo "$1 possui Set-User-ID"
+fi
+
+<-->
+/* ------------------------------ */
+
+   Agora basta aprender um pouquinho de shell scripting que dá pra fazer
+algumas coisas legais! ;)
+
+
+3.5. Outros Comandos
+     ---------------
+
+   Aqui vai uma relação de alguns comandos que tem relação com permissões de
+arquivos. Dê uma olhada na página man deles (o "umask" é explicado na pagina
+man do bash, "man umask" lhe mostrará a man page da system call umask. Leia
+também! ;-) ).
+
+chown, chgrp, chattr, newgrp, su, id, sudo, suauth, umask.
+
+   No momento só estou me lembrando destes... Devem haver outros.
+
+
+-------------------------------------------------------------------------------
+
+
+4. Usando C
+   ^^^^^^^^
+
+   Esta parte tem alguns pontos parecidos com a matéria de lamagra na
+CoreZine n. 1 (ver 6. Referências). Não me chame de copião! Acho que em
+português não tem nada sobre isso, por isso resolvi escrever.
+
+
+4.1. Informações sobre Arquivos
+     --------------------------
+
+   Como já foi dito, todas as informações sobre um arquivo fica numa
+estrutura chamada inode. Para que possamos consultar estas informações
+através do C utilizamos as funções stat(), fstat() e lstat().
+Aqui estão os protótipos e uma ligeira descrição:
+
+       int stat(const char *file_name, struct stat *buf);
+       int fstat(int filedes, struct stat *buf);
+       int lstat(const char *file_name, struct stat *buf);
+
+-> stat:  consulta informações sobre file_name no inode e armazena na
+          estrutura buf.
+-> fstat: faz o mesmo só que ela acessa o arquivo através do inteiro
+          filedes (file descriptor), como por exemplo o retornado por open()
+-> lstat: faz a mesmíssima coisa que stat porém quando o file_name é um link
+          a função stat() armazena em buf informações sobre o arquivo
+          apontado pelo link, já lstat() armazena em buf informações sobre
+          o próprio link.
+
+   Como podemos ver na página man destas funções a estrutura stat está
+definida da seguinte forma:
+
+        struct stat
+        {
+            dev_t         st_dev;      /* device */
+            ino_t         st_ino;      /* inode */
+            mode_t        st_mode;     /* protection */
+            nlink_t       st_nlink;    /* number of hard links */
+            uid_t         st_uid;      /* user ID of owner */
+            gid_t         st_gid;      /* group ID of owner */
+            dev_t         st_rdev;     /* device type (if inode device) */
+            off_t         st_size;     /* total size, in bytes */
+            unsigned long st_blksize;  /* blocksize for filesystem I/O */
+            unsigned long st_blocks;   /* number of blocks allocated */
+            time_t        st_atime;    /* time of last access */
+            time_t        st_mtime;    /* time of last modification */
+            time_t        st_ctime;    /* time of last change */
+        };
+
+   Vamos agora analisar cada elemento desta estrutura.
+st_dev: o dispositivo em qual o arquivo está gravado, para ver o "major and
+        minor numbers" use as macros major() e minor() definidas em
+        sysmacros.h. OBS.: Se você não sabe o que isto significa
+        leia o Apêndice.
+st_ino: o inode que guarda as informações sobre o arquivo (cada arquivo
+        está relacionado a um único inode).
+st_mode: serve para ver o tipo do arquivo (se é diretório, dispositivo de
+         bloco, etc) e também para ver as permissões. Para tais finalidades
+         são necessários alguns artifícios que veremos no código abaixo.
+st_nlink: número de hard links para o arquivo. O mínimo é 1 (pelo menos
+          se o arquivo existir :P ) a cada hard link soma mais 1.
+st_uid, st_gid: ID do dono e ID do grupo, respectivamente (duh!).
+st_rdev: se o arquivo é um dispositivo de bloco ou de caracteres o st_rdev
+         irá armazenar os números maior e menor do dispositivo.
+         A diferença deste para o st_dev é que, por exemplo, o *arquivo de
+         dispositvo* /dev/hdd está gravado (aqui na minha máquina) em 
+         /dev/hda2, então st_dev contém os números "maior" e "menor" do
+         /dev/hda2 ao passo que st_rdev contém os números maior e menor
+         do próprio /dev/hdd.
+st_size: tamanho do arquivo em bytes (duh!)
+st_blksize: é o tamanho do bloco que o sistema de arquivos usa para E/S,
+            é usado por alguns programas para que haja uma melhor
+            "bufferização".
+st_blocks: o número de blocos físicos que estão sendo usados por este arquivo
+           no disco.
+st_atime: contém o dia/ano/mês/hora/... do último acesso a este arquivo
+          (leitura e/ou execução).
+st_mtime: contém o dia/ano/mês/hora/... da última modificação feita no
+          arquivo.
+st_ctime: contém /dia/ano/mês/hora/... da última alteração feita *no inode*.
+          Note que se você modificar o arquivo você estará alterando o inode
+          também, mas se mudar o inode não quer dizer que esteja alterando o
+          arquivo (ex.: através de chmod, chown, etc...). O que quero dizer é
+          que se alterar st_mtime automaticamente alterará st_ctime, mas o
+          contrário nem sempre acontece.
+
+   Bom... Acho que é melhor um código-fonte de exemplo que assim é a melhor
+maneira de pegar as coisas. ;) Muita atenção nos comentários!
+
+/* --------------------------- */
+<++> Permissoes/filestat.c
+#include <stdio.h>              /* Essa você deve saber pra que serve. :P */
+#include <sys/stat.h>           /* Necessaria para usar lstat() */
+#include <sys/sysmacros.h>      /* Para usar major() e minor() */
+#include <sys/types.h>          /* Para declarar variável do tipo mode_t */
+#include <time.h>               /* Para usar ctime() */
+
+#define TRUE  1
+#define FALSE 0
+#define PERMS 07777
+
+/* Como foi dito, a variável st_mode armazena num só inteiro o tipo do
+   arquivo e suas permissões. E é por isso que a gente precisa usar os
+   bitmasks diferentes para quando queremos ver o tipo do arquivo e para
+   ver as permissões do arquivo. A macro PERMS declarada acima é para se
+   "traduzir as permissões. */
+
+char *FileType (mode_t tipo);
+
+unsigned short int isdev = FALSE; /* Isso é só pra verificar se o
+                                     arquivo é um dispositivo. */
+
+int main (int argc, char **argv) {
+  struct stat arq;
+
+  if (argc != 2)
+    {
+      printf ("Uso: %s <arquivo>\n", argv[0]);
+      exit (-1);
+    }
+
+  if (lstat (argv[1], &arq))
+    {
+      perror (argv[1]);
+      exit (1);
+    }
+
+  printf ("Nome do arquivo:\t%s\n", argv[1]);
+  printf ("Inode:\t\t\t%d\n", arq.st_ino);
+  printf ("Tipo do Arquivo:\t%s\n", FileType (arq.st_mode));
+
+  if (!isdev) { /* Se NÃO for um dispositivo... */
+      printf ("Tamanho:\t\t%d bytes, %d blocos\n", arq.st_size, arq.st_blocks);
+      printf ("Bloco de E/S:\t\t%d bytes\n", arq.st_blksize);
+      printf ("Dispositivo onde está salvo: \tmaior: %d,", major (arq.st_dev));
+      printf (" menor: %d\n", minor (arq.st_dev));
+  }
+  /* Nos dois printf's acima e nos dois abaixo foram usadas as macros
+     major() e minor(), ambas declaradas em <sys/sysmacros.h>, estas
+     macros servem para retornar os números maior e menor do dispositivo
+     (Ver no Apêndice mais sobre estes números). */
+
+  else { /* Se for um dispositivo... */
+      printf ("Dispositivo verdadeiro: \tmaior: %d,", major (arq.st_rdev));
+      printf (" menor: %d\n", minor (arq.st_rdev));
+  }
+
+  printf ("Permissões:\t\t%04o\n", arq.st_mode & PERMS);
+  /* Olhe aí a macro PERMS (que eu defini lá no começo) sendo usada. Ela
+     está sendo usada aqui para ver as permissões no formato octal (ver
+     tabelinhas do tópico 3.1.) portanto use sempre o formato "%o" para
+     imprimir com printf() (de preferência "%04o" para mostrar os 0's a
+     esquerda). Lembre-se que sempre que for fazer esta "tradução" usar
+     sempre 5 dígitos sendo que o primeiro dígito seja um '0', para que o
+     compilador entenda que é um octal. */
+
+  printf ("Numero de Hard Links:\t%d\n", arq.st_nlink);
+  printf ("UserID: %d,\tGroupID: %d\n", arq.st_uid, arq.st_gid);
+  printf ("Último acesso:\t\t\t%s", ctime (&arq.st_atime));
+  printf ("Última modificação:\t\t%s", ctime (&arq.st_mtime));
+  printf ("Última alteração no inode:\t%s", ctime (&arq.st_ctime));
+  /* Nos 3 printf's acima usei ctime() para imprimir o
+     timestamp bonitinho. */
+
+  return 0;
+}
+
+
+char *FileType (mode_t tipo) {
+  switch (tipo & S_IFMT) { /* Para saber o tipo do arquivo é necessário usar
+                              o S_IFMT. Detalhes sobre esta e outras macros
+                              definidas em <sys/stat.h> podem ser vistos na
+                              manpage do stat(). */
+    case S_IFDIR:
+      return "Diretório";
+    case S_IFREG:
+      return "Arquivo Normal";
+    case S_IFSOCK:
+      return "Socket";
+    case S_IFLNK:
+      return "Link Simbólico";
+    case S_IFBLK:
+      isdev = TRUE;
+      return "Dispositivo de Bloco";
+    case S_IFCHR:
+      isdev = TRUE;
+      return "Dispositivo de Caracter";
+    case S_IFIFO:
+      isdev = TRUE;
+      return "FIFO";
+    }
+  return NULL;
+}
+
+
+/* * * EOF * * */
+<-->
+/* --------------------------- */
+
+   Note que eu usei a função lstat(), pois estou querendo informações sobre
+o próprio link (se o arquivo for um link!) e não sobre o arquivo apontado por
+ele. Para se usar a função fstat() você faria algo mais ou menos assim
+(só um trechinho):
+
+/* -=-=-= usando fstat =-=-=- */
+...
+  int fd;
+...
+  fd = open(argv[1], O_RDONLY); /* isso normalmente fica dentro de um 'if' */
+  fstat (fd, &arq);             /* e isso também ;) */
+...
+/* -=-=-= usando fstat =-=-=- */
+
+
+
+4.2. Mudando Permissões
+     ------------------
+
+   Para mudar as permissões de um arquivo você pode usar as seguintes funções:
+
+       int chmod(const char *path, mode_t mode);
+       int fchmod(int fildes, mode_t mode);
+
+-> chmod: muda as permissões do arquivo/diretório path setando para mode.
+-> fchmod: igual chmod porém usando fildes (file descriptor) para mudar as
+           permissões do arquivo.
+
+   Em ambas funções você usa o caminho do arquivo que você quer modificar
+como primeiro parâmetro. E para "mode" (o segundo parâmetro) você deve usar
+as macros definidas em stat.h ou um número octal de 5 dígitos (sempre de 5
+dígitos!). Você pode ver as macros na página man das funções stat.
+   Evidentemente você só pode mudar as permissões de arquivos que lhe
+pertençam (a não ser que você seja super-usuário).
+
+   Para mudar as posses do arquivo (vulgo ownership) você usa as seguintes
+funções:
+
+       int chown(const char *path, uid_t owner, gid_t group);
+       int fchown(int fd, uid_t owner, gid_t group);
+       int lchown(const char *path, uid_t owner, gid_t group);
+
+-> chown: mudar a proprietário do path para owner e o grupo para group.
+-> fchown: mesmo esquema só que tem aquele lance do file descriptor.
+-> lchown: mesmo esquema só que tem aquele lance de alterar o próprio link
+           ao invés de alterar o arquivo apontado pelo link.
+
+   Nestas funções o primeiro parâmetro é o caminho do arquivo. O segundo e o
+terceiro parâmetro é, respectivamente, o UID e GID que você quer atribuir ao
+arquivo. Quando você não quer mudar o UID ou o GID é só você usar -1.
+   Ainda existem algumas limitações:
+   -> Apenas o super-usuário pode mudar o proprietário do arquivo;
+   -> O proprietário do arquivo pode mudar o grupo do arquivo para qualquer
+      um que ele faça parte;
+   -> O super-usuário pode mudar o grupo do arquivo para qualquer um.
+
+   Olhe este pequenino programinha (sem muita utilidade) só pra ver qual é o
+esquema:
+
+/* -------------------- */
+<++> Permissoes/mudar_permissoes.c
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#define PERMS 07777
+#define GRUPO 666       /* O grupo que eu quero que o arquivo pertença */
+#define MODE 04555      /* Permissões que eu quero que o arquivo tenha */
+
+int main (int argc, char **argv) {
+  struct stat arq;
+
+  if (argc != 2) {
+    printf ("Uso: %s <arquivo>\n", argv[0]);
+    exit (-1);
+  }
+
+  if (lstat(argv[1], &arq)) {
+    perror (argv[1]);
+    exit (1);
+  }
+
+  printf ("ANTES:\n");
+  printf ("\tOwnership -> UID: %d,\tGID: %d\n", arq.st_uid, arq.st_gid);
+  printf ("\tPermissões: %04o\n\n", arq.st_mode & PERMS);
+
+  if (lchown (argv[1], -1, GRUPO)) perror ("lchown");
+  if (chmod (argv[1], MODE)) perror ("chmod");
+
+  lstat (argv[1], &arq);
+  printf ("DEPOIS:\n");
+  printf ("\tOwnership -> UID: %d,\tGID: %d\n", arq.st_uid, arq.st_gid);
+  printf ("\tPermissões: %04o\n", arq.st_mode & PERMS);
+
+  return 0;
+}
+<-->
+/* -------------------- */
+
+   O programa mudará o grupo do arquivo para 666, se este GID não existir no
+sistema o lchown não funcionará como desejado. O programa muda também a
+permissão do arquivo para "r-sr-xr-x", ou se preferir: 4555, de acordo com a
+macro MODE definida lá em cima. Por exemplo: se você quiser tornar um
+arquivo/diretório com acesso de leitura e execução para todo mundo você faria
+o seguinte:
+          chmod ("arquivo", 00555);
+Nunca se esqueça: são sempre 5 dígitos para ser certinho!
+
+
+   Bom... é isso... teste uns esquemas ae e divirta-se. Com estas funções
+dá pra fazer uns lances bem legais pra você verificar arquivos "perigosos"
+com frequência. Enfim... tenha imaginação!
+
+
+-------------------------------------------------------------------------------
+
+
+5. Esquemas Úteis
+   ^^^^^^^^^^^^^^
+
+   Vamos ver aqui umas coisinhas interessantes de se fazer usando SUID.
+Antes vou logo avisando que para que as coisas mostradas neste tópico tenham
+alguma graça você terá que adquirir nível de outro usuário. Se não sabe como
+fazer isso... bem amigo... FUCE!
+
+   Digamos que você conseguiu acessar a conta de outro usuário. Não perca
+tempo! Copie um shell e atribua SUID a ele! Mas antes que você comece a se
+empolgar muito, isso não funciona com o bash nem com o tcsh.
+   No exemplo abaixo imagine que eu seja "hack" mas consegui acessar a conta
+do usuário "meleu" (não! isso não é crise de identidade!). Então eu vou e
+copio um shell e atribuo SUID a ele. Veja:
+
+/* -=-=-= exemplo =-=-=- */
+meleu:~$ id
+uid=1000(meleu) gid=100(users) groups=100(users),666(hack)
+meleu:~$ cp /bin/ash /tmp/exemplo
+meleu:~$ chmod +s /tmp/exemplo
+meleu:~$ ls -l /tmp/exemplo
+-rwsr-sr-x    1 meleu    users       59628 Dec  9 23:47 /tmp/exemplo*
+/* -=-=-= exemplo =-=-=- */
+
+   Pronto. Agora eu entro no sistema como o usuário hack e... Veja você
+mesmo:
+
+/* -=-=-= exemplo =-=-=- */
+hack:/tmp$ id
+uid=1005(hack) gid=100(users) groups=100(users),666(hack)
+hack:/tmp$ ls -l exemplo
+-rwsr-sr-x    1 meleu    users       59628 Dec  9 23:47 exemplo*
+hack:/tmp$ ./exemplo
+\u:\w$ id
+uid=1005(hack) gid=100(users) euid=1000(meleu) groups=100(users),666(hack)
+/* -=-=-= exemplo =-=-=- */
+
+   Reparaste que o EUID mudou né? Reparaste também que o prompt do ash não é
+bonito? :P
+   Agora eu (hack) tenho acesso a tudo que meleu também tem. Mas felizmente
+existem programadores que são pessoas preocupadas com a segurança e alguns
+programas não funcionam quando você está com EUID de outro usuário. Este é o
+caso do programa "ps". Veja o exemplo:
+
+/* -=-=-= exemplo =-=-=- */
+\u:\w$ id
+uid=1005(hack) gid=100(users) euid=1000(meleu) groups=100(users),666(hack)
+\u:\w$ ps x
+This /bin/ps is not secure for setuid operation.
+/* -=-=-= exemplo =-=-=- */
+
+   Sacaste?
+
+   Este esquema eu testei no tcsh 6.08, bash 2.05, ash (não sei a versão),
+zsh 3.0.6, e pdksh 5.2.12 (Public Domain Korn Shell). Só funcionou no ash,
+zsh, e pdksh.
+
+
+   Agora se não tiver no sistema um destes shells "bons" (entre aspas :P ),
+ainda tem outras coisas que você pode fazer.
+   Uma boa a se fazer é copiar e atribuir SUID a um editor de textos. Só
+testei este esquema com o "vi" (o editor mais fácil de se achar nos sistemas
+que existem por aí). Tendo um editor com SUID você pode editar/criar
+arquivos como se fosse o outro usuário. Consequentemente você pode
+editar/criar um profile para a "vítima", e quando falamos nisso logo
+pensamos em (tchan tchan tchan!) Trojan Horses. E se você tiver um editor
+SUID para root você pode mecher nos arquivos de configuração do sistema
+(geralmente localizados em /etc ), visualizar o tão cobiçado /etc/shadow e
+mais uma infinidade de coisas.
+   Isso foi só um pontapé inicial. Não vou ensinar aqui como editar profiles
+e nem como fazer Trojans. Mas posso te indicar onde aprender, para aprender
+a fazer/editar profiles você tem que aprender shell script e para aprender a
+fazer Trojans você tem que aprender a programar. Existem diversos textos
+sobre o assunto, inclusive em http://unsekurity.virtualave.net (Veja mais em
+6. Referências).
+
+
+                          -=> ALERTA <=-
+
+   Se o administrador do sistema tiver um mínimo de competência ele
+rodará um find (ver tópico 3.3.) com frequência para dar uma monitorada nos
+arquivos SUID. Portanto não fique dando bobeira usando estes esquemas tão
+"fuleiros".
+   E você, administrador de sistema, fique alerta em relação aos arquivos
+SUID do seu sistema. Permita apenas aqueles que são realmente necessários.
+
+
+-------------------------------------------------------------------------------
+
+
+6. Referências
+   ^^^^^^^^^^^
+
+Phrack Extraction Utility -> Para pegar é só ir no último número da Phrack
+                             em http://www.phrack.org
+
+Dominando o Linux -> Foi onde li sobre as permissões básicas e sobre
+                     arquivos de dispositivo (do Apêndice). Se quiser
+                     comprar (o que não é nem um pouco necessário) visite
+                     http://www.lcm.com.br
+
+Security-HOWTO -> Li sobre SUID, SGID, e sticky bit. Você pode encontrar em
+                  http://www.linuxdoc.org ou /usr/doc/Linux-HOWTOs
+
+Bash-Prog-Intro-HOWTO -,-> Textos sobre shell script. Úteis para você aprender
+Adv-Bash-Scr-HOWTO ----'   a criar/editar profiles. Ambos se encontram em
+                           http://www.linuxdoc.org ou /usr/doc/Linux-HOWTOs
+
+Cursos de Linguagem C -> Dois ótimos lugares para se aprender a programar em
+                         Linguagem C: (portugês)
+                         http://ead1.eee.ufmg.br/cursos/C
+                         e (inglês, muito bom! voltado especificamente para
+                         ambiente UNIX)
+                         http://www.cs.cf.ac.uk/Dave/C/CE.html
+
+Básico de Backdoors e TrojanHorses -> Um texto bem bacaninha que aborda estes
+                                      temas pode ser encontrado em
+                              http://unsekurity.virtualave.net/txts/bandt1.txt
+
+Barata Eletrica n. 20 -> Tem um texto sobre UNIX e foi lá que eu vi
+                         aquelas tabelas do topic 3.2. A URL é
+                         http://www.inf.ufsc.br/barata
+
+CoreZine n. 01 -> Li sobre a parte de C. Você pode encontrar a CoreZine em
+                  http://www.digibel.org/~tompy/ezine.html
+
+man pages -> Sobre as system calls e os comandos do tópico 3.
+
+Linux Allocated Devices -> Maiores detalhes sobre os arquivos de
+                           dispositivo. Você pode encontrar em
+                           /usr/src/linux/Documentation/devices.txt
+
+www.lockabit.coppe.ufrj.br -,-> Dê uma olhada aqui se quiser saber mais
+www.pulltheplug.com --------|   sobre wargames (OBS: vale a pena!!).
+www.hackerslab.org ---------'
+
+mail list da unsekurity -> Se não fosse a mail list esse texto seria um lixo
+                           ou até mesmo nem sairia! =) (maiores informações
+                           em http://unsekurity.virtualave.net )
+
+
+-------------------------------------------------------------------------------
+
+
+7. Considerações Finais
+   --------------------
+
+   Bem como esse texto é pro pessoal que está bem no começo mesmo vou dar
+uma dica em forma de relato "baseado em fatos reais". :P
+
+   O lance é que quando eu comecei a estudar profundamente permissões de
+arquivos eu comecei a fuçar nos txts da vida e determinado assunto puxava
+outro, e para compreender melhor o outro tinha que ler outro mais (arquivos
+de dispositivo é um exemplo)... e por aí vai... E de tanto ir saltando de
+txt em txt eu acabava aprendendo um monte de coisa útil.
+   Onde quero chegar?!
+   Estou querendo dizer que ao invés de ficar procurando ajuda em canais de
+IRC você tem que correr atrás das infos você mesmo ou pedir indicação de um
+txt pra alguém... Você acaba aprendendo muitas outras coisas!
+   É lógico que não é todo mundo que dispõe de tempo pra ficar fazendo isso.
+Portanto não pense que estou condenando quem fica pedindo ajuda... As vezes
+precisamos de uma solução rápida e talz... Mas conseguir aprender as coisas
+por conta própria a muito gratificante (pelo menos pra mim).
+   Eu costumo apurrinhar o pessoal da mail list com dicas de leitura e outras
+coisas... Se você, fuçador iniciante, fizer isso vai sair lucrando! Dividir
+experiências com os outros faz a informação fluir mais facilmente e vai que 
+alguém já passou pelo mesmo problema que você e encontrou um txt sarado
+sobre o assunto! =] E se você achar um txt/URL legal, não esqueça de indicar
+pra gente lá no fórum: http://www.unsekforum.cjb.net
+
+   Vou terminando aqui... Um abraço irmãos! E não se esqueçam de ler as
+man pages sempre que houver alguma dúvida! ;)
+
+
+
+-------------------------------------------------------------------------------
+
+Apêndice.
+                         Arquivos de Dispositivo
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+
+   Os arquivos de dispositivo são um artifício para que os programas possam
+interagir com os dispositivos de hardware através do kernel. Eles não são 
+"arquivos" de verdade (ou são?). Mas os programas os usam como se fossem, e
+assim o kernel reconhece a solicitação de E/S e envia para o driver
+correspondente.
+   Como vocês já sabem os arquivos de dispositvos ficam no /dev. Ao listar
+o conteúdo do /dev com um "ls -l" você ve algo incomum. Veja um exemplo:
+
+/* -=-=-= exemplo =-=-=- */
+meleuzord:~$ ls -l /dev/hda2
+brw-r-----   1 root     disk       3,   2 Apr 27  1995 /dev/hda2
+/* -=-=-= exemplo =-=-=- */
+
+   Você deve ter observado que o primeiro bit das permissões é um 'b' o que
+mostra que é um dispositivo de bloco (ver tópico 3.2.). Mas não é disso que
+falo quando digo "algo incomum". Estou falando são destes dois números
+separados por uma vírgula (3 e 2). O primeiro valor é o número maior (major)
+do dispositivo e o segundo é o número menor (minor). Isso é para que o
+kernel saiba que dispositivo está sendo usado. Quando um arquivo de
+dispositivo é acessado o kernel recebe essa informação em forma de número
+maior e número menor. O maior número especifica um determinado driver de
+dispositivo do kernel e o menor número especifica exatamente qual dispositivo
+será controlado pelo driver.
+
+   Olhe outro exemplo:
+
+/* -=-=-= exemplo =-=-=- */
+meleuzord:~$ ls -l /dev/hda*
+brw-r-----   1 root     disk       3,   0 Apr 27  1995 /dev/hda
+brw-r-----   1 root     disk       3,   1 Apr 27  1995 /dev/hda1
+brw-r-----   1 root     disk       3,  10 Apr 27  1995 /dev/hda10
+brw-r-----   1 root     disk       3,  11 Apr 27  1995 /dev/hda11
+brw-r-----   1 root     disk       3,  12 Apr 27  1995 /dev/hda12
+brw-r-----   1 root     disk       3,  13 Apr 27  1995 /dev/hda13
+brw-r-----   1 root     disk       3,  14 Apr 27  1995 /dev/hda14
+brw-r-----   1 root     disk       3,  15 Apr 27  1995 /dev/hda15
+brw-r-----   1 root     disk       3,  16 Apr 27  1995 /dev/hda16
+brw-r-----   1 root     disk       3,   2 Apr 27  1995 /dev/hda2
+brw-r-----   1 root     disk       3,   3 Apr 27  1995 /dev/hda3
+brw-r-----   1 root     disk       3,   4 Apr 27  1995 /dev/hda4
+brw-r-----   1 root     disk       3,   5 Apr 27  1995 /dev/hda5
+brw-r-----   1 root     disk       3,   6 Apr 27  1995 /dev/hda6
+brw-r-----   1 root     disk       3,   7 Apr 27  1995 /dev/hda7
+brw-r-----   1 root     disk       3,   8 Apr 27  1995 /dev/hda8
+brw-r-----   1 root     disk       3,   9 Apr 27  1995 /dev/hda9
+/* -=-=-= exemplo =-=-=- */
+
+   Repare que o número maior de todos são iguais, isso quer dizer que para
+todos estes dispositivos é usado o mesmo driver. O número menor indica ao
+driver qual é o dispositivo que ele tem que executar sua função.
+
+   Para maiores informações consulte a página man do comando mknod e o
+arquivo /usr/src/linux/Documentation/device.txt
+
+
+-------------------------------  E O F  ---------------------------------------

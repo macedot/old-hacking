@@ -1,0 +1,1724 @@
+,************,
+| Winsocks 2 |
+'************'
+
+Autor: Dimitri Vashnov
+
+Email: palwaaktaar@bol.com.br
+
+Thanks Unsekurity Team!
+
+0. Introducao
+
+A falta de material sobre Windows incentivou-me a pesquisar e escrever sobre
+Windows Sockets 2. Utilizei como base para este tutorial o helpfile oficial
+da microsoft sobre a API do Windows, talvez a unica fonte de informaçao para 
+um fucador da plataforma Windows. Eh notavel a pessima documentacao dos 
+produtos da microsoft, alem da horrivel API que eles desenvolvem. Espero com 
+este texto estar contribuindo para um cenario mais igualitario no mundo da 
+tecnologia, nao um apenas destinado àqueles que tem dinheiro mas sim um 
+voltado para todos sem qualquer distincao.
+
+Os exemplos exibidos neste tutorial foram compilados com sucesso no Windows
+95 e NT4, mas o conteudo deste texto deve tambem servir para qualquer Windows 
+que suporte Winsocks 2.
+
+Voce nao precisara piratear nenhum software para poder programar de graca.
+Baixe o IDE da http://www.bloodshed.net chamado Dev-c++ (junto com o mingw32,
+um compilador c/c++ muito bom), versao 4.01 quando da escrita deste texto.
+Este compilador eh uma boa alternativa aos compiladores comerciais. Ele
+contem suporte para Winsocks 1.1 e 2, Directx e OpenGL, alem de ser gratuito,
+mas caso voce se sinta auxiliado por este compilador, eh aconselhado a
+registra-lo junto com a Bloodshed mediante uma taxa minima. Mas nao ha nenhuma
+obrigatoriedade quanto a isto.
+
+Este texto exige que o leitor tenha um conhecimento bastante amplo da
+linguagem C, alem de algum conhecimento anterior sobre sockets (no que
+consistem, como funcionam, protocolos, etc). Nao eh necessario nenhum
+conhecimento da API do Windows, todas as funcoes que se fizerem necessarias
+para programaçao com Winsocks serao tratadas nesse texto com o minimo de
+explicacao possivel.
+
+Junto com esse texto incluimos alguns sources para exemplificar aplicativos
+cliente e server, como portscans, backdoors, etc.. tudo para windows.
+
+1. Nomes de funcoes
+
+A biblioteca sockets originalmente foi implementada no BSD, e portada para o
+Windows pela criacao do Winsocks 1.1 (agora atualizado para 2). Mas muitas
+funcoes foram preservadas com seus nomes originais:
+
+accept
+socket
+bind    
+closesocket
+connect 
+getpeername     
+getsockname     
+getsockopt
+htonl   
+htons   
+inet_addr       
+inet_ntoa       
+ioctlsocket     
+listen
+ntohl
+ntohs
+recv
+recvfrom
+select
+send    
+sendto
+setsockopt
+shutdown
+socket
+
+e 
+
+gethostname
+gethostbyaddr
+gethostbyname
+getprotobyname
+getprotobynumber
+getservbyname
+getservbyport
+
+Essas funcoes tem basicamente a mesma sintaxe da versao UNIX, e isso devera
+facilitar a leitura deste texto caso o leitor esteja familiarizado com
+programacao sockets em UNIX.
+
+Existem tambem uma serie de funções que fazem parte da extensao implementada
+pelo Windows. Estas funções, cujos nomes sao começados com WSA
+(ex.: WSAAsyncGetHostByName) sao opcionais, ou seja, você pode ignora-las,
+caso seja sua vontade. Iremos mostrar neste tutorial algumas poucas dessas
+tais funções, descartando aquelas que fogem ao escopo deste texto.
+
+Deve-se observar que o leitor deverá sempre incluir o header winsock.h ou
+winsock2.h
+
+#include <winsock2.h>
+
+em seus arquivos quando se for programar em Winsocks.
+
+3. Inicializando a Windows Sockets DLL
+
+Todo programa que use a Windows Sockets DLL pode querer fazer uma chamada da
+funcao WSAStartup, que verifica a versao da Windows Sockets DLL instalada no
+computador, cuja sintaxe segue logo abaixo:
+
+Sintaxe: int WSAStartup (WORD wVersionRequested,LPWSADATA lpWSAData);
+
+Você que nunca se interessou em programar para Windows deve ter se assustado
+com esse WORD e LPWSADATA. Isso eh especifico do Windows.
+
+Parâmetros da WSAStartup:
+
+WORD wVersionRequested ->
+
+A definiçao do tipo WORD segue logo abaixo como unsigned short, ou seja, um
+inteiro de 16bits positivo (1 a 65535 possibilidades).
+
+====extraido do windef.h do dev-c++====
+typedef unsigned short WORD;
+====extraido do windef.h do dev-c++====
+
+Neste caso, wVersionRequested e o numero da versao do Winsocks exigido pelo
+seu programa.
+
+As versões mais comuns sao 1.0, 1.1 e 2.0. No nosso caso, utilizaremos 2.0,
+fazendo
+
+wVersionRequested = MAKEWORD(2,0);
+
+Isso exigirá que a máquina tenha a versao 2.0 da dll winsocks.
+
+Você deve estar atento que Windows 95 vem de caixa com Winsocks 1.1, ou seja,
+caso você esteja num Windows 95, Windows 3.11, ou num Windows NT 3.51 (ou
+qualquer windows antigo) devera atualizar seu winsocks na pagina da Microsoft.
+Windows 98 e posteriores tem Winsocks 2, de forma que voce nao terah muitos
+problemas.
+
+Veja que se vc tiver varias DLLs de diferentes versões do Winsocks e fizer
+uma requisicao por uma versao mais antiga, sera esta a DLL utilizada pelo
+seu programa.
+
+
+LPWSADATA lpWSAData ->
+
+LPWSADATA e um ponteiro para uma estrutura WSADATA, definida logo abaixo (DEV-C++):
+
+====extraido do winsock.h do dev-c++====
+
+typedef struct WSAData {
+	WORD    wVersion;
+	WORD    wHighVersion;
+	char    szDescription[WSADESCRIPTION_LEN+1];
+	char    szSystemStatus[WSASYS_STATUS_LEN+1];
+	unsigned short  iMaxSockets;
+	unsigned short  iMaxUdpDg;
+	char *  lpVendorInfo;
+} WSADATA;
+typedef WSADATA *LPWSADATA;
+
+====extraido do winsock.h do dev-c++====
+
+Com a chamada WSAStartup, que escolhe a DLL a ser usada pelo aplicativo,
+esta estrutura eh atualizada (jah que passamos o ponteiro para ela).
+
+Nessa estrutura, wVersion eh a versao da Winsocks que o Windows espera que o
+programa use, wHighVersion eh a maior versao do Windsocks que a DLL oferece,
+geralmente igual ao wVersion, szDescription eh uma string (terminada em
+caractere nulo) que contem a descricao da DLL, szSystemStatus eh tambem uma
+string (tb terminada em caractere nulo) com informacoes relevantes sobre
+status ou configuracao. iMaxSockets, iMaxUdpDg e lpVendorInfo sao mantidas
+por retrocompatibilidade, e nao tem nenhuma importancia nas versoes 2 em
+diante.
+
+Deve haver uma chamada da funçao WSACleanup para cada chamada bem sucedida
+da funcao WSAStartup para desalocar memoria pelo uso da DLL.
+
+Um exemplo de trecho de programa que usa WSAStartup:
+
+
+===extraido do helpfile da microsoft===
+
+WORD wVersionRequested;
+WSADATA wsaData;
+int err;
+  
+wVersionRequested = MAKEWORD( 2, 0 );
+ 
+err = WSAStartup( wVersionRequested, &wsaData );
+if ( err != 0 ) {
+    /* Tell the user that we couldn't find a usable */
+    /* WinSock DLL.                                  */
+    return;
+}
+ 
+/* Confirm that the WinSock DLL supports 2.0.*/
+/* Note that if the DLL supports versions greater    */
+/* than 2.0 in addition to 2.0, it will still return */
+/* 2.0 in wVersion since that is the version we      */
+
+/* requested.                                        */
+ 
+if ( LOBYTE( wsaData.wVersion ) != 2 ||
+	HIBYTE( wsaData.wVersion ) != 0 ) {
+    /* Tell the user that we couldn't find a usable */
+    /* WinSock DLL.                                  */
+    WSACleanup( );
+    return; 
+}
+ 
+/* The WinSock DLL is acceptable. Proceed. */
+
+===extraido do helpfile da microsoft===
+
+
+Você pode observar a existencia das chamadas LOBYTE e HIBYTE, que retornam
+o Byte de menor ordem e o de maior ordem, respectivamente. Sao funcoes
+utilizadas para verificar a versao em wsaData.wVersion.
+
+Codigos de Erro retornados por WSAStartup:
+
+WSASYSNOTREADY  -> Indica que a rede nao estah pronta pra comunicacao.
+WSAVERNOTSUPPORTED -> A versao do winsocks exigida nao eh provida pela
+		      maquina.
+WSAEINPROGRESS -> Uma operacao de bloqueamento do Winsocks 1.1 estah em
+		  progresso.
+WSAEPROCLIM      -> O limite de numero de tarefas suportadas pelo Winsocks
+		    foi alcancado.
+WSAEFAULT -> lpWSAData nao eh um ponteiro valido.
+
+Como haviamos dito, tem de haver tantas chamadas WSACleanup quanto forem as
+chamadas WSAStartup bem sucedidas. A sintaxe dessa funcao eh dada a seguir:
+
+Sintaxe: int  WSACleanup (void)
+
+Codigos de Erro retornados por WSACleanup:
+
+WSANOTINITIALISED -> Uma chamada bem sucedida de WSAStartup eh necessaria.
+WSAENETDOWN -> falha na rede.
+WSAEINPROGRESS -> Uma chamada bloqueadora do Winsocks 1.1 estah em progresso.
+
+
+4. Tratamento de Erros
+
+O tratamento de erro quando se estah programando em Winsocks eh dado pela
+funcao WSAGetLastError e WSASetLastError. As sintaxes seguem abaixo:
+
+Sintaxes: void WSASetLastError(int) e   int WSAGetLastError(void)
+
+A funcao WSAGetLastError, como o nome jah diz, retorna um codigo que
+representa o ultimo erro ocorrido. A funcao WSASetLastError, tb como pode-se
+ver, seta o ultimo codigo de erro, sendo mais util para zerar o ultimo codigo 
+de erro (fazendo uma chamada WSASetLastError(0)).
+
+Voce pode querer adicionar a macro
+
+#define errno WSAGetLastError
+
+no seu programa para poder deixar seu programa mais portavel entre os
+ambientes Unix e Windows.
+
+Seguem no apendice A os codigos de erro que podem ser retornados por
+WSAGetLastError.
+
+
+5. Criando um Socket.
+
+
+Sockets em Windows sao criados pelo uso de uma estrutura SOCKET, definida
+logo abaixo:
+
+===extraido do winsock.h===
+typedef u_int   SOCKET;
+===extraido do winsock.h===
+
+Assim devemos declarar um socket como
+
+SOCKET mysocket;
+
+Logicamente, SOCKET continua sendo um tipo de inteiro, mas deve-se usar
+SOCKET e nao int quando estivermos lidando com winsocks.
+
+Isso, porem, apenas declara um socket. Para inicializarmos tal socket,
+usamos a funcao socket, cuja sintaxe segue logo abaixo:
+
+Sintaxe: SOCKET socket(int af,int tipo,int protocolo)
+
+Essa funcao ira retornar um socket com as propriedades exigidas.
+
+Parâmetros de socket:
+
+O parametro af eh o address family, e utilizamos macros comecadas por AF_
+para substituir tais valores. No nosso caso, como estamos utilizando o
+Dev-c++, os possiveis valores de af sao:
+
+
+===extraido de winsock.h do dev-c++===
+#define AF_UNSPEC       0
+#define AF_UNIX 1
+#define AF_INET 2
+#define AF_IMPLINK      3
+#define AF_PUP  4
+#define AF_CHAOS        5
+#define AF_IPX  6
+#define AF_NS   6
+#define AF_ISO  7
+#define AF_OSI  AF_ISO
+#define AF_ECMA 8
+#define AF_DATAKIT      9
+#define AF_CCITT        10
+#define AF_SNA  11
+#define AF_DECnet       12
+#define AF_DLI  13
+#define AF_LAT  14
+#define AF_HYLINK       15
+#define AF_APPLETALK    16
+#define AF_NETBIOS      17
+#define AF_VOICEVIEW    18
+===extraido de winsock.h do dev-c++===
+
+O parametro tipo especifica o tipo de socket usado. Da mesma forma que em
+outros tutoriais, podemos usar SOCK_STREAM ou SOCK_DGRAM. Para winsocks 1.1,
+estes sao os unicos 2 tipos implementados. Para winsocks 2, os tipos sao:
+
+===extraido de winsock.h do dev-c++===
+#define SOCK_STREAM     1
+#define SOCK_DGRAM      2
+#define SOCK_RAW        3
+#define SOCK_RDM        4
+#define SOCK_SEQPACKET  5
+===extraido de winsock.h do dev-c++===
+
+Por ultimo, o parametro protocolo pode assumir um dos seguintes valores:
+
+===extraido de winsock.h do dev-c++===
+#define IPPROTO_IP      0
+#define IPPROTO_ICMP    1
+#define IPPROTO_GGP     2
+#define IPPROTO_TCP     6
+#define IPPROTO_PUP     12
+#define IPPROTO_UDP     17
+#define IPPROTO_IDP     22
+#define IPPROTO_ND      77
+#define IPPROTO_RAW     255
+#define IPPROTO_MAX     256
+===extraido de winsock.h do dev-c++===
+
+Em caso de sucesso, a funcao socket() ira retornar um socket, e em caso de
+erro, retornara o valor INVALID_SOCKET (que eh um macro para -1) e o erro
+serah tratado pela funcao WSAGetLastError.
+
+Um exemplo entao seria
+
+SOCKET mysocket;
+mysocket = socket(AF_INET,SOCK_STREAM,IPPROTO_IP);
+
+Isso declara e inicializa o socket mysocket. Nao esqueca de incluir a linha
+
+#include <winsock2.h>
+
+no inicio de todo programa que utilizar winsocks.
+
+/*
+ NOTA DA VERSAO 4.01 do DEV-C++ 
+
+Estah faltando um caractere # antes de um ifdef no arquivo winsock2.h do
+dev-c++ 4.01. O fim do arquivo, após a correçao, deverá ser algo assim:
+
+===
+#ifdef __cplusplus
+}
+#endif
+#endif
+===
+*/
+
+Para fechar um socket, existe a funcao closesocket, cuja sintaxe eh simples:
+
+Sintaxe: int closesocket(SOCKET s);
+
+Faca isso somente quando o socket nao estiver sendo usado numa conexao e
+voce quiser destrui-lo, liberando memoria. Essa funcao retorna 0 em caso de
+sucesso. Mais adiante, voce verah que deve usar antes a funcao disconnect
+para desabilitar envios ou recebimentos no tal socket.
+
+
+6. Configurando um socket
+
+
+Existem duas funcoes basicas para configurar e ver a configuracao de um
+socket, sendo elas setsockopt e getsockopt, respectivamente.
+
+Sintaxe: 
+int getsockopt(SOCKET s, int level, int optname, char *optval, int *optlen)
+
+Esta funcao retorna em optval o valor da opcao optname.
+
+e
+
+int setsockopt (SOCKET s, int level, int optname, char  *optval, int optlen)
+
+Esta funcao altera o valor da opcao optname para optval.
+
+Parametros do getsockopt:
+
+SOCKET s -> Eh o socket a ser analisado.
+int level -> Nivel no qual a opcao eh definida.
+	     Pode ser SOL_SOCKET ou IPPROTO_TCP
+int optname -> Nome da opcao que desejamos ver.
+char *optval -> Buffer que armazenarah o valor da opcao.
+int *optlen -> Um ponteiro para o inteiro q indica o tamanho de optval.
+
+Parametros do setsockopt:
+
+SOCKET s -> Eh o socket que queremos configurar (alterar opcoes).
+int level -> Nivel no qual a opcao que desejamos mudar eh definida.
+	     Pode ser SOL_SOCKET ou IPPROTO_TCP.
+int optname -> Nome da opcao que desejamos alterar.
+char *optval -> Buffer no qual estah o novo valor para a opcao desejada.
+int optlen -> Tamanho do buffer optval.
+
+As opcoes, de acordo com level, sao:
+
+Para level == SOL_SOCKET:
+
+VALOR                   TIPO    
+SO_ACCEPTCONN   BOOL
+Socket estah escutando conexoes.
+SO_BROADCAST    BOOL
+Socket estah configurado para a transmissao de mensagens broadcast.
+SO_DEBUG                BOOL
+Debugging estah habilitado. 
+SO_DONTLINGER   BOOL
+Se TRUE, entao a opcao SO_LINGER estah desabilitado.
+SO_DONTROUTE    BOOL
+Roteamento desabilitado.
+SO_ERROR                int
+Retorna status de erro e zera.
+SO_GROUP_ID             GROUP
+O identificado do grupo ao qual o socket pertence. 
+Esta opcao nao pode ser alterada por setsockopt.
+SO_GROUP_PRIORITY       int
+Prioridade relativa para sockets de um mesmo grupo.
+SO_KEEPALIVE    BOOL
+Evitar queda de conexao por timeout.
+SO_LINGER               struct linger 
+Retorna as opcoes linger atuais.
+SO_MAX_MSG_SIZE unsigned int
+Tamanho maximo de uma mensagem para sockets orientados a mensagens
+(ex.: SOCK_DGRAM).
+SO_OOBINLINE    BOOL    
+Dados fora de banda (oob) estah sendo recebido na data stream normal.
+SO_PROTOCOL_INFO        WSAPROTOCOL_INFO        
+Descricao do protocolo que estah atribuido este socket.
+SO_RCVBUF               int
+Tamanho do buffer para recebimentos.
+SO_REUSEADDR    BOOL    
+O socket pode ser usado para um endereco local que jah estah em uso.
+Toda conexao eh unicamente identificada por uma combinacao de enderecos
+locais e enderecos remotos, nao ha nenhum problema em ter dois sockets
+compartilhando o mesmo endereco local, desde que os enderecos remotos
+sejam distintos.
+SO_SNDBUF               int
+Tamanho do buffer para envios.
+SO_TYPE         int
+Tipo de socket (exemplo: SOCK_STREAM, SOCK_RAW, etc)
+PVD_CONFIG      Service Provider Dependent
+Uma estrutura de dados 'opaca' do provedor de servicos associado ao 
+socket s. Este objeto armazena informacoes de configuracao correntes 
+do provedor de servico. O formato especifico desta estrutura de dados 
+eh especifico ao provedor de servico.
+
+Para level == IPPROTO_TCP:
+
+TCP_NODELAY             BOOL
+Disabilita o algoritmo Nagle no envio.
+
+Opcoes no estilo BSD que nao sao suportadas para getsockopt sao:
+
+SO_RCVLOWAT             int
+Receber baixa marca-dagua
+SO_RCVTIMEO             int
+Receber timeout
+SO_SNDLOWAT             int
+Enviar baixa marca-dagua
+SO_SNDTIMEO             int
+Enviar timeout
+TCP_MAXSEG              int
+Retorna tamanho maximo de segmento (maximum segment size, mss)
+
+Tipos BOOL (booleano) podem ser TRUE ou FALSE (1 ou 0, respectivamente).
+
+A opcao linger controla a acao tomada quando dados nao enviados entra em
+espera (queue) num socket e um closesocket() eh chamado neste socket.
+A estrutura linger eh definida como:
+
+===extraido de winsock.h do dev-c++===
+struct linger {
+	u_short l_onoff;
+	u_short l_linger;
+};
+===extraido de winsock.h do dev-c++===
+
+SO_LINGER estah ativado quando l_onoff eh nao zero, e o intervalo de timeout
+eh definido em l_linger. Quando l_onoff eh zero, entao SO_DONTLINGER eh TRUE,
+e quando l_onoff eh nao zero, entao SO_DONTLINGER eh FALSE.
+
+Esta opcao influi diretamente na atitude de closesocket() vista no topico
+anterior.
+
+Se SO_DONTLINGER estah habilitado (padrao) entao closesocket() retorna
+imediatamente, a conexao eh fechada na boa em background.
+SE SO_LINGER estah habilitado com um timeout zero, sempre retorna
+imediatamente, a conexao eh resetada e terminada.
+Se SO_LINGER estah habilitado com um timetou nao zero:
+
+- com um socket bloqueador, bloqueia ateh que todos os dados sejam enviados
+ou que o timeout expire.
+- com um socket nao bloqueador, retorna imediatamente indicando um erro.
+
+As opcoes SO_GROUP_ID e SO_GROUP_PRIORITY implementam o conceito de grupo
+de sockets, introduzido pelo Winsocks 2. Um socket de grupo pode ser criado
+pela funcao WSASocket, mas isso foge ao escopo do nosso texto, que eh ser
+simples, conciso, sem muitos rodeios acerca das 1001 peculiaridades da API
+do Windows.
+
+7. Conectando-se!
+
+A funcao para se conectar atraves de um socket eh connect, assim como em Unix.
+
+Sintaxe: int connect (SOCKET s, const struct sockaddr *name, int namelen)
+
+Parametros de connect:
+
+SOCKET s -> socket que iremos utilizar na conexao.
+const struct sockaddr *name -> ponteiro para uma estrutura sockaddr, que tem
+os detalhes da conexao tais como endereco, porta, etc.
+int namelen -> tamanho de name.
+
+
+Se o socket eh do tipo SOCK_STREAM, orientado a conexao, entao uma conexao
+eh estabelecida, e o socket estara pronto para enviar e receber dados. Se
+for do tipo SOCK_DGRAM, a funcao ira meramente estabeler um endereco destino
+padrao que serah usado em chamadas send e recv. Se o campo name for zerada,
+entao o socket eh 'desconectado' embora isso na pratica seja impossivel jah
+que nao ha conexao.
+
+Se a chamada de connect for bem sucedida, irah retornar 0.
+
+A estrutura sockaddr varia de acordo com o protocolo. A estrutura usada pelo
+protocolo TCP/IP eh a seguinte:
+
+===extraido de winsock.h do dev-c++===
+struct sockaddr_in {
+	short   sin_family;
+	u_short sin_port;
+	struct  in_addr sin_addr;
+	char    sin_zero[8];
+};
+===extraido de winsock.h do dev-c++===
+
+sin_family eh uma das seguintes opcoes: 
+
+#define AF_UNSPEC       0
+#define AF_UNIX 1
+#define AF_INET 2
+#define AF_IMPLINK      3
+#define AF_PUP  4
+#define AF_CHAOS        5
+#define AF_IPX  6
+#define AF_NS   6
+#define AF_ISO  7
+#define AF_OSI  AF_ISO
+#define AF_ECMA 8
+#define AF_DATAKIT      9
+#define AF_CCITT        10
+#define AF_SNA  11
+#define AF_DECnet       12
+#define AF_DLI  13
+#define AF_LAT  14
+#define AF_HYLINK       15
+#define AF_APPLETALK    16
+#define AF_NETBIOS      17
+#define AF_VOICEVIEW    18
+
+sin_port eh a porta destino da conexao, podendo ser uma das seguintes:
+
+#define IPPORT_ECHO     7
+#define IPPORT_DISCARD  9
+#define IPPORT_SYSTAT   11
+#define IPPORT_DAYTIME  13
+#define IPPORT_NETSTAT  15
+#define IPPORT_FTP      21
+#define IPPORT_TELNET   23
+#define IPPORT_SMTP     25
+#define IPPORT_TIMESERVER 37
+#define IPPORT_NAMESERVER 42
+#define IPPORT_WHOIS    43
+#define IPPORT_MTP      57
+#define IPPORT_TFTP     69
+#define IPPORT_RJE      77
+#define IPPORT_FINGER   79
+#define IPPORT_TTYLINK  87
+#define IPPORT_SUPDUP   95
+#define IPPORT_EXECSERVER       512
+#define IPPORT_LOGINSERVER      513
+#define IPPORT_CMDSERVER        514
+#define IPPORT_EFSSERVER        520
+#define IPPORT_BIFFUDP  512
+#define IPPORT_WHOSERVER        513
+#define IPPORT_ROUTESERVER      520
+#define IPPORT_RESERVED 1024
+
+A estrutura in_addr eh definida assim:
+
+===extraido de winsock.h do dev-c++===
+struct in_addr {
+	union {
+		struct { u_char s_b1,s_b2,s_b3,s_b4; } S_un_b;
+		struct { u_short s_w1,s_w2; } S_un_w;
+		u_long s_addr;
+	} S_un;
+===extraido de winsock.h do dev-c++===
+
+Assim, no caso, teriamos que fazer:
+
+SOCKET mysocket;
+struct sockaddr_in vitima;
+mysocket = socket(AF_INET,SOCK_STREAM,IPPROTO_IP);
+vitima.sin_family = AF_INET;
+vitima.sin_porta = htons(IPPORT_FTP); 
+vitima.sin_addr.s_addr = inet_addr("xxx.xxx.xxx.xxx"); /*ip no formato dotted
+							decimal*/
+for (i=0;i<8;i++) {
+ alvo.sin_zero[i]=(char)0; /*zera a estrutura*/
+}
+
+
+e a chamada de connect seria:
+
+connect(mysocket,(struct sockaddr *)&vitima,sizeof(vitima));
+
+8. Funcoes de conversao
+
+Existem diversas funcoes para conversao de valores. Vimos no topico anterior 
+as funcoes htons e inet_addr. Existem varias outras, as quais iremos detalhar
+aqui.
+
+Sintaxe: unsigned long inet_addr(char *cp)
+
+A funcao inet_addr converte um ip no formato dotted-decimal 
+(ou seja, xxx.xxx.xxx.xxx) para in_addr. cp eh uma string que pode ser
+"127.0.0.1" ou qualquer outra string contendo um ip valido.
+
+Voce pode tambem especificar o ip no formato xxx.xxx.xxx (rede de classe B)
+ou xxx.xxx (rede classe A) ou xxx (neste ultimo caso o valor eh mantido
+inalterado).
+
+Se nenhum erro ocorre, a funcao retorna um valor in_addr. Caso cp nao seja
+um IP valido, ou seja, caso algum numero da porcao a.b.c.d seja maior que 255,
+a funcao retorna o valor INADDR_NONE.
+
+Existe tambem uma funcao que faz a conversao no sentido contrario:
+
+Sintaxe: char *inet_ntoa(struct in_addr in)
+
+Aqui voce fornece o IP no formato in_addr e ele retorna uma string no formato
+dotted-decimal, ou seja, a.b.c.d. Em caso de erro, retorna NULL.
+
+Outra especie de funcoes sao as XtoY, ou seja, htons, htonl, ntohl, ntohs.
+Para explicar a necessidade dessas funcoes, eh importante introduzir 2 
+conceitos: host byte order e network byte order. Na host byte order, o byte
+menos significante vem primeiro, enquanto que na network byte order, o byte
+mais significante vem primeiro. As sintaxes sao:
+
+Sintaxe:
+u_long int htonl(u_long int hostlong);
+u_short int htons(u_short int hostshort);
+u_long int ntohl(u_long int netlong);
+u_short int ntohs(u_short int netshort);
+
+Assim, htonl significa host to network long, htons significa host to network
+short, ntohl significa network to host long, ntohs significa network to host
+short.
+
+Assim, para passar inteiros para funcoes, deve faze-lo na network byte order.
+
+9. Funcoes getXbyY
+
+Essas funcoes, listadas a seguir com a sintaxe, sao explicadas uma a uma.
+
+Sintaxe:
+struct hostent *gethostbyname(char *name);
+
+Essa funcao retorna informacoes acerca de um hostname. Ela retorna um
+ponteiro para uma estrutura hostent:
+
+===extraido de winsock.h do dev-c++===
+struct  hostent {
+	char    *h_name;
+	char    **h_aliases;
+	short   h_addrtype;
+	short   h_length;
+	char    **h_addr_list;
+#define h_addr h_addr_list[0]
+};
+===extraido de winsock.h do dev-c++===
+
+Aqui h_name eh o nome oficial da maquina, h_aliases eh uma lista de nomes
+alternativos para a maquina, h_addrtype eh o tipo de endereco retornado, 
+h_length eh o tamanho de cada endereco em bytes, e h_addr_list eh uma lista
+de enderecos terminada em NULL.
+
+Assim, voce poderia fazer
+
+struct hostent *host;
+host = gethostbyname("unsekurity.virtualave.net");
+
+Isso ira resolver o nome "unsekurity.virtualave.net" e retornar uma estrutura
+hostent.
+
+Sintaxe:
+struct hostent *gethostbyaddr (char *addr, int len, int type)
+
+Esta funcao faz o mesmo da gethostbyname, mas o ponteiro addr deve apontar
+para um endereco em network byte order. Aqui len eh o tamanho do endereco, e
+tye eh o tipo de endereco. Retorna NULL em caso de erro.
+
+Sintaxe:
+struct protoent *getprotobyname(char *name)
+
+Essa funcao retorna informacoes sobre um protocolo dado seu nome. O retorno
+eh um ponteiro para uma estrutura protoent, que eh definida assim:
+
+
+===extraido de winsock.h do dev-c++===
+struct  protoent {
+	char    *p_name;
+	char    **p_aliases;
+	short   p_proto;
+};
+===extraido de winsock.h do dev-c++===
+ 
+Sintaxe:
+
+struct protoent *getprotobynumber (int number)
+
+Essa funcao retorna informacoes sobre um dado protocolo dado seu numero no 
+formato host byte order. O retorno eh um ponteiro para uma estrutura protoent,
+definida anteriormente.
+
+Sintaxe:
+
+struct servent *getservbyname(char *name,       char *proto)
+
+Essa funcao retorna informacoes sobre um servico dado seu nome e o seu 
+protocolo. O retorno eh uma estrutura servent, definida logo a seguir:
+
+===extraido de winsock.h do dev-c++===
+struct  servent {
+	char    *s_name;
+	char    **s_aliases;
+	short   s_port;
+	char    *s_proto;
+};
+===extraido de winsock.h do dev-c++===
+
+Na estrutura acima, s_name eh o nome do servico, s_aliases eh um conjunto
+de nomes alternativos para o servico, s_port eh a porta em que o servico
+roda e s_proto eh o nome do protocolo usado pelo servico.
+
+Sintaxe:
+
+struct servent *getservbyport(int port, char *proto)
+
+Essa funcao retorna informacoes sobre um servico dado a sua porta e o 
+protocolo. O retorno eh uma estrutura servent, jah definida anteriormente.
+
+10. Arquivos importantes
+
+Bem, voce deve saber que nos sistemas Unix, existe um arquivo com informacoes
+acerca do protocolo, portas, servicos, etc. Um destes arquivos, /etc/services,
+assume o nome c:\windows\services no Windows 95. Eh bom manter atualizado este
+arquivo, pois se voce der um getservbyport numa porta que nao estah listada 
+neste arquivo, e imprimir o nome de tal servico, obterah um erro.
+Segue abaixo uma lista dos arquivos e suas localizacoes no Win 95 e no NT 4.0
+
+
+UNIX                   WIN 95                  WIN NT4
+/etc/services   c:\windows\services     c:\winnt\system32\drivers\etc\services
+/etc/protocol   c:\windows\protocol     c:\winnt\system32\drivers\etc\protocol
+/etc/networks   c:\windows\networks     c:\winnt\system32\drivers\etc\networks
+/etc/hosts      c:\windows\hosts.sam    c:\winnt\system32\drivers\etc\hosts
+		    c:\windows\lmhosts.sam  c:\winnt\system32\drivers\etc\lmhosts.sam
+
+11. Portscan
+
+Bem, com o que vimos ateh agora, jah eh possivel desenvolver um portscan simples.
+A tecnica eh criar um socket para cada porta que voce deseja scanear num 
+servidor. Devo frisar aqui que a ferramenta de portscan abaixo eh facilmente
+detectavel e soh seria util para administradores de redes testarem suas redes e
+programadores aprenderem como programar em winsocks.
+
+===pscan.c===
+#include <stdio.h>
+#include <stdlib.h>
+#include <winsock2.h>
+
+/*
+Portscan feito em Winsocks 
+Autor: Dimitri Vashnov a.k.a xf86config
+Email: palwaaktaar@bol.com.br
+Thanks Unsekurity Team!
+Adicione -lwsock32 na linha de comando do compilador Dev-c++
+Visite http://www.bloodshed.net (Compilador Dev-c++)
+e http://unsekurity.virtualave.net (Unsekurity Team)
+Nota:
+Este portscan eh muito vuneravel a deteccao. 
+Execute-o a seu proprio risco.
+*/
+
+int main(int argc, char *argv[])
+{
+ char i;
+ int conexao;
+ SOCKET mysocket;
+ struct sockaddr_in alvo;
+ struct servent *scan;
+ int PORTA;
+ WORD wVersion;
+ WSADATA wStart;
+ int total = 0;
+ int INF = 1;
+ int SUP = 25;
+ 
+ if (argc<=1) { 
+  printf("Uso: pscan xxx.xxx.xxx.xxx [portainicial] [portafinal]",argv[0]);
+  return;
+ }
+ else if (argc>2){
+  INF = atoi(argv[2]);
+  SUP = atoi(argv[3]);
+ }
+ printf("Ponto0\n");
+ wVersion = MAKEWORD(2, 0);
+ if(WSAStartup(wVersion,&wStart) != 0) {
+  return;
+ }
+ printf("Portscan usando Winsocks 2 by xf86config\n"); 
+ printf("Scaneando %s, portas %d a %d\n",argv[1],INF,SUP);
+ for(PORTA=INF;PORTA<SUP;PORTA++) {
+  printf("Ponto1\n");
+  mysocket = socket(AF_INET,SOCK_STREAM,IPPROTO_IP);
+  if(mysocket < 0) {
+   printf("Nao foi possivel criar socket\n");
+   WSACleanup();
+   exit;
+  }
+  alvo.sin_family = AF_INET;
+  alvo.sin_addr.s_addr = inet_addr(argv[1]);
+  for (i=0;i<8;i++) {
+   alvo.sin_zero[i]=0;
+  }
+  alvo.sin_port = htons(PORTA);
+  printf("Ponto2\n");
+  conexao = connect(mysocket,(struct sockaddr *)&alvo,sizeof(alvo));
+  if(conexao != 0) {
+   closesocket(mysocket);
+  }
+  else {
+  /*scan = getservbyport(htons(PORTA),"tcp");*/
+   printf("Porta %d aberta\n",PORTA);
+   total++;
+   shutdown(mysocket,SD_BOTH);
+   closesocket(mysocket);
+  }
+ } 
+ printf("Total de Portas Abertas: %d\n",total);
+ WSACleanup();
+ system("PAUSE");
+ return 0;
+}
+===pscan.c===
+
+Para compilar o programa acima no dev-c++, adicione o parametro
+-lwsock32 na linha de compilacao.
+
+
+12. Envio e Recebimento de Dados
+
+
+Para enviar e receber dados atraves de um socket jah conectado, o
+esquema eh igual ao BSD sockets: send() e recv().
+
+Sintaxe: int send(SOCKET s, char *buf, int len, int flags)
+
+A funcao send envia pelo socket s os 'len' primeiros bytes do buffer buf.
+A opcao flags pode ser uma das seguintes:
+
+===extraido de winsock.h do dev-c++===
+#ifndef __INSIDE_CYGWIN__
+#define MSG_OOB 1
+#define MSG_PEEK        2
+#define MSG_DONTROUTE   4
+#endif  /* ndef __INSIDE_CYGWIN__ */
+#define MSG_MAXIOVLEN   16
+#define MSG_PARTIAL     0x8000
+===extraido de winsock.h do dev-c++===
+
+Quando nao quisermos nenhuma destas flags, colocaremos flags = 0.
+A funcao retorna o numero de bytes enviados. Em caso de erro, 
+retorna SOCKET_ERROR.
+
+Assim uma chamada para enviar dados por um socket seria:
+
+int sent;
+...
+sent = send(s,"QUIT",sizeof("QUIT"),0);
+printf("Foram enviados %d bytes\n",sent);
+ 
+
+Sintaxe: int recv(SOCKET s, char *buf, int len, int flags)
+
+A funcao acima recebe dados do socket s no buffer buf, onde len
+eh o tamanho do buffer. Quando o socket eh do tipo SOCK_STREAM,
+o maximo de informacao disponivel eh alocado no buffer ateh que
+ele esteja cheio, e o restante da informacao eh guardado. Quando 
+o socket eh do tipo SOCK_DGRAM, e caso o protocolo nao seja
+confiavel, como o UDP, o dado excessivo (que nao pode 
+ser copiado para o buffer) eh descartado. O parametro flags eh o
+mesmo anterior, e neste caso iremos utilizar flags = 0.
+
+O retorno de recv eh o numero de bytes lidos. Se a conexao foi 
+desfeita pelo outro lado da conexao, recv retorna 0. Em caso de erros, 
+recv retorna SOCKET_ERROR.
+
+Por fim, a funcao shutdown tem a seguinte sintaxe:
+
+Sintaxe: int shutdown(SOCKET s, int how)
+
+Essa funcao finaliza o recebindo ou o envio de dados pelo socket s.
+O valor how pode ser um dos seguintes:
+
+===extraido de winsock.h do dev-c++===
+/* shutdown() how types */
+#define SD_RECEIVE      0x00
+#define SD_SEND         0x01
+#define SD_BOTH         0x02
+===extraido de winsock.h do dev-c++===
+
+Se how eh SD_RECEIVE, o recebimento de dados pelo socket s eh interrompido.
+Se how eh SD_SEND, o envio de dados pelo socket s eh interrompido.
+SE how eh SD_BOTH, o envio e recebimentos pelo socket s sao interrompidos.
+
+Se nenhum erro ocorre, a funcao retorna 0, caso contrario, eh retornado
+SOCKET_ERROR.
+
+13. Finalizando
+
+Bem, poderiamos continuar falando de mais e mais funcoes sobre Winsocks,
+pois existe uma vasta gama de recursos inuteis para fussadores e
+administradores. As funcoes sendto e recvfrom nao foram cobertas, mas nao
+se preocupe ainda, embora seja interessante dominar sockets do tipo
+SOCK_DGRAM para poder desenvolver sniffers ou portscans detectors.
+Espero poder cobrir mais sobre winsocks em uma outra oportunidade. Para os
+que desejam programar em winsocks em C++, desenvolvi uma classe Socket que
+anexei no Apendice B, juntamente com um exemplo de portscan em c++. 
+A utilizacao dessa classe Socket eh intuitiva, e talvez numa futura versao 
+eu possa fazer uma documentacao melhor, mas eh bom mostrar que para tais
+tarefas basicas, seria interessante usar C++ em vez de C, tornando o codigo
+enxuto.
+
+Gostaria tambem de agradecer ao coracaodeleao, que me motivou a escrever,
+e aqueles para os quais escrevo, dentre eles, amigos como klogd, Blind_Bard, 
+module, e Cs0. Embora desprezem o Windows, assim como eu, tal sistema precisa 
+ser dominado, de forma que possamos a catar bugs tambem nesta plataforma e nao
+somente na plataforma Unix. Linux, por exemplo, jah instala tudo o que voce
+precisa para ser um fussador. Bibliotecas, compilador, textos (HOWTOs e MANPAGES),
+alem de ser OpenSource, enquanto que no Windows, a documentacao eh fraca,
+compiladores bons sao dificeis de obter e a API eh muito complicada, alem 
+de nao termos acesso ao codigo fonte dos programas, o que nos faz meio 
+'cegos' na caca de bugs.
+
+Barreiras existem para serem quebradas. Para que mais serviriam?
+
+
+----------
+APENDICE A.
+----------
+
+O formato dos codigos de erro eh
+
+MACRO
+
+(inteiro)
+
+Descricao
+
+As macros aqui definidas sao especificas para o Winsocks, ou seja, nao serao
+portaveis para outros ambientes. Para portabilidade, seria conveniente criar
+macros do tipo
+
+#define MACRO WSAMACRO
+
+Ex.:
+
+#define EACCES WSAEACCES
+
+E usar EACCES para portabilidade com ambientes Unix. O Dev-c++, porem, nao
+tem tais macros e voce teria de usar as macros iniciadas por WSA.
+
+===extraido do helpfile da microsoft===
+
+WSAEACCES
+
+(10013)
+
+Permission denied. 
+
+An attempt was made to access a socket in a way forbidden by its access 
+permissions. An example is using a broadcast address for sendto without 
+broadcast permission being set using setsockopt(SO_BROADCAST).
+
+WSAEADDRINUSE
+
+(10048)
+
+Address already in use. 
+
+Only one usage of each socket address (protocol/IP address/port) is 
+normally permitted. This error occurs if an application attempts to 
+bind a socket to an IP address/port that has already been used for 
+an existing socket, or a socket that wasn't closed properly, or one 
+that is still in the process of closing. For server applications that 
+need to bind multiple sockets to the same port number, consider using 
+setsockopt(SO_REUSEADDR). Client applications usually need not call 
+bind at all - connect will choose an unused port automatically.
+
+WSAEADDRNOTAVAIL
+
+(10049)
+
+Cannot assign requested address. 
+
+The requested address is not valid in its context. Normally 
+results from an attempt to bind to an address that is not 
+valid for the local machine, or connect/sendto an address 
+or port that is not valid for a remote machine (e.g. port 0). 
+
+WSAEAFNOSUPPORT
+
+(10047)
+
+Address family not supported by protocol family. 
+
+An address incompatible with the requested protocol was used. 
+All sockets are created with an associated "address family" 
+(i.e. AF_INET for Internet Protocols) and a generic protocol 
+type (i.e. SOCK_STREAM). This error will be returned if an 
+incorrect protocol is explicitly requested in the socket call, 
+or if an address of the wrong family is used for a socket, 
+e.g. in sendto. 
+
+WSAEALREADY
+
+(10037)
+
+Operation already in progress. 
+
+An operation was attempted on a non-blocking socket that 
+already had an operation in progress - i.e. calling connect 
+a second time on a non-blocking socket that is already connecting, 
+or canceling an asynchronous request (WSAAsyncGetXbyY) that 
+has already been canceled or completed. 
+
+WSAECONNABORTED
+
+(10053)
+
+Software caused connection abort. 
+
+An established connection was aborted by the software in your host 
+machine, possibly due to a data transmission timeout or protocol error. 
+
+WSAECONNREFUSED
+
+(10061)
+
+Connection refused. 
+
+No connection could be made because the target machine actively 
+refused it. This usually results from trying to connect to a 
+service that is inactive on the foreign host - i.e. one with 
+no server application running. 
+
+WSAECONNRESET
+
+(10054)
+
+Connection reset by peer. 
+
+A existing connection was forcibly closed by the remote host. 
+This normally results if the peer application on the remote 
+host is suddenly stopped, the host is rebooted, or the remote 
+host used a "hard close" (see setsockopt for more information 
+on the SO_LINGER
+ option on the remote socket.) 
+
+WSAEDESTADDRREQ
+
+(10039)
+
+Destination address required. 
+
+A required address was omitted from an operation on a socket. 
+For example, this error will be returned if sendto is called 
+with the remote address of ADDR_ANY. 
+
+WSAEFAULT
+
+(10014)
+
+Bad address. 
+
+The system detected an invalid pointer address in attempting to 
+use a pointer argument of a call. This error occurs if an 
+application passes an invalid pointer value, or if the length 
+of the buffer is too small. For instance, if the length of an 
+argument which is a struct sockaddr is smaller than 
+sizeof(struct sockaddr). 
+
+WSAEHOSTDOWN
+
+(10064)
+
+Host is down.
+
+A socket operation failed because the destination host was down. 
+A socket operation encountered a dead host. Networking activity 
+on the local host has not been initiated. These conditions are 
+more likely to be indicated by the error WSAETIMEDOUT. 
+
+WSAEHOSTUNREACH
+
+(10065)
+
+No route to host. 
+
+A socket operation was attempted to an unreachable host. See WSAENETUNREACH 
+
+WSAEINPROGRESS
+
+(10036)
+
+Operation now in progress. 
+
+A blocking operation is currently executing. Windows Sockets only 
+allows a single blocking operation to be outstanding per task 
+(or thread), and if any other function call is made (whether or 
+not it references that or any other socket) the function fails 
+with the WSAEINPROGRESS error. 
+
+WSAEINTR
+
+(10004)
+
+Interrupted function call. 
+
+A blocking operation was interrupted by a call to 
+WSACancelBlockingCall. 
+
+WSAEINVAL
+
+(10022)
+
+Invalid argument. 
+
+Some invalid argument was supplied (for example, specifying 
+an invalid level to the setsockopt function). In some 
+instances, it also refers to the current state of the socket - 
+for instance, calling accept on a socket that is not listening. 
+
+WSAEISCONN
+
+(10056)
+
+Socket is already connected. 
+
+A connect request was made on an already connected socket. 
+Some implementations also return this error if sendto is 
+called on a connected SOCK_DGRAM socket (For SOCK_STREAM sockets, 
+the to parameter in sendto is ignored), although other 
+implementations treat this as a legal occurrence. 
+
+WSAEMFILE
+
+(10024)
+
+Too many open files. 
+
+Too many open sockets. Each implementation may have a maximum 
+number of socket handles available, either globally, per process 
+or per thread. 
+
+WSAEMSGSIZE
+
+(10040)
+
+Message too long. 
+
+A message sent on a datagram socket was larger than the 
+internal message buffer or some other network limit, or the 
+buffer used to receive a datagram into was smaller than 
+the datagram itself. 
+
+WSAENETDOWN
+
+(10050)
+
+Network is down. 
+
+A socket operation encountered a dead network. This could 
+indicate a serious failure of the network system (i.e. the 
+protocol stack that the WinSock DLL runs over), the network 
+interface, or the local network itself. 
+
+WSAENETRESET
+
+(10052)
+
+Network dropped connection on reset. 
+
+The host you were connected to crashed and rebooted. May also 
+be returned by setsockopt if an attempt is made to set SO_KEEPALIVE 
+on a connection that has already failed. 
+
+WSAENETUNREACH
+
+(10051)
+
+Network is unreachable. 
+
+A socket operation was attempted to an unreachable network. This 
+usually means the local software knows no route to reach the remote host. 
+
+WSAENOBUFS
+
+(10055)
+
+No buffer space available. 
+
+An operation on a socket could not be performed because the system 
+lacked sufficient buffer space or because a queue was full. 
+
+WSAENOPROTOOPT
+
+(10042)
+
+Bad protocol option. 
+
+An unknown, invalid or unsupported option or level was specified in a 
+getsockopt or setsockopt call. 
+
+WSAENOTCONN
+
+(10057)
+
+Socket is not connected. 
+
+A request to send or receive data was disallowed because the socket 
+is not connected and (when sending on a datagram socket using sendto) 
+no address was supplied. Any other type of operation might also return 
+this error - for example, setsockopt setting SO_KEEPALIVE if the 
+connection has been reset. 
+
+WSAENOTSOCK
+
+(10038)
+
+Socket operation on non-socket.
+
+An operation was attempted on something that is not a socket. 
+Either the socket handle parameter did not reference a valid 
+socket, or for select, a member of an fd_set was not valid. 
+
+WSAEOPNOTSUPP
+
+(10045)
+
+Operation not supported. 
+
+The attempted operation is not supported for the type of object 
+referenced. Usually this occurs when a socket descriptor to a 
+socket that cannot support this operation, for example, trying 
+to accept a connection on a datagram socket. 
+
+WSAEPFNOSUPPORT
+
+(10046)
+
+Protocol family not supported. 
+
+The protocol family has not been configured into the system or no 
+implementation for it exists. Has a slightly different meaning to 
+WSAEAFNOSUPPORT, but is interchangeable in most cases, and all 
+Windows Sockets functions that return one of these specify WSAEAFNOSUPPORT. 
+
+WSAEPROCLIM
+
+(10067)
+
+Too many processes.
+
+A Windows Sockets implementation may have a limit on the number 
+of applications that may use it simultaneously. WSAStartup may 
+fail with this error if the limit has been reached. 
+
+WSAEPROTONOSUPPORT
+
+(10043)
+
+Protocol not supported. 
+
+The requested protocol has not been configured into the system, 
+or no implementation for it exists. For example, a socket call 
+requests a SOCK_DGRAM socket, but specifies a stream protocol. 
+
+WSAEPROTOTYPE
+
+(10041)
+
+Protocol wrong type for socket. 
+
+A protocol was specified in the socket function call that does not 
+support the semantics of the socket type requested. For example, 
+the ARPA Internet UDP protocol cannot be specified with a socket 
+type of SOCK_STREAM. 
+
+WSAESHUTDOWN
+
+(10058)
+
+Cannot send after socket shutdown. 
+
+A request to send or receive data was disallowed because the 
+socket had already been shut down in that direction with a 
+previous shutdown call. By calling shutdown a partial close of 
+a socket is requested, which is a signal that sending or 
+receiving or both has been discontinued. 
+
+WSAESOCKTNOSUPPORT
+
+(10044)
+
+Socket type not supported. 
+
+The support for the specified socket type does not exist in this 
+address family. For example, the optional type SOCK_RAW might 
+be selected in a socket call, and the implementation does not 
+support SOCK_RAW sockets at all. 
+
+WSAETIMEDOUT
+
+(10060)
+
+Connection timed out. 
+
+A connection attempt failed because the connected party did not 
+properly respond after a period of time, or established connection 
+failed because connected host has failed to respond. 
+
+WSAEWOULDBLOCK
+
+(10035)
+
+Resource temporarily unavailable. 
+
+This error is returned from operations on non-blocking sockets 
+that cannot be completed immediately, for example recv when no 
+data is queued to be read from the socket. It is a non-fatal 
+error, and the operation should be retried later. It is normal 
+for WSAEWOULDBLOCK to be reported as the result from calling 
+connect on a non-blocking SOCK_STREAM socket, since some time 
+must elapse for the connection to be established. 
+
+WSAHOST_NOT_FOUND
+
+(11001)
+
+Host not found.
+
+No such host is known. The name is not an official hostname or 
+alias, or it cannot be found in the database(s) being queried. 
+This error may also be returned for protocol and service queries, 
+and means the specified name could not be found in the relevant database. 
+
+WSA_INVALID_HANDLE
+
+(OS dependent)
+
+Specified event object handle is invalid.
+
+An application attempts to use an event object, but the specified 
+handle is not valid. 
+
+WSA_INVALID_PARAMETER
+
+(OS dependent)
+
+One or more parameters are invalid.
+
+An application used a Windows Sockets function which directly maps 
+to a Win32 function. The Win32 function is indicating a problem 
+with one or more parameters. 
+
+WSAINVALIDPROCTABLE
+
+(OS dependent)
+
+Invalid procedure table from service provider.
+
+A service provider returned a bogus proc table to WS2_32.DLL. 
+(Usually caused by one or more of the function pointers being NULL.) 
+
+WSAINVALIDPROVIDER
+
+(OS dependent)
+
+Invalid service provider version number.
+
+A service provider returned a version number other than 2.0.
+
+WSA_IO_PENDING
+
+(OS dependent)
+
+Overlapped operations will complete later.
+
+The application has initiated an overlapped operation which cannot 
+be completed immediately. A completion indication will be given at 
+a later time when the operation has been completed. 
+
+WSA_IO_INCOMPLETE
+
+(OS dependent)
+
+Overlapped I/O event object not in signaled state.
+
+The application has tried to determine the status of an overlapped 
+operation which is not yet completed. Applications that use 
+WSAWaitForMultipleEvents in a polling mode to determine when 
+an overlapped operation has completed will get this error code 
+until the operation is complete. 
+
+WSA_NOT_ENOUGH_MEMORY
+
+(OS dependent)
+
+Insufficient memory available.
+
+An application used a Windows Sockets function which directly 
+maps to a Win32 function. The Win32 function is indicating a 
+lack of required memory resources. 
+
+WSANOTINITIALISED
+
+(10093)
+
+Successful WSAStartup not yet performed.
+
+Either the application hasn't called WSAStartup or WSAStartup 
+failed. The application may be accessing a socket which the 
+current active task does not own (i.e. trying to share a 
+socket between tasks), or WSACleanup has been called too many times. 
+
+WSANO_DATA
+
+(11004)
+
+Valid name, no data record of requested type.
+
+The requested name is valid and was found in the database, 
+but it does not have the correct associated data being resolved 
+for. The usual example for this is a hostname -> address 
+translation attempt (using gethostbyname or WSAAsyncGetHostByName) 
+which uses the DNS (Domain Name Server), and an MX record is 
+returned but no A record - indicating the host itself exists, 
+but is not directly reachable. 
+
+WSANO_RECOVERY
+
+(11003)
+
+This is a non-recoverable error.
+
+This indicates some sort of non-recoverable error occurred during 
+a database lookup. This may be because the database files 
+(e.g. BSD-compatible HOSTS, SERVICES or PROTOCOLS files) could 
+not be found, or a DNS request was returned by the server with a 
+severe error.
+
+WSAPROVIDERFAILEDINIT
+
+(OS dependent)
+
+Unable to initialize a service provider.
+
+Either a service provider's DLL could not be loaded (LoadLibrary failed) 
+or the provider's WSPStartup/NSPStartup function failed. 
+
+WSASYSCALLFAILURE
+
+(OS dependent)
+
+System call failure.
+
+Returned when a system call that should never fail does. For example, 
+if a call to WaitForMultipleObjects fails or one of the registry 
+functions fails trying to manipulate theprotocol/namespace catalogs.
+
+WSASYSNOTREADY
+
+(10091)
+
+Network subsystem is unavailable. 
+
+This error is returned by WSAStartup if the Windows Sockets 
+implementation cannot function at this time because the underlying 
+system it uses to provide network services is currently unavailable. 
+Users should check:
+·       that the appropriate Windows Sockets DLL file is in the 
+current path,
+·       that they are not trying to use more than one Windows Sockets 
+implementation simultaneously. If there is more than one WINSOCK DLL 
+on your system, be sure the first one in the path is appropriate for 
+the network subsystem currently loaded.
+
+·       the Windows Sockets implementation documentation to be sure all 
+necessary components are currently installed and configured correctly. 
+
+WSATRY_AGAIN
+
+(11002)
+
+Non-authoritative host not found.
+
+This is usually a temporary error during hostname resolution and 
+means that the local server did not receive a response from an 
+authoritative server. A retry at some time later may be successful. 
+
+WSAVERNOTSUPPORTED
+
+(10092)
+
+WINSOCK.DLL version out of range.
+
+The current Windows Sockets implementation does not support the Windows 
+Sockets specification version requested by the application. Check 
+that no old Windows Sockets DLL files are being accessed.
+
+WSAEDISCON
+
+(10094)
+
+Graceful shutdown in progress.
+
+Returned by recv, WSARecv to indicate the remote party has initiated 
+a graceful shutdown sequence. 
+
+WSA_OPERATION_ABORTED
+
+(OS dependent)
+
+Overlapped operation aborted.
+
+An overlapped operation was canceled due to the closure of the socket, 
+or the execution of the SIO_FLUSH command in WSAIoctl.
+
+ 
+===extraido do helpfile da microsoft===
+
+----------
+APENDICE B
+----------
+
+A seguinte classe em c++ foi desenvolvida usando Dev-c++. Coloque o arquivo
+abaixo com o nome Socket.h dentro da pasta \include\g++ do diretorio raiz do
+dev-c++.
+
+===Socket.h===
+#include <iostream.h>
+#include <stdlib.h>
+#include <winsock2.h>
+
+/*
+Classe Socket para Winsocks
+Autor: Dimitri Vashnov a.k.a xf86config
+Email: palwaaktaar@bol.com.br
+Thanks Unsekurity Team!
+Este arquivo deve estar em \include\g++ 
+Visite http://www.bloodshed.net (Compilador Dev-c++)
+e http://unsekurity.virtualave.net (Unsekurity Team)
+Nota:
+Esta classe limita-se a conexoes envolvendo sockets SOCK_STREAM usando
+o protocolo IP.
+Sinta-se livre pra modificar este arquivo, contanto que permaneca
+alguma mencao sobre o autor original e seu email.
+*/
+
+
+class Socket {
+ public:
+ SOCKET s;
+ struct sockaddr_in local, remoto, cliente;
+ int status; 
+ int c_len;
+ Socket() {
+  c_len = sizeof(struct sockaddr);
+  s = socket(AF_INET,SOCK_STREAM,IPPROTO_IP);
+ }
+ Socket(SOCKET soq) {
+  c_len = sizeof(struct sockaddr);
+  s = soq;
+ }
+ ~Socket() {
+  closesocket(s);
+  status = 0;
+ }
+ int Connect(char *ip,unsigned short porta) {
+  remoto.sin_family = AF_INET;
+  remoto.sin_port = htons(porta);
+  remoto.sin_addr.s_addr = inet_addr(ip);
+  if((connect(s,(struct sockaddr *)&remoto,sizeof(struct sockaddr))) != 0) {
+   status = 0;
+   return -1;
+  }
+  status = 1;
+  return 0;
+ }
+ int Disconnect() {
+  status = 0;
+  return shutdown(s,SD_BOTH);
+ }
+ int Status() {
+  return status;
+ }
+ int Send(char *string, int size) {
+  return send(s,string,size,0);
+ }
+ int Receive(char *string, int size) {
+  return recv(s,string,size,0);
+ }
+ int Listen(int porta) {
+  return listen(s,porta);
+ }
+ int Bind(int porta) {
+  int i;
+  local.sin_family = AF_INET;
+  local.sin_port = htons(porta);
+  local.sin_addr.s_addr = INADDR_ANY;
+  for(i=0;i<8;i++) {
+   local.sin_zero[i] = 0;
+  }
+  if(bind(s,(struct sockaddr*)&local,sizeof(struct sockaddr)) != 0) {
+   closesocket(s);
+   WSACleanup();
+   exit;
+  }
+ }
+ SOCKET Accept() {
+  return accept(s,(struct sockaddr *)&cliente,&c_len);
+ }
+};
+
+===fim do Socket.h===
+
+Segue aqui um exemplo de portscan usando a classe acima:
+
+===Pscan.cpp===
+#include <iostream>
+#include <Socket.h>
+
+/*
+Portscan feito em Winsocks usando a classe Socket
+Autor: Dimitri Vashnov a.k.a xf86config
+Email: palwaaktaar@bol.com.br
+Thanks Unsekurity Team!
+Adicione -lwsock32 na linha de comando do compilador Dev-c++
+Visite http://www.bloodshed.net (Compilador Dev-c++)
+e http://unsekurity.virtualave.net (Unsekurity Team)
+Nota:
+Este portscan eh muito vuneravel a deteccao. 
+Execute-o a seu proprio risco.
+*/
+
+int main(int argc, char *argv[]) {
+ WORD wsversao = MAKEWORD(2,0);
+ WSADATA wsadata;
+ WSAStartup(wsversao,&wsadata);
+ int i, inicio, fim;
+ cout << "Portscaner for Windows by xf" << endl;
+ cout << "Digite a primeira porta:" << endl;
+ cin >> inicio;
+ cout << "Digite a ultima porta:" << endl;
+ cin >> fim;
+ for(i=inicio;i<=fim;i++) {
+  Socket soquete = Socket();
+  soquete.Connect(argv[1],i);
+  if(soquete.Status() == 1) {
+   cout << "Porta " << i << " aberta" << endl;
+  }
+  else {
+   cout << "Porta " << i << " fechada" << endl;
+  }
+ }
+
+ WSACleanup(); 
+
+}
+
+===fim do Pscan.cpp===
+

@@ -1,0 +1,142 @@
+Unsekurity Team
+irc.brasnet.org : #unsekurity
+http://unsekurity.virtualave.net
+e-brain - eebrain@hotmail.com
+
+				 _ ______ __  _
+				| | Sony |  || \
+				| | 1.44 |__|| |
+				| |__________| |
+				| Win32 Trojan |
+				|    Coding    |
+                                |  bY e-brain  |
+				|O____________O|
+
+
+        Com certeza alguns de voces estao pensando: "que bosta! esse cara eh
+um lammer da porra que ainda brinca com o windows dele, e fica brincando de
+invadir os outros com trojans!"
+        Ai vai minha resposta: bando de imbecil sem cabeca p/ porra nenhuma,
+eh isso qeu voces sao. Conheco muita gente por ai (MUITA MESMO!!!) que fica
+dizendo: como vc fica usando windows cara! Windows fede! Usa linux! Linux eh
+o canal!
+        Esses tipos nao sabem nem mudar a porra da hora pelo DOS e se acham
+"Os Entendedores da Computacao". Olha cara. O linux tah ai, mas ainda
+grande parte do mercado empresarial e domestico eh do windows.
+Voce precisa entender a fundo do sistema com o qual estah trabalhando (ou
+pegar exploits prontos - LAME SCRIPT KID MODE).
+
+Now to the mad stuff! =]
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Escondendo o processo
+
+        Esconder uma aplicacao windows daquela famosa janela Ctrl+Alt+Del,
+nao eh nenhum bicho de sete cabecas. Alias, eh apenas uma questao de usar de
+uma chamada do sistema, para propositos diferentes dos quais ela foi criada.
+        A API a ser usada eh a RegisterServiceProcess, localizada em
+kernel32.dll. o formato eh RegisterServiceProcess(ProcessID, Type)
+ProcessID: pode ser setado p/ 0 sempre.
+Type: 0 service, 1 process
+        No noso caso, queremos que a aplicacao seja registrada como service.
+Eh ai que estah o X da questao. A janela de Ctrl+Alt+Del soh registra os
+processos que estao sendo executados. Os servicos continuam ocultos, com
+excessao do windows NT, onde servicos e processos sao exibidos. Neste caso
+eu nunca soube de algo que pudesse esconder uma aplicacao, a nao ser uma
+tecnica que serah discutida logo abaixo.
+P.S.: existem varios programas que mostram ao usuario tudo o que estah sendo
+executado em sua maquina, inclusive servicos. Um exemplo eh um utilitario que
+vem dentro do Win98, para verificacao do sistema.
+
+                                .o!o.
+
+Executando na inicializacao
+
+        Nenhum misterio. Ha varias maneiras de se executar um arquivo na
+inicializacao do sistema:
+1. Colocar um atalho na pasta Iniciar, do menu iniciar. Se voce optar por
+esta tecnica, recomendo ir estudar em uma escola de deficientes e largar o
+computador, porque c nao vai ter futuro nenhum na vida.
+
+2. Adicionar seu programa na linha "run" do win.ini.
+
+3. Adicionar o programa na chave:
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\Run, ou
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\RunService, ou
+HKEY_CURRENT_USER\Software\Microsoft\Windows\Run, ou
+HKEY_CURRENT_USER\Software\Microsoft\Windows\RunService, ou
+HKEY_USERS\.Default\Software\Microsoft\Windows\RunService, ou
+HKEY_USERS\.Default\Software\Microsoft\Windows\RunService.
+
+        Pow! Quanta chave de registro! Bem... entao ai vai entao uma breve
+explicacao sobre estas chaves de registro do windows.
+        Na pasta HKEY_LOCAL_MACHINE, qualquer usuario que conectar na maquina
+ira carregar o processo.
+        Na pasta HKEY_CURRENT_USER, se voce tiver trojaneado um certo usuario
+da maquina, apenas aquele usuario ira carregara o trojan, ao logar na maquina.
+Isto eh util, quando nada mais te interessa no sistema, alem dos arquivos
+daquele usuario. E com um sistema de aviso que o trojan pode te enviar quando
+o usuario estiver conectado, voce pode saber exatamente quando agir.
+        A pasta HKEY_CURRENT_USER eh apenas um link para a pasta do usuario
+logado, dentro de HKEY_USERS. Se o usuario logado for , por exemplo, Estevez,
+a pasta apontara p/ HKEY_USERS\Estevez.
+        A pasta HKEY_USERS\.Default, eh sempre utilizada quando a maquina tem
+apenas um unico usuario. Consequentemente, HKEY_CURRENT_USER ira apontar
+apenas para HKEY_USERS\.Default sempre.
+
+                                .o!o.
+
+Instalando-se no sistema
+
+        O progama deve na primeira vez que for executado, se copiar para um
+dir (geralmente o dir do windows, ou windows\system), exibir uma mensagem de
+erro (por exemplo uma MEssage Box "Error loading SHiT.DLL"), fingir que foi
+descarregado e se ocultar.
+        Ao ser carregado pelo boot, o programa nao deve fazer o mesmo. Apenas
+carregar e ficar oculto. Basta verificar se o diretorio em que o trojan estah,
+eh aquele onde voce quer que ele seja instalado.
+        Aqui vai um diagrama bem explicado do qeu fazer p/ nao haver confusao
+ao instalar o trojan no sistema.
+
+            programa foi executado
+                      |
+                      |
+                      v
+            estah no dir requerido?
+              Sim          Nao-----> copiar-se p/ o dir desejado
+               |                                 |
+               |                                 |
+               v                                 v
+          Ocultar-se <----+           escrever chave de registro
+                          |                      |
+                          |                      |
+                          |                      v
+                          |            exibir mensagem de erro
+                          |                      |
+                          +----------------------+
+
+
+                                .o!o.
+
+That's all folks!
+        Daqui por diante acho que todos jah sabem o que fazer. Nao tem segredo
+nenhum. Basta saber programar. Abrir uma porta, copiar arquivos, etc...
+Basta saber usar as API's do windows p/ obter toda e qualquer tipo de
+informacao do computador que desejar. Existem bons livros os quais eu nao me
+lembro agora que documentam as API's do windows. Verdadeiras biblias. Basta
+consulta-las.
+                                                Happy coding,
+                                                        e-brain
+
+Apendix
+
+        Jah ia me esquecendo! Eu disse que tinha uma maneira de esconder uma
+aplicacao do WinNT. Eh verdade, existe sim, mas eh um pouco mais complicada.
+O fato consiste em infectar um arquivo com seu codigo. Isso exige um pouco de
+conhecimento de infeccao virotica (yeah dud! virii rlz!).
+        Um exemplo seria infectar o ICQ, para que ele executasse nosso codigo,
+antes de passar o controle ao ICQ, e abrisse uma porta, etc, etc...
+        Existe alguns inconvenientes nessa tecnica a serem contornados, e toda
+a programacao serah feita em baixo nivel. Pretendo escrever um outro texto
+explicando programacao em 32 bits usando API's, mas nao contem muito com esse
+texto. procurem por ai material e ponham a mao na massa! Essa eh parte do
+espirito do fucador: a persistencia! =]

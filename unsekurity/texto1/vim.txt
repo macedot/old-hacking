@@ -1,0 +1,703 @@
+#############################################################################
+##									   ##
+##		D E S M I S T I F I C A N D O   O   V I M		   ##
+##			    Unsekurity Team - 2001 			   ##
+#############################################################################
+
+
+Por The Alchemist ( alchemist@hackzone.com.br )
+
+
+Obs: `Hackers` e o resto da `elite,` nao percam seu tempo lendo este texto, 
+o seu conhecimento ja eh muito grande para ser gasto com um simples tutorial
+como este.... ( ate por que este texto fala sobre o vi  :)
+
+
+	========================
+		SUMARIO
+	========================
+	1 - Introducao
+	 1.2 - Por que aprender o ViM ( VI )
+	 1.3 - Objetivos
+	2 - Editando com o ViM
+	 2.1 - Modos de edicao
+	 2.3 - Movendo entre os modos de edicao
+	 2.4 - Editando um arquivo existente
+	 2.5 - Interrompendo, cancelando e saindo do vi
+	3 - Movendo o cursor
+	 3.1 - Descricao
+	 3.2 - Movendo o curor por linhas e caracteres
+	 3.3 - Movendo dentre as linhas
+	 3.4 - Repetindo o comando de movimento varias vezes
+	 3.5 - Movendo o cursos palavra por palavra
+	 3.6 - Movendo o cursos por linhas, paragrafos e sentencas
+	 3.7 - Movendo o cursos atraves das paginas
+	4 - Procurando, inserindo e alterando o texto
+	 4.1 - Descricao
+	 4.2 - Procurando por palavras
+	 4.3 - Inserindo texto
+	 4.5 - Modificando texto
+	5 - Copiando, movendo e salvando texto
+	 5.1 - Descricao
+	 5.2 - Copiando e movendo texto
+	 5.3 - Usando comandos com o buffer
+ 	 5.4 - Restorando e repetindo alteracoes
+	 5.5 - Salvando as alteracoes
+	 5.6 - Editando um outro arquivo
+	 5.7 - Comandos de controle da tela
+	 5.8 - Recuperando e editado uma sessao
+	 5.9 - Customizando o ViM
+	 5.10 - Usando as opcoes SET
+
+,-------------------------,
+| 1 - I N T R O D U C A O |
+`-------------------------`
+
+	Bom, aqui estou eu escrevendo o meu primeiro texto 'oficial', ou em 
+outras palavras, o primeiro texto que eu realmente termino a ponto de ser um
+material que varias pessoas possam usar e ( espero que ) aprender alguma coisa
+de boa ou nova. Atualmente eu estou com bastante trabalho ( o que nao eh nada
+mau :) e isso consome praticamente todo o meu tempo, sendo essa a razao pela
+qual muitas vezes deixo de me dedicar para coisas mais banais. Bah, mas chega
+dessa choradeira toda hehehe, vamos ao que interessa mesmo. So lembrando que
+se voce for da elite ou um raker, entao nem perca seu tempo lendo isso, pois
+o conhecimento aqui contido nao eh para voce. So lembrando que ao final nao 
+revisei o texto, entao erros de digitacao ou concordancia podem ocorrer. 
+	O conteudo do texto foi todo escrito por mim, porem algumas coisas
+usei como base de referenia ou mesmo de pesquisa. Em parte isso foi retirado
+do "UNIX Utilities and Commands course Guide".
+
+	1.2 - POR QUE APRENDER A USAR O ViM ( VI )
+
+	Antes de mais nada, este texto fala mais precisamente do ViM, a versao
+'turbinada' do VI ( le-se viai ), mas a maioria ( 99.7% ) do que eh descrito aqui
+funciona sem prolema algum no VI. A um primeiro contato, usar o vi pode ser 
+uma experiencia boa e interessante como pode ser uma guerra com o teclado e um
+festival de palavroes ( quantas vezes voce ja tentou sair do editor e nao 
+conseguiu ?? ). De qualquer maneira, quando aprende-se a trabalhar com este
+magnifico editor, voce nao ira mais querer outra coisa, e sempre estara atras
+de coisas novas sobre o vi. O vi eh como uma religiao, tem seus seguidores 
+ao redor do mundo que sao capazes de passar horas discutindo com usuarios de 
+outros editores ( lei-se emacs ) sobre as qualidades ( ou nao ) do mesmo. 
+	Este texto nao tem o intuito de lhe forcar a usar o vi ou dizer que o
+mesmo eh o melhor do mundo, apenas tem a finalidade de tentar ensinar o funcionamento
+deste magnifico programa. Uma outra boa razao para dominiar o vi eh que ele eh
+o editor padrao dos sistemas UNIX, e em um momento de dificuldade ( com por exemplo
+uma pane no sistema ) o mesmo sera muito possivelmente o unico editor de textos
+a sua mao. Eh isso entao, vamos agora para o que interessa :) 
+
+,-----------------------------------,
+|2 - E D I T A N D O  C O M  O  V I |
+`-----------------------------------`
+
+	Este capitulo discute os modos de operacao do vi, tais com o inicar
+e terminar uma sessao.   
+
+	2.1 - MODOS DE EDICAO
+	Em alguns teclados ( ou quando a tecla ESC nao funcionar ) voce pode
+sair do modo de edicao de texto usando a sequencia de CTRL+[. Isso muito 
+provavelmente ira funcionar, porem sera rara a vez que este comando sera necessario.
+O vi tem tres modos de operacao:
+
+	- Modo de comando ou edicao
+	- Modo de entrada de texto
+	- Modo de ultima linha
+
+A relacao entre os modos de edicao esta no ascii abaixo:
+
+				ARQUIVO DO VI
+				     	|
+					|
+,------------------,	    ,-------------------,	,---------------------,
+| Entrada de texto | 	    | MODO DE COMANDO   |	|MODO DE ULTIMA LINHA |
+|		   | <------|	deletar texto,  |	|editar outro arquivo,|
+| append, mudar,   |  	    |	mover o cursor, | 	|excut. comando shell,|
+| inserir, abrir,  |	    |	mover o texto ou| ENTER	|sair, ler um arquivo |
+| trocar ou        |  ESC   |	desfazer (undo) |<------|pelo buffer, escrever|
+| substituir	   |------->|___________________|	|o buffer para o      |
+`------------------`		     |			|arquivo.	      |
+| a, A, c, C, i, I,|		     |			|_____________________|
+| o, O, R, s, S    |		     ZZ			|      :,/,?,!!       |
+`------------------`					|_____________________| 
+
+	2.3 - A seguinte tabela ira lhe ajudar a entender como e quando navegar
+entre os modos de edicao:
+
+MODOS DE EDICAO DO vi
+------------------------------------------------------------------------------
+MODO		DESCRICAO
+-------------------------------------------------------------------------------
+Comando		Este eh o modo default do vi, eh usando mais normalmente para
+		mover-se pelo arquivo, deletar ou substituir textos. Qualquer
+		comando pode ser entrado quando neste modo de comando,
+		exceto eh claro, os comandos de entrada de texto :) . Para entrar
+		no modo de comando, pressione a tecla ESC. Se a tecla
+		ESC for presssionada quado ja estiver neste modo, entao o 
+		comando atual ( ou que estava sendo realizado ) sera cancelado
+		imediatamente, da mesma forma que CRTL+C tambem cancela um
+		comando. 
+
+
+Entrada de	Entra neste modo atraves do modo de comando usando as teclas
+texo		a, A, cx, C, i, I, o, O, r, s ou S. O 'x' em cx representa
+		o escopo do comando. Apos ter digitado alguma dessas teclas,
+		voce pode digitar texto na posicao corrente do cursor. Lembre-se
+		que para retornar ao modo de comando voce deve precionar ESC ou
+		CTRL+[
+
+
+Ultima Linha	Entra neste modo atraves do modo de comando usando 2 pontos ':',
+		barra '/', interrogacao '?' ou exclamacao '!!'. 
+		Ira aparecer um prompt na parte inferior do monitor, entao voce
+		pode digitar algum comando. Para executar o comando precione
+		ENTER ou precione CTRL-C para cancelar o mesmo.  
+
+Se voce nao tem certeza em qual modo de edicao esta, precione ESC e ira ouvir
+um beep, o que indica que agora voce entrou no modo de comando. Mais adiante
+vamos ver como ter uma maneira visual de saber em qual modo de edicao estamos
+atualmente. 
+
+	2.4 - EDITANDO UM ARQUIVO EXISTENTE
+	O exemplo a seguir mostra como editar um arquivo qualquer ( chamarei
+de aloha.txt ). Basta simplesmente digitar no prompt do shell:
+
+$vi aloha.txt
+Primeira linha do arquivo |
+Segundo linha do arquivo  | --> (1) 
+Terceira linha do arquivo |  
+~ | -->  (2)
+~ |	
+	.
+	.
+	,
+~
+~
+~
+"aloha.txt" 3 lines, 77 characteres (3)
+
+(1) -> Se o arquivo existe, as primeiras linhas do arquivo sao mostradas na
+tela.
+(2) -> Se o numero de linhas no arquivo eh menor que o total de colunas da tela,
+todas as linhas que nao contiverem algo escrito terao um til '~' no inicio da 
+linha.
+(3) -> A ultima linha indica o nome do arquivo, o total de linhas e o total
+de caracteres no mesmo. 
+
+Se o voce digitar
+
+$vi arquivo
+
+e o arquivo de nome 'arquivo' nao existir ainda, o vi ira cria-lo, sendo que 
+na parte inferior da tela ira aparecer
+
+"arquivo" [new file]
+
+	
+	2.5 - INTERROMPENDO, CANCELANDO E SAINDO DO VI
+	A tabela a seguir lista os comandos usados para sair do vi, executar
+um comando qualquer ou rodar a shell de login dentro do vi:
+
+TABELA DE COMANDOS
+------------------------------------------------------------------------------
+Para fazer:				Use:
+-------------------------------------------------------------------------------
+Sair do vi, salvando as alteracoes	zz
+se precisar:
+
+Sair do vi. Se alguma alteracao foi 	:q
+feita, o vi ira mostrar uma mensagem
+de alerta e nao ira sair
+
+Forcar a saida do vi sem gravar as	:q!
+alteracoes feitas no arquivo
+
+Gravar as alteracoes no arquivo 	:w
+
+Gravar as alteracoes e sair do vi	:wq
+
+Rodar o comando usando o shell. O 	:w !comando
+comando executado nao ira afetar o
+buffer de edicao de texto
+
+Executar a shell de login. Ao 		:sh
+digitar exit voce ira retornar ao
+vi
+
+Forcar a saida do vi			CTRL+Z
+
+-------------------------------------------------------------------------------
+
+,-----------------------------,
+|   3 - MOVENDO O CURSOR      |
+`-----------------------------`
+	3.1 - DESCRICAO
+	Quando voce inicia o vi, voce esta no modo de comando. Para mover o 
+curor entre as linhas/palavras do arquivo voce precisa necessariamente estar
+no modo de comando ( uma excessao: voce pode move o cursor simplesmente usando
+as setas do teclado, mas por razoes didaticas sera descrito como fazer o mesmo
+usando comando de teclado ). O fato eh que algumas pessoas acham mais simples
+e pratico usar comando de teclado para mover-se no arquivo. A tabela seguinte
+mostra os comandos mais usando para fazer tal movimentacao no arquivo:
+
+	3.2 - MOVER O CURSOR POR LINHAS E CARACTERES
+-------------------------------------------------------------------------------
+Move o cursor para:			Use
+------------------------------------------------------------------------------
+Um caracter a esquerda			h, CTRL+h ou seta para esquerda
+Uma linha abaixo			j, CTRL+n ou seta para baixo
+Uma linha acima				k, CTRL+p ou seta para cima
+Um caracter a direita			l, barra de espaco ou seta para direita
+-------------------------------------------------------------------------------
+
+Obs: nao se esqueca de que o vi leva em consideracao a altura da casa das letras,
+entao H eh um comando e h eh outro comando. Nao se esqueca disto. 
+
+	3.3 - MOVENDO O CURSOS ENTRE AS LINHAS
+	A tabela seguinte mostra alguns comando que voce pode usar para mover
+o curor pela linha atual:
+
+-------------------------------------------------------------------------------
+Move o cursos para:			Use:
+-------------------------------------------------------------------------------
+O inicio da linha			0
+O primeiro caracter nao-espaco		^
+O fim da lnha				$
+O proximo caracter 'x'			fx
+O caracter 'x' anterior			Fx
+Uma coluna antes o caracter 'x'		tx
+Uma coluna apos o caracter 'x'		Tx
+-------------------------------------------------------------------------------
+Para:					Use:
+-------------------------------------------------------------------------------
+Repetir o ultimo comando f, F, t ou T	;
+Repetir o ultimo comando f, F, t ou T	,
+na direcao oposta
+-------------------------------------------------------------------------------
+
+Lembre-se de que eh necessario que voce esteja no modo de comando ( precione ESC ).
+
+	3.4 - REPETINDO O COMANDO DE MOVIMENTO VARIAS VEZES
+
+	Eh possivel prefixar os comando do vi com o numemro de vezes que voce
+deseja que o comando seja executado. Por exemplo:
+
+	- Pressione k para mover o cursor uma linha acima
+	- Pressione 6k para mover o cursos 6 linhas acima
+	
+	3.5 - MOVENDO O CURSOR PALAVRA POR PALAVRA
+	
+	Antes de prosseguir, considere o que o vi considera uma palavra grande
+e uma palavra pequena ( big word e small word ):
+
+	-------------------------------------------------------------
+	Tipo de palavra:	Descricao
+	-------------------------------------------------------------
+	Big word		Uma sequencia de letras, digitos e/ou
+			pontuacao delimitada por uma nova linha, espaco
+			tabulacao ou o inicio da linha. Pontuacao eh 
+			consideracao uma big word quando eh delimitado
+			por um espaco ou tabulacao em cada lado.
+	
+	Small word		Uma sequencia de letras e/ou digitos
+			delimitados por uma nova linha, espaco, tabulacao
+			o inicio de uma nova linha ou algum tipo de
+			pontuacao. Uma serie de pontuacao em sequencia eh 
+			considerado uma small word
+	----------------------------------------------------------------
+
+A proxima tabela mostra como voce pode se movimentar pelas sequencias no 
+arquivo. Lembre-se de que eh necessario que voce esteja em modo de comando.
+
+	-----------------------------------------------------------------
+	Move o cursor para:		Use:
+	-----------------------------------------------------------------
+	Proxima 'small word'		w
+	'small word' anterior		b
+	O fim da proxima 'small word'	e
+
+	Proxima 'big word'		W
+	'big word' anterior		B
+	O fim da proxima 'big word'	E
+	-----------------------------------------------------------------
+
+
+	3.6 - MOVENDO O CURSOS POR LINHAS, PARAGRAFOS E SENTENCAS
+		Em adicao a mover o cursor por linhas e palavras, voce pode
+mover o cursos por sentencas, paragrafos e paginas de texto. A proxima tabela
+mostra como mover o cursos por linhas e sentencas:
+
+	-------------------------------------------------------------------
+	Move o cursor para:		Use:
+	-------------------------------------------------------------------
+	Topo da linha na tela		H
+	Meio da tela			M
+	Parte inferior da tela		L
+	Primeiro caracter nao-espaco	+ ou ENTER
+		na proxima linha	
+	Primeiro caracter nao-espaco	-
+		na linha anterior
+	--------------------------------------------------------------------
+
+	A proxima tabela mostra como mover o cursor por sentencas, paragrafos
+ou secoes do texto:
+
+	----------------------------------------------------------------
+	Move o cursor para o inicio de:		Use:
+	----------------------------------------------------------------
+	Sentenca anterior			(
+	Proxima sentenca			)
+	Paragrafo anteior			{
+	Proximo paragrafo			}
+	Secao anterior				[[
+	Proxima secao				]]
+	----------------------------------------------------------------
+
+	3.7 - MOVENDO O CURSOR ATRAVES DAS PAGINAS
+		As partes a seguir dependem de como o seu terminal esta
+configurado, tais como numero de linhas e numero de colunas. A tabela a 
+seguir mostra os comandos usando para fazer a paginacao atraves do texto:
+
+	-----------------------------------------------------------------
+	Para:				use:
+	-----------------------------------------------------------------
+	Rolar a tela para cima: 	CTRL-u
+	Rolar a tela para baixo:	CTRL-d
+	Uma tela para tras:		CTRL-f
+	Uma tela para frente:		CTRL-b
+	Rola a tela uma linh para cima:	CTRL-y
+	Rola a tela uma linha para 	CTRL-e
+		baixo:
+	PageUp:				z+
+	PageDown:			z^
+	Coloca o curor na linha x ou  	xG
+		 na ultima linha:
+	----------------------------------------------------------------
+
+Eh claro que para muitas das coisas aqui descritas voce pode usar as teclas
+normais do teclado como PGUP e PGDOWN :)
+
+
+	,---------------------------------------------,
+	| 4 - PROCURANDO, INSERINDO E ALTERANDO TEXTO |
+	`---------------------------------------------`
+		4.1 - DESCRICAO
+		Esta secao discute como procurar, inserir e trocar texto em
+um arquivo. As tabelas seguintes proveem os comandos necessrios para completar
+as operacoes:
+
+		4.2 - PROCURANDO POR PALAVRAS
+	Procurando por palavras chave ou sequencias
+	------------------------------------------------------------
+	Para:				Use:
+	------------------------------------------------------------
+	Colocoar o texto na proxima 	/seq
+	   linha contento 'seq':
+	Colocar o cursos na linha	?seq	
+	   anterior contendo 'seq':
+	Repetir a ultima procura por  	n
+	  'seq' na mesma direcao:
+	Repetir a ultima procura por	N
+	  'seq' na direcao oposta:
+	Colocar o cursor n linhas 	/seq /+n
+	  apos encontrar 'seq':
+	Colocar o cursor n linhas	?seq ?-n
+	  antes de encontrar 'seq':
+	---------------------------------------------------------
+Por exemplo, digamos que voce queira procurar a palavra 'Virtual' no arquivo. 
+Para realizar isso basta fazer ( em modo de comando, eh claro ):
+
+/Virtual
+
+e o cursor sera posicionado na posicao corrente. Logicamente voce tambem pode
+procurar por fazes, como a seguir:
+
+/Onde esta isso
+
+e assim por diante :)
+	
+
+	4.3 - INSERINDO TEXTO
+	Quando voce estiver no modo de comando, os seguintes comandos colocam
+o vi em modo de edicao de texto:
+
+	---------------------------------------------------------
+	Para:					Use:
+	---------------------------------------------------------
+	Comecar editando a direita do cursor:	a
+	Comecar editando no fim da linha:	A
+	Inserir texto antes do cursor:		i
+	Comecar escrevendo na linha seguinte:	o
+	Comecar escrevendo na linha de cima:	O
+	----------------------------------------------------------
+
+	4.4 - MODIFICANDO TEXTO
+	Os comandos a seguir sao para mudar algum texto ( eh necessario que 
+o editor esteja em modo de comando - pressione ESC ):
+
+	-----------------------------------------------------------
+	Para:						Use:
+	------------------------------------------------------------
+	Mudar esta palavra:				cw
+	Mudar a palavra anterior:			cb
+	Mudar para o fim da linha:			c$
+	Mudar para o inicio da linha:			c0
+	Mudar a linha toda:				cc ou C
+	Deleta o texto na posicao atual do 		dw
+  	  cursor para o fim da palavra:
+	Deleta o texto ate o fim da palavra:		de
+	Deleta da posicao atual ate o fim 		D ou d$
+	  da linha:				
+	Deleta da posicao atual ate o inicio		d0
+	Delete a linha inteira:				dd
+	Troca o caracter na posicao atual		rx
+	 por x
+	Faz replace a partir da posicao atual:		R
+	Deleta o caracter atual e insere novo texto:	s
+	Deleta a linha atual e insere novo texto:	S
+	Deleta o caracter na posicao do curor:		x
+	Deleta o caracter anterior:			dh ou X
+	Coloca a proxima linha no final da linha atual:	J
+	Faz 'undo' ( desfaz a acao ):			u
+	Muda a altura da casa na posicao atual:		~
+	------------------------------------------------------------
+
+	,----------------------------------------,
+	| 5 - COPIANDO, MOVENDO E SALVANDO TEXTO |
+ 	`----------------------------------------`
+		5.1 - DESCRICAO
+		Esta secao discute como usar os buffers para copiar, colar,
+deletar e substituir textos. 
+
+		5.2 - COPIANDO E MOVENDO TEXTO
+		Umas das maiores usualidades dos editores de textos eh a 
+possibilidade de deletar, copiar e mover partes de texto para uma outra
+parte dentro do arquivo. O vi usa 'yank' (puxar, pegar) e 'put' (colocar) 
+juntamente com os comandos de delecao para mover texto para outras 
+partes no arquivo. O vi usa tres tipos de buffers para guardar os textos
+pegos ou deletados. O conteudo destes buffers podem ser restorados para
+o buffer de edicao. Os tres tipos de buffer sao:
+
+	- undo buffer ( buffer de restauracao )
+	- Numbered (delete) buffer	
+	- named buffer
+
+	yank e delete buffers
+	-------------------------------------------------------------------
+	buffer	descricao		comentario
+	-------------------------------------------------------------------
+	undo	Usado para delecoes	Qualquer texto deletado ou removido	
+	buffer  e tirada de textos	eh colocado no buffer undo, e pode
+		normais. O conteudo	ser imediatamente colocado de volta
+		esta disponivel ate	usando um comando de restauracao. 
+		a proxima delecao	- O conteudo desse buffer eh alterado
+		ou parte de texo 	a cada delecao ou retirada de texto.
+		retirada/movida.	- Se voce usar 'dw' tres vezes  
+					seguidas para 3 palavras, somente
+					a ultima palavra excluida podera ser
+					restaurada.
+					- Da mesma forma, se voce retirar
+					3 palavras usando sucessivamente o 
+					comando 'yw', somente a ultima palavra
+					retirada estara disponivel no buffer.
+
+	Numbered Armazena as delecoes	Existem 9 locais neste buffer. Quando
+	(delete) em locais em 		um numero de sucessivas delecoes eh 
+	buffer	 sequencia quando	feita, o buffer como o stack ( push-down)
+		 uma linha inteira	- Quando voce restaura o conteudo com 
+		 ou mais eh deletada	'p' ou 'P', voce obtem a delecao mais
+		 (dd,d), d}, d]])	recente.
+					- Para restaurar mais delecoes, informe
+					os numeros, como 'np' ou 'nP', onde n
+					eh o numero que voce deseja.
+		
+	Named	Contem 26 locais	Cada local precisa ter um nome individual	
+	buffer	chamados a ate z,	para a delecao, retirada ou restauracao.
+		para guardar as 	Por exemplo:
+		delecoes ou retiradas.	- "bdd deleta a linha e coloca o conteudo
+					na localizacao b do buffer
+					- "fd) deleta o texto da proxima sentenca,
+					colocando o texto na posicao f do buffer.
+					- Voce pode restaurar essas delecoes usando
+					"bp, "fp, ou 'bP e "fP.
+
+		5.3 - USANDO COMANDOS COM O BUFFER
+		Use os seguintes comandos com os buffers undo, numbered ou named:
+	
+	---------------------------------------------------------------------
+	Para:							Use:
+	---------------------------------------------------------------------
+	Restaurar o texto indicado por 'motion' no buffer undo.	y motion
+	  yw restaura uma palavra, y ) restaura o texto no 
+	  inicio da proxima sentenca.
+	Restaurar toda a linha do buffer undo:			Y
+	Restaurar o texto indicado por motion no buffer		"xy motion
+ 	  named designado pelo caracter 'x':
+	Deletar o texto indicado por motion no buffer named
+	  indicado pelo caracter 'x'. dd delete a linha toda. 	"xd motion
+	Colocar de volta o texto contido no buffer undo na 	p
+	  posicao depois do curor:
+	Colocar de volta o texto contido no buffer undo 	P
+	  antes da posicao do cursor:
+	Colocar de volta o texto do buffer numbered 	 	"np
+	  indicado por 'n' apos o cursor:
+	Colocar de volta o texto do buffer numbered 		"nP
+	  indicado por 'n' antes do cursor:
+	Colocar de volta o texto do buffer named indicado	"xp
+	 por 'x' depois da posicao atual do cursor:
+	Colcoar de volta o texto do buffer named indicado	"xP
+	 por 'x' antes da posicao atual do cursor:
+	Repetir o ultimo comando "np e incrementar o 		.
+	  contador:
+	----------------------------------------------------------------------
+
+		5.4 - RESTORANDO E REPETIDO ALTERACOES
+		Os comandos da proxima tabela em modo de comando para desfazer
+ou repetir algum comando:
+
+	----------------------------------------------------------------------
+	Para:							Use:
+	----------------------------------------------------------------------
+	Desfazer o ultimo comando caso voce encontre algum 	u
+	  erro:
+	Desfazer todas as alteracoes em uma linha:		U
+	Repetir o ultimo comando. 				.
+	----------------------------------------------------------------------
+
+		5.5 - SALVANDO AS ALTERACOES
+		Os comando na tabela a seguir sao usados para salvar o arquivo
+que esta sendo editado no momento. 
+
+	--------------------------------------------------------------
+	Para:						Use:
+	--------------------------------------------------------------
+	Gravar as alteracoes feitas:			:w
+	Gravar as alteracoes feitas no arquivo 'arq'	:w arq
+	Sobrescrever arq com o conteudo do buffer	:w! arq
+	  editado:
+	---------------------------------------------------------------
+
+		5.6 - EDITANDO UM OUTRO ARQUIVO
+		Os comandos a seguir podem ser usando para editar um arquivo
+diferente ao qual se esta editando no momento:
+
+	-----------------------------------------------------------------
+	Para:						Use:
+	------------------------------------------------------------------
+	Editar o arquivo chamado 'arquivo';		:e arquivo
+	Reeditar o arquivo atual, descartando todas as	:e!
+	Le do arquivo 'arquivo' depois da posicao do 	:r arquivo
+	  cursor:
+	Executa o comando 'comando' colocando a saida 	:r! comando
+	  do comando no arquivo, apos a posicao do 
+	  cursor:
+	-----------------------------------------------------------------
+
+		5.7 - COMANDOS DE CONTROLE DE TELA
+		Os comandos a seguir podem ser usando para realizar algumas
+acoes com a tela:
+
+	-----------------------------------------------------------------
+	Para:						Use:
+	-----------------------------------------------------------------
+	Limpar ou redesenhar a tela:			CTRL+l
+	Redesenhar a tela com a linha atual no topo	z ENTER
+	  da tela:
+	Redesenhar a tela com a linha atual na parte	z-	
+	  inferior da tela: 
+	Redesenha a tela com a linha atual no meio	z.
+	  da tela:
+	Redesenhar a tela com a linha contendo 		/expressao/z-
+ 	  'expressao' na parte inferior da tela:
+	------------------------------------------------------------------
+
+		5.8 - RECUPERANDO E EDITANDO UMA SESSAO
+		Se o sistema quebra enquando voce esta editando um arquivo ou
+caso algum outro problema ocorra, toda e qualquer alteracao feita no arquivo 
+que nao tenha sido salva sera perdida. Contudo, uma copia do buffer de edicao
+( edit buffer ), contendo as alteracoes nao salvas, pode ser recuperado. A 
+proxima vez que voce tentar editar o arquivo, voce sera informado que uma
+copia do arquivo existe e ira lhe questionar sobre o que fazer. Apertar O
+voce abre o arquivo em modo somente leitura, apertar R o vi tentara recuperar
+o arquivo para voce, e apertar Q sai da edicao do mesmo. Voce ainda pode tentar
+usar o comando
+
+$vi -r nome_do_arquivo
+
+para tentar recuperar o mesmo. 
+
+		5.9 - CUSTOMIZANDO O VI
+		Por padrao, o vi nao quebra linhas longas ( wrap ), quando
+voce faz alguma pesquisa no arquivo, o mesmo leva em consideracao a altura
+da casa das letras ( diferencia minuscula de maiuscula ). Para resolver 
+problemas como esse, o vi contem uma serie de comando para as mais diversas
+finalidades. Os mesmos podem ser digitados em modo de comando ou gravados
+em um arquivo em disco, para que voce nao precise redigitar os comandos
+toda vez que abrir o vi. Como este texto fala mais precisamente do vim, os
+comandos voce pode gravar no arquivo ~/.vimrc. Abaixo os 3 que considero mais
+uteis, e logo apos uma pequena lista dos comandos possiveis:
+	
+	set ruler
+	syn on
+	set bs=2 
+
+Pela ordem, eh ativada a regua ( ou o contador de linhas/colunas ), colocamos
+sintaxe no arquivo ( para trabalhar com C, perl, php, etc ) e ativamos o 
+funcionamento da tecla BACKSPACE. Aconselho voce a colcoar estes comando no
+arquivo .vimrc ( dentro do seu diretorio home ). 
+	Para ter uma listagem completa dos comandos possivel, entre no modo
+de comamdo do vi e digite 
+
+	:set all
+
+Para obter ajuda em algum topico, digite
+
+	:help 
+
+ou 
+
+	:help assunto
+
+
+		5.10 - USANDO AS OPCOES SET
+		Existem 2 modos de como as opcoes podem ser altaradae com o 
+comando :set :
+	- Atravez de opcoes, que podem ser on ou off
+	- Atraves de opcoes que podem ser um numero ou string
+
+As opcoes de on ou off sao usadas da seguinte forma:
+
+Para ativar:
+:set option
+
+Para desativar:
+:set nooption
+
+Por exemplo, para dizer ao vi que eh para ingorar a altura da casa das letras,
+use
+
+:set ingorecase
+
+e para fazer o contrario, digite
+
+:set noingorecase
+
+Simples, nao?! :)
+
+	,--------------------------,
+	|  6 - T E R M I N A N D O |
+	`--------------------------`
+
+	Bom, entao eh isso. Espero que este material lhe tenha sito util de
+alguma maneira. O vi eh uma grande ferramenta e ate ter o total dominio da 
+mesma voce tera que passar boas horas estudando o mesmo. 
+
+	Up the Irons!!!
+
+----------------------------
+Desmistificando o ViM 
+The Alchemist - 02/2001
+alchemsit@hackzone.com.br
+-----------------------------
+
+	
+		

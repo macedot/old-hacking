@@ -1,0 +1,443 @@
+#############################################################################
+################################## UNSEKURITY ###############################
+#############################################################################								
+
+Escrito por TankDS para UNSEKURITY TEAM	
+e-mail: tankds@bol.com.br
+
+Este e outros tutoriais podem ser obtidos em:
+http://unsekurity.virtualave.net/
+
+OBS: Todo material contido neste tutorial é apenas para propositos educacionais, não me
+     responsabilizo pelo mal uso das informações contidas.aqui, ficando assim de interia
+     responsabilidade do leitor pelo seus atos.
+
+
+	##################################################################
+	#     TUTORIAL BÁSICO SOBRE CONFIGURAÇÃO DE ROTEADORES CISCO     #
+	##################################################################
+
+
+--------------------------------------------------------------------------
+		INDICE
+
+	1 - INTRODUÇÃO
+	2 - O QUE SÃO ROUTERS, SWTICHES E HUB'S?
+	3 - MEMÓRIAS E INICIALIZAÇÃO
+	4 - FORMAS DE ACESSO A CONFIGURAÇÃO
+	5 - MODOS
+	6 - COMANDOS
+	7 - ROTEAMENTO
+	8 - CONFIGURANDO O IP
+	9 - SENHAS PADRÕES
+       10 - REFERENCIAS
+       11 - FINALIZAÇÃO 
+
+-------------------------------------------------------------------------
+
+1 - Introdução
+
+Este é o primeiro tutorial que estou escrevendo p/ a unsekurity, e inicialmente gostaria
+de agradeçer todo o pessoal que sempre dah uma força, tirando nossas dúvidas, e tendo
+uma puta paciencia!! Valew Unsekurity! =:)
+Vou descrever aqui + ou - do q se tratará este tutorial, pretendo passar p/ vcs um
+conhecimento básico sobre roteadores cisco, mesmo pq meu conhecimento sobre o
+mesmo não é elevado, mas tentarei mostrar as difereças entre routers, switches e hub's.
+Falando desde um pouco do hardware ateh a configuração... Para vc poder entender
+melhor este tutorial faz-se nescessário um conhecimento básico sobre TCP/IP.
+Espero que gostem! =:)
+
+
+2 - O que são Routers, Swtiches e Hub's?
+
+Estes 3 equipamentos, são muitos ultilizados em empresas grandes normalmente, 
+podemos citar algumas delas, como IG, UOL, TERRA, etc... e por ai vai. Mas qual
+a função deles? vc deve estar c perguntando! =:) vou explicar isso agora...
+
+HUB's ==> Acho que este é o mais simples de difundido, que uma pessoa que tenha
+um conhecimento básico de rede conheçe, mas a função do HUB, é quando ele
+recebe um pacote, ele gera um broadcast, para todos os IP's configurados nele.
+Complicou mano? vou explicar melhor....
+O broadcast, seria como se o HUB mandasse uma mensagem para todas as makinas
+perguntando: "De quem é este pacote?",  dessa forma todas as makinas responderiam,
+e a makina "dona" do pacote enviaria: "é meu!!". E nisso o HUB mandaria o pacote para
+ a makina que respondeu. 
+Os HUB's tem muitas desvantagens, por isso não é ultilizado em grandes redes, vou
+mostrar aki alguns detalhes:
+
+---> Repetidor de sinal
+---> Atua na Camada 1 da tabela OSI
+---> Pode acontecer Colisões
+---> Sempre qdo a makina recebe ela não pode enviar.
+
+SWITCHES ou BRIDGE ==> Switches podemos dizer q são os Hub's melhorados,
+a difereça entre ele eh que a switche envia somente o pacote p/ os MAC ADRESS,
+especificados, sobre switches meu conhecimento não eh muito grande, mas assim
+que eu puder vou procurar escrever sobre ela. vamos p/ alguns detalhes:
+
+---> Atua na Camada 2 da tabela OSI
+---> Diminui a geração de broadcast.
+
+ROUTERS ==> Chegamos no nosso objetivo... =:) . Os Roteadores ou Routers,
+melhoram e muito o tráfego de uma rede, pelo fato de a geração de bradcast ser
+muito baixa, deixando a rede "livre", para outras tarefas. Outra vantagem eh q
+ele recebe o pacote e jah manda p/ o IP e a porta que conste na sua tabela,
+gerada pela configuração. Bem mais simples neh mano? Algumas caracteristicas
+dele são:
+
+---> Atua na Camada 3 da tabela OSI
+---> Faz a ligação entre duas redes, as conhecidas Vlans.
+
+Bom isso foi + ou - a descrição destes equipamentos, como o tutorial eh básico,
+e se fossemos abordar assuntos mais complexos, iria c tornar extensos. Mas espero
+que vc possa ter entendido a diferença entre os 3. =:)
+
+
+3 - Memórias e Inicialização
+
+As mémorias contidas no Roteador são basicamente as seguintes:
+
+	ROM		FLASH		NVRAM		DRAM
+	---------------------------------------------------------
+	BOOTSTRAP	SISTEMA		STARTUP		CACHE DE
+			OPERACIONAL	CONFIG		INTERFACE
+	SUBSET DO					
+	SISTEMA						CPU
+	OPERACIONAL
+							RUNNING
+							CONFIG
+
+Não entrarei em detalhes a forma de funcionamento delas, pq o q nos
+interessa neste tutorial eh a configuração do router, mas descreverei
+abaixo + ou - como eh a forma de inicialização do router...
+
+			INICIALIZAÇÃO
+
+	- Self-Test e diagnósticos da CPU, memórias e circuitos de interface.
+	- Executa o Programa BOOTSTRAP.
+  	- Carrega o sistema operacional na memória DRAM.
+	- Carrega o arquivo de configuração na memória DRAM ou entra em modo SETUP.
+
+
+4 - Formas de Acesso a Configuração
+
+Para vc poder a configuração do roteador, vc pode ter as seguintes portas de 
+acesso:
+
+- Porta do Console ( Default 9600bps, 8 bits, 1 stop, sem paridade).
+- Porta Auxiliar.
+- Telnet * Interessante isso não? =:) *
+- Estação de gerenciamento.
+
+Bom, como vcs podem ver o roteador da cisco, pode ser configurado remotamente,
+deve ter surgido um monte de indéias neh mano? pois eh... e irão surgir ainda mais,
+pq muitas empresas colocam senhas fracas nos roteadores, e as vezes ateh as senhas 
+padrões, iremos abordar tudo isso, tenha calma.. =:)
+
+
+5 - Modos
+
+Vamos falas das "shells", que vc pode ter ao acessar um router, são elas:
+
+User EXEC
+Router>
+
+Privileged EXEC
+Router#
+
+Global Configuration
+Router (config)#
+
+Outros Modos
+Router (config-modo)#
+
+RXBOOT
+Perda do IOS
+
+Esse ultimo q c refere ao IOS, o IOS eh o SO que o roteador da cisco usa,
+este tutorial foi escrito baseando no CISCO IOS 11.2 .Procure dar uma olhada 
+nos boletins da cisco, vc verá q sempre tem um bug para ele. Outra coisa 
+importante, quando um bug c refere a troca do IOS poucas empresas fazem isso! =:)
+Vou mostrar um exemplo prático aki de acesso a um router...
+
+Router>
+Router> enable
+Password>
+Router#
+Router# config terminal
+Router (config)# comando
+Router (config)# router protocol
+Router (config-router)# comando
+Router (config-router)# exit
+Router (config)# interface s 1
+Router (config-if)# comando
+Router (config-if)# CTRL+Z
+Router#
+
+Bom mano, eh mais ou menos isso como c configura um router, naum entedeu nada,
+calma logo explicarei mais detalhes... =:)
+
+
+6 - Comandos
+
+Vamos falar de alguns comandos para podermos configurar o roteador.
+
+
+6.1 - Help
+
+O comando help nos roteadores cisco são "pedidos", pelo caractere (?).
+por exemplo:
+
+Router# cl?
+clear	clock
+
+Router# clock ?
+set 	Set time and date
+
+simples não?? como vcs podem ver naum tem mistério, qualuqer duvida basta ver o help,
+quanto aos comandos!!
+
+
+6.2 - Vizualização de configurações
+
+Para podermos vizualizar as configurações, podemos usar os comandos:
+
+- SHOW RUNNING-CONFIG
+  Mostra a configuração do arquivo corrente.
+
+- SHOW STARTUP-CONFIG
+  Mostra as configurações que estão armazenadas na NVRAM. 
+
+
+6.3 - Cópia de configurações
+
+Para copiar configurações de um local p/ outro:
+
+- COPY RUNNING STARTUP
+  Copia o conteúdo do RUNNING-CONFIG para STARTUP-CONFIG
+
+- COPY STARTUP RUNNING
+  Copia o conteúdo do STARTUP-CONFIG para RUNNING-CONFIG
+
+
+6.4 - SHOW INTERFACE
+
+Quando queremos verificar se uma porta está UP, e as configurações estão corretas,
+usamos este comando, ex.:
+
+- show interface type number
+
+Router# show int serial 1
+Serial is up,	line protocol is up
+	Hardware is MK5025
+
+Como vc pode ver no exemplo a Serial está UP e o Protocol tbm...
+Mas as vezes podem ocorrer alguns erros, vou disponibilizar uma tabela que
+mostra + ou - o q pode ser:
+
+		Serial		Line protocol 
+
+Operacional	UP		UP
+
+Problema de	UP		down
+Conexão
+
+Problema de	down		down
+interface
+desabilit.
+
+administrati.	down		down
+
+
+6.5 - PASSWORD (OBA!!)
+
+Vamos falr agora sobre password nos roteadores cisco, =:), falaremos sobre,
+pelo acesso local e remoto (telnet). A password padrão que eu conheço que
+vem abilitada nos roteador cisco, eh: enable/cisco. humm... pode ter certeza
+mano q vc encontrará um router assim um dia. Bom mas o acesso por telnet,
+não mudaria muita coisa, do q o acesso nromal, ams egue os dois exemplos
+abaixo:
+
+telnet --> "enable" --> Router# config_term
+		   	Router (confi)# line vty 0 4
+			Router (config-line)# enable
+			Router (cinfig-line)# password h4x0r
+
+Explicando a parte acima, tipow ai em cima estamos dando um telnet no router,
+usando a password padrão, e em seguida mudando o password do "root", por h4x0r.
+sendo assim, o admin. soh poderá reativar as configurações, resetando o IOS.
+Agora por acesso local eh mais simples:
+
+"enable" --> Router (config)# enable password h4x0r
+	     Router (config)# service password-encryption
+
+Como vc deve ter observado mano, ai neste exemplo, eu usei o comando "service password-encryption", q seria p/ aplicar criptografia na password! =:)
+
+
+6.6 - Nome do Roteador
+
+Para vc mudar o nome do roteador eh simples, veja o exemplo abaixo:
+
+Router>
+Router> enable
+Password>
+Router#
+Router# config terminal
+Router (config)# hostname "TankDS"
+TankDS (config)# exit
+TankDS#
+
+Simples não? para maiores informações não se esqueça de consultar o help (?)! =:)
+
+
+6.7 - Abilitar Interface
+
+Para podermos abilitar uma interface. (para maiores informações consulte o help(?)).
+
+Router (config)# int e0
+Router (config-if)# no shut
+
+
+7 - Roteamento
+
+Ao meu conhecimento existem 3 forma de roteamento, são elas: Rotas Estáticas, Rotas default e Roteamento Dinâmico. veremos um pouco sobre cada uma. 
+
+
+7.1 - Rotas Estáticas
+
+São definidas manualmente, ex:
+
+Router# config terminal
+Router (config)# ip route rede mask gateway distância
+
+
+7.2 - Rotas Default
+
+Definidas manualmente como sendo o caminho a ser tomada quando não há rora conhecida para o destino. 
+
+
+7.3 - Roteamento Dinâmico
+
+O roteador aprende o caminho para o destino através de updates reiódicas nas tabelas de outros roteadores.
+
+
+7.3.1 - Protocolos de Roteamento Dinâmicos
+
+Os Protocolos de Roteamento Dinâmicos são os protocolos nos quais o roteador cisco podem trabalhar, são: DISTACE-VECTORS, LINK-STATE E HIBRIDO. Vamos ver um pouco deles.
+
+
+7.3.1.1 - DISTANCE-VECTORS
+
+- RIP (V1 e V2) (30 seg)
+- IGRP (cisco) (90 seg)
+- IPX RIP
+
+Consome: Menos CPU
+	 Menos Memória
+
+Possuem tempo fixo
+Tempo de convergência alto
+
+
+7.3.1.2 - LINK-STATE
+
+- OSPF --> IP
+- NLSP --> IPX
+
+Consome: Mais CPU
+tempo baixo de convergência
+
+
+7.3.1.3 - HIBRIDO
+
+- EIGRP --> CISCO
+
+Não tem tempo fixo
+
+Este se naum me falhe a memória eh um protocolo criado pela cisco.
+
+
+7.3.2 - Configurando Protocolos
+
+Os comandos básicos para configurar o protocolo são:
+
+Router>
+Router> enable
+Password>
+Router#
+Router# config terminal
+Router (config)# router protocol
+Router (config-router)# network network-number
+Router (config-router)# redistribute static
+
+onde estatic seria o nome do protocolo ex.: RIP.
+
+Bom isso ai eh o básico sobre os protocolos de roteamento, no final deste tuto terá alguns links onde vc possa estudar um pouco mais!
+
+
+8 - Configurando um IP
+
+Chegamos na parte onde irei passar os comandos para configurar o IP no seu roteador. Temos dois métodos de configuração de IP's.
+
+- Interface Configuration
+  Configura o endereço IP e a Máscara.
+
+- Global Configuration
+  Define as rotas estáticas ou
+  Selecione o protocolo de roteamento.
+  especifica as redes.
+
+Jah mostrei um pouco sobre os protocolos e agora passarei os comandos p/ vc poder configurar o Ip em um roteador, ele seguem abaixo...
+
+- Configurando o endereço IP na interface
+
+Router(config-if)# ip address ip-addres subnet-mask
+
+- Rota Estática
+
+Router(config)# ip route network [mask] {address|interface} [distance]
+
+- Protocolo de Roteamento
+
+Router(config)# router protocol
+
+- Especificando as Redes
+
+Router(config-router)# network network-number
+
+
+9 - Algumas Senhas Padrões
+
+Bom ai vai algumas senhas padrões q talvez vcs encontrem nos Router:
+
+Telnet
+Enable
+Secret
+Console
+Auxiliar
+Cisco
+router
+
+
+10 - Referências
+
+Documentação do CISCO IOS 12.1
+Http://www.cisco.com/univercd/cc/td/doc/product/software/ios121/121cgcr/index.htm
+
+Protocolos
+http://www.protocols.com
+
+Sobre a camada OSI
+http://penta.ufrgs.br/homeosi.html
+
+
+11 - Finalizando
+
+Eh isso ae mano, chegamos ao fim deste tutorial BEM BÁSICO, sobre Routers Cisco. A minha idéia era soh mesmo passar um introdução p/ vcs saberem como funciona e alguns comandos básicos, mas o q tah escrito aqui te garanto que não eh nem o começo, existem ainda configurações p/ IPX, Frame Relay e X25, que eu não citei aki. mas caso você queria aprender mais sobre esta area, corra atrás, veja os links, q com certeza irão ajudar! =:) espero que tenham gostado, e quem sabe num futuro não saia algo sobre o PIX FIREWALL!! =:)
+Por enquanto eh soh... valewz pela paciencia. Criticas, sugestões, erros neste tutorial, me contatem!
+Agradeçendo tbm a unsekurity por ter cedido este espaço aki! =:)
+
+TankDS
+tankds@bol.com.br
+
+_eof_	

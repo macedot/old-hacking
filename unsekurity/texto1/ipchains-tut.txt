@@ -1,0 +1,2734 @@
+                              _               _ _         
+         _   _ _ __  ___  ___| | ___   _ _ __(_) |_ _   _ 
+        | | | | '_ \/ __|/ _ \ |/ / | | | '__| | __| | | |
+        | |_| | | | \__ \  __/   <| |_| | |  | | |_| |_| |
+         \__,_|_| |_|___/\___|_|\_\\__,_|_|  |_|\__|\__, |
+                     T     E     A     M            |___/ 
+                                                 apresenta...
+
+
+
+                ################################
+                #TUTORIAL BASICO SOBRE IPCHAINS#
+                ################################                
+
+
+
+Escrito por segfault.
+[segfault@mail.com]
+
+
+
+                                        "A informacao deve ser compartilhada
+                                                                  por todos."
+
+
+Este tutorial bem como outros otimos tutoriais podem ser encontrados em:
+
+http://unsekurity.virtualave.net   -> Home page oficial do grupo.
+
+
+        Bem, este tutorial nao foi feito com o objetivo de lhe informar
+*TUDO* sobre ipchains, mas sim ensinar o basico para que voce possa talvez
+se interessar e aprender mais sobre o assunto. Um conhecimento basico de
+Linux e TCP/IP seriam necessarios para um bom acompanhamento das 
+informacoes aqui contidas. Recomendo a leitura do texto feito pelo module
+que fala sobre o Projeto Loki (ICMP Tunneling) e tambem do texto sobre
+TCP/IP feito pelo Dimitri Vashnov. 
+
+
+INDICE:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+INTRODUCAO................................................................1
+POLITICA DE SEGURANCA DA REDE ATRAVES DO FIREWALL.........................2
+FILTRAGEM DE PACOTES......................................................3
+A TOPOLOGIA...............................................................4
+COLOCANDO SUPORTE NO KERNEL PARA O IPCHAINS...............................5
+CONSTANTES................................................................6
+HABILITANDO TRAFEGO LOCAL.................................................7
+FILTRAGEM DE PACOTES DA ORIGEM............................................8
+O RESTO DAS REGRAS........................................................9
+OS SCRIPTS...............................................................10
+EXEMPLO DE SCRIPT PARA O SERVIDOR WEB....................................11
+EXEMPLO DE SCRIPT PARA O SERVIDOR MAIL...................................12
+REDIRECIONAMENTO E "MASCARAMENTO" NO LINUX...............................13
+CONSTRUINDO KERNEL COM SUPORTE A MASCARAMENTO............................14
+EXEMPLO DE SCRIPT PARA O SERVIDOR GATEWAY................................15
+SCRIPT PARA CONEXOES DIAL-UP.............................................16
+FINALIZANDO..............................................................17
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. INTRODUCAO:
+
+        Uma certa vez, eu li uma pergunta que era mais ou menos assim: "Alguem 
+pode me dizer por que eu deveria escolher um firewall comercial em vez de apena
+s
+usar o IPchains e restringir algumas conexoes e coisas do tipo? O que eu
+perco usando o IPchains?". Bom, certamente existem diversas respostas para
+essas perguntas e sem duvida, uma grande discussao seria gerada em
+consequencia dessas respostas.
+        O IPchains eh muito bom e ha quem acredite que ele seja melhor que
+os firewalls comerciais, devido a sua facilidade de uso e uma grande
+quantidade de materiais existentes sobre ele pela internet.
+        Mas o que faria o IPchains? Ele na verdade eh um software *opensource*
+que serve para a administracao das regras do seu firewall. Ele eh usado para
+configurar, fazer manutencao e inspecionar as regras no kernel do Linux.
+Essas regras podem ser divididas em 4 partes: a IP chain("cadeia") de
+entrada (input), a IP chain de saida (output) , a IP chain de retransmissao 
+(forwarding) e as chains definidas pelo usuario.
+
+
+2. POLITICA DE SEGURANCA DA REDE ATRAVES DO FIREWALL:
+
+        Essa politica define quais servicos serao permitidos ou barrados,
+como esses servicos serao usados e as exececoes dessas regras. Numa rede,
+essa politica (regras) deve ser determinada de acordo com a necessidade de
+seguranca, o que deveria ser prioridade em todas as redes (muito dificil
+achar locais com firewalls). Geralmente, um firewall usa um dos metodos
+abaixo:
+
+_Tudo o que nao for especificado como permitido serah barrado_
+
+        Esse tipo bloqueia todo o trafego entre duas redes com excessao 
+daqueles servicos que seriam permitidos. Mas cada servico deveria ser 
+configurado um a um. Como todos deveriam saber, nenhum servico que possa 
+comprometer o sistema deveria ser permitido (wuftpd, qpop2.53, 
+bind<8.2.2-P5, etc.). Esse metodo eh o mais seguro, pois o admin soh 
+liberaria o que fosse realmente necessario, tendo um controle maior sobre 
+o sistema. Esse metodo serah usado para a explicacao mais pra frente... :)
+
+_Tudo que nao for especificado como barrado, serah permitido_
+
+        Esse permite o trafego entre duas redes com excessao daqueles 
+servicos que foram barrados. Ele pode parecer mais facil, mas como os 
+ataques `as redes estao crescendo cada vez mais, nao seria muito recomendado. 
+
+
+3. FILTRAGEM DE PACOTES:
+
+        A filtragem de pacotes eh um tipo de firewall que estah inserido no
+kernel do Linux. Esse tipo de firewall funciona ao nivel da rede, ou seja,
+os dados soh poderiam sair do sistema se o firewall permitisse. Quando os
+pacotes chegam, eles sao filtrados pelo seu tipo, endereco de origem,
+endereco do destino e a informacao das portas contidas em cada pacote!
+        Na maioria das vezes, a filtragem de pacotes trabalha junto com um
+roteador que pode repassar os pacotes de acordo com as regras da filtragem.
+Quando um pacote passa pelo roteador, ele extrai certas informacoes do 
+cabecalho (header) do pacote e decide se o pacote pode passar ou deve ser 
+barrado, de acordo com as regras de filtragem do firewall. Algumas 
+informacoes podem ser extraidas do cabecalho de um pacote:
+
+* O IP de origem;
+* O IP de destino;
+* A porta TCP/UDP de origem;
+* A porta TCP/UDP de destino;
+* O tipo de mensagem ICMP;
+* A informacao encapsulada do protocolo (TCP, UDP, ICMP ou tunel IP).
+
+
+4. A TOPOLOGIA:
+
+        Todos os servidores deveriam ser configurados para bloquear portas
+inutilizadas mesmo que eles nao sejam um firewall. Isso seria implementar a
+seguranca numa rede e nao ser paranoico.. hehehe :) Imagine se alguem
+consegue acesso `a sua rede, e os computadores ligados a ela nao estao
+configurados para barrar certos tipos de servicos... a pessoa que conseguiu
+penetrar na sua rede acharia uma maravilha, pois isso resulta em mais
+maquinas, e um maior controle do que acontece na sua rede!! Um exemplo
+basico:
+
+
+(192.168.1.0/24)
+                                             ---        -------------------
+ ---     ---                                | 3 | <--- |Servidor Apache com|
+| 4 |---| 5 |                                ---       |caching DNS        |
+ ---     ---                                  |        |208.164.186.3      |
+  |       |                                   |         -------------------
+  |       |               ----------------    |
+ ---     ---             |Servidor Gateway|   |
+| 6 |---| 7 |            |DNS primario    |   |
+ ---  |  ---             |208.164.186.1   |   F <------------> Firewalls
+      |                   ----------------    |      |
+      |                        |              |      |
+      |    Rede Interna        `---------->  ---     |             ----------
+      `-------------------------------------| 1 |----F------------| INTERNET |
+                                             ---     |             ----------
+                                              |      |
+                        ----------------      |      |
+                       |Servidor de MAIL|     F <----'
+                       |DNS secundario  |     |
+                       |208.164.186.2   |     |
+                        ----------------     ---
+                               `----------> | 2 |
+                                             ---
+
+
+Permissoes:
+.-----------------------------------------------------------------------------,
+| www.unsekurity.org     | server.unsekurity.org     | mail.unsekurity.org    |
+| Caching DNS            | DNS primario              | DNS secundario         |
+| 208.164.186.3          | 208.164.186.1             | 208.164.186.2          |
+|------------------------|---------------------------|------------------------|
+|1. trafego ilimitado na |1. trafego ilimitado na    |1. trafego ilimitado na |
+|interface de loopback   |interface de loopback      |interface de loopback   |
+|2. trafego de ICMP      |2. trafego de ICMP         |2. trafego de ICMP      |
+|3. DNS Caching e cliente|3. servidor DNS e cliente  |3.servidor DNS e cliente|
+|servidor na porta 53    |na porta 53                |na porta 53             |
+|4. servidor SSH na porta|4. servidor SSH e cliente  |4.servidor SSH e cliente|
+|22                      |na porta 22                |na porta 22             |
+|5.servidor HTTP na porta|5. servidor HTTP e HTTPS   |5.servidor STMP e client|
+|80 e HTTPS na porta 443 |nas portas 80 e 443        |na porta 25             |
+|6. cliente STMP na porta|6. WWW-CACHE na porta 8080 |6. servidor IMAP na 143 |
+|25                      |7. cliente externo na porta|7. requisicao de saida  |
+|7.servidor FTP nas ports|110 (POP)                  |de traceroutes          |
+ 
+|20 e 21                 |8. servidor e cliente SMTP |                        |
+|8. Requisicao de saida  |na porta 25                |                        |
+|de traceroutes          |9. servidor IMAP na 143    |                        |
+|                        |10. clientes IRC na porta  |                        |
+|                        |6667                       |                        |
+|                        |11. clientes ICQ na porta  |                        |
+|                        |4000                       |                        |
+|                        |12. clientes FTP nas portas|                        |
+|                        |20 e 21                    |                        |
+|                        |13. Requisicao de saida    |                        |
+|                        |de traceroutes             |                        |
+`-----------------------------------------------------------------------------'
+
+WWW.UNSEKURITY.ORG eh o nosso servidor WEB, MAIL.UNSEKURITY.ORG eh o nosso
+servidor de MAIL para toda a rede interna, e SERVER.UNSEKURITY.ORG eh o
+nosso servidor GATEWAY, que serah a nossa base de explicacao sobre o IPchains.
+Como voces perceberam, "telnet" eh obsoleto, pois ao conectar voce envia o seu
+login e senha em texto, podendo ser capturados por sniffers.. :)
+Vale lembrar que o exemplo acima soh vale pro tutorial, voce deve montar as
+suas politicas de acordo com a necessidade da sua rede!
+
+
+5. COLOCANDO SUPORTE NO KERNEL PARA O IPCHAINS:
+
+        A primeira coisa que voce deve fazer eh ter certeza que o kernel
+estah compilado com suporte ao IPchains. Lembre-se que todas as maquinas da
+rede deveriam estar configuradas para barrar portas inutilizadas (sempre
+alguem tenta invadir a sua rede, mesmo que voce nao saiba!). No kernel
+2.2.16 (outros tambem..hehe), ficaria assim:
+
+[root@unsekurity:~]# cd /usr/src/linux
+[root@unsekurity:/usr/src/linux]# make menuconfig
+
+        Vah em "Networking options" e marque:
+
+[*] Network firewalls
+[*] IP: firewalling
+[*] IP: TCP syncookie support (not enabled per default) 
+
+Depois eh soh recompilar o kernel e rebootar a maquina...
+
+[root@unsekurity:/usr/src/linux]# make dep ; make clean ; make bzImage ;
+make modules ; make modules_install
+
+:)
+
+
+6. CONSTANTES USADAS NOS SCRIPTS:
+
+INTERFACE_EXTERNA
+Essa eh o nome da interface de rede externa, a interface que liga a rede com
+a internet. Serah usada "eth0" nos exemplos.
+
+INTERFACE_LOCAL_1 
+Essa eh a interface de rede interna, a da LAN. Serah definida como "eth1".
+
+LOOPBACK_INTERFACE
+Essa eh a interface de loopback, serah definida como "lo".
+
+IPADDR
+Esse eh o endereco IP da sua interface externa. Pode ser um IP estatico
+registrado com a InterNIC ou entao um IP designado dinamicamente pelo seu
+ISP (geralmente via DHCP)
+
+REDELOCAL_1
+Eh o endereco da sua rede (LAN) local. Nos exemplos serah usado 192.168.1.0/24
+, uma classe C privada.
+
+QUALQUERLUGAR
+Essa eh o nome para os enderecos usados pelo ipchains para encaixar
+quaisquer enderecos. Serah usado any/0, o que significa 0.0.0.0/0
+
+NAMESERVER_1
+Esse eh o IP do servidor primario de DNS da sua rede, ou do seu ISP.
+
+NAMESERVER_2
+Eh o IP do seu servidor secundario de DNS da sua rede, ou do ISP.
+
+LOOPBACK
+O alcance do loopback eh 127.0.0.0/8. A interface em si ja estah definida
+como 127.0.0.1 (em /etc/hosts).
+
+PORTASPRIV
+Sao as portas privilegiadas, de 0 a 1023.
+
+PORTASNAOPRIV
+Sao as portas nao privilegiadas, de 1024 ateh 65535. Sao portas designadas
+dinamicamente para a parte cliente de uma conexao.
+
+Politica Padrao:
+
+Um firewall tem uma politica padrao e uma lista de acoes para fazer em
+resposta a tipos especificos de mensagens. Isso significa que se um certo
+pacote nao foi selecionado por uma ou outra regra, entao a politica(regra)
+padrao serah aplicada. 
+
+
+7. HABILITANDO TRAFEGO LOCAL:
+
+        Levando em conta que as regras padroes para os exemplos do tutorial
+sao de barrar tudo, algumas regras devem ser mudadas. Servicos de rede locais
+nao passam pela interface de rede interna, mas sim por uma especial, privada
+interface chamada "LOOPBACK INTERFACE". Nenhum dos seus programas de rede irao
+funcionar enquanto nao for permitido trafego nessa interface!!!
+
+# Trafego ilimitado na interface de loopback!
+
+ipchains -A input -i $LOOPBACK_INTERFACE -j ACCEPT
+ipchains -A output -i $LOOPBACK_INTERFACE -j ACCEPT
+
+
+-A --> APPEND: adiciona uma ou mais regras para o final da chain
+selecionada (input ou output, no caso acima). 
+
+-i --> INTERFACE: interface na qual os pacotes sao recebidos ou estao sendo
+enviados. Essa opcao pode ser omitida, entao todas as interfaces serao
+selecionadas. Se for usado o caracter "!", entao o sentido da regra serah 
+invertido. Se a interface terminar com um "+", entao todas as interfaces que 
+comecam com os caracteres antes do "+" serao selecionadas.
+
+-j --> JUMP: especifica o destino da regra. Ou seja, o que fazer se o pacote
+se encaixar nas regras especificadas.
+
+
+8. FILTRAGEM DE PACOTES DA ORIGEM:
+
+        Todos os cabecalhos(headers) de pacotes contem a origem e destino dos 
+IPs e o tipo da mensagem do protocolo (ICMP, TCP ou UDP). Isso quer dizer que
+a identificacao do Protocolo de Internet (Internet Protocol, IP) eh o endereco
+de origem contido no cabecalho do pacote!! Isso eh um problema que abre uma
+porta para o "spoofing", uma tentativa de forjar o IP real de origem!
+
+# Recusar pacotes forjados tentando parecer como se fossem do IP externo!!
+
+ipchains -A input -i $INTERFACE_EXTERNA -s $IPADDR -l -j DENY
+
+-s --> SOURCE: eh o endereco de origem. Pode ser o hostname, uma rede ou um
+endereco IP. 
+
+-l --> LOG: ativa o kernel logging dos pacotes que se encaixam nas regras.
+Quando essa opcao estah ativada, serao gravadas informacoes sobre todos os
+pacotes que se encaixaram (geralmente os cabecalhos dos IPS) via printk().
+Esse log pode ser modificado na config do syslogd (/etc/syslog.conf),
+adicionando "kern.*         /local/do/log". 
+
+        Na opcao "-s", eu omiti algumas partes da sua sintaxe, pois no exemplo 
+o que eu deveria explicar era apenas o que ele faz no mesmo. Mais pra frente a 
+sua sintaxe serah explicada melhor!! :)
+
+        Existem tambem pelo menos mais 7 tipos de enderecos de origem que
+deveriam ser filtrados pela sua interface externa em TODOS os casos!!
+Sao os pacotes que fingem vir de:
+
+* Seu IP externo;
+* Uma classe A de IPs privados;
+* Uma classe B de IPs privados;
+* Uma classe C de IPs privados;
+* Uma classe D de enderecos multicast;
+* Uma classe E de enderecos reservados;
+* Da interface local.
+
+        Com excecao do seu proprio IP, bloquear pacotes de saida contendo
+esses enderecos de origem protege voce de um possivel erro de configuracao!
+
+OBS: Nao esqueca de excluir o seu IP dos pacotes que serao bloqueados!!
+
+
+9. O RESTO DAS REGRAS:
+
+        As outras regras usadas nos scripts serao:
+
+* Acesso de um servico disponivel na Internet;
+* Disponibilizacao de um servico para todos na Internet;
+* Masquerading("compartilhamento") com as maquinas internas.
+
+
+10. OS SCRIPTS DO FIREWALL:
+
+        O utilitario IPchains permite que voce configure firewalls, IP
+masquerading, etc. O IPchains "conversa" com o kernel e diz a ele quais
+pacotes devem ser filtrados. Apesar de as suas configuracoes estarem
+configuradas no kernel, apos um reboot, elas serao perdidas. Para prevenir
+isso, eu recomendo o uso dos inits scripts do System V, para que as suas
+regras sejam permanentes. Para fazer isso, crie um script como o que serah
+mostrado abaixo em "/etc/rc.d/init.d/" para cada servidor que voce tiver. Eh
+claro que cada servidor terah uma configuracao diferente, entao voce deverah
+personaliza-lo!! Por isso, eu disponibilizarei 3 tipos de scripts, com os
+quais voce pode modificar para as suas necessidades.
+        Agora, usuarios do Slackware que possuem um certo conhecimento devem
+estar dizendo: "Putz, ele usa Red Hat" ou "Nao tenho esse diretorio", mas
+isso nao importa, pois eu acho o meu Red Hat bem estavel e nao eh tao
+inseguro, hehe! Os usuarios do slackware podem criar o diretorio que eu
+mencionei e depois adicionar uma chamada ao nome do script no rc.local!
+Assim: echo "/etc/rc.d/init.d/nome-do-script" >> /etc/rc.d/rc.local , onde
+"nome-do-script" deve ser substituido pelo seu respectivo nome..
+
+
+11. EXEMPLO DE UM SCRIPT "/etc/rc.d/init.d/firewall" PARA O SERVIDOR WEB:
+
+        Essa eh a configuracao do nosso servidor web (WWW.UNSEKURITY.ORG,
+lembram?). Essa configuracao permite: Trafego ilimitado na interface de
+loopback, ICMP, DNS Caching e Cliente-Servidor (na porta 53), servidor SSH
+(22), servidor HTTP (80), servidor HTTPS (443), cliente SMTP (25), servidor
+FTP (20, 21), e requisicoes de SAIDA DE TRACEROUTE por padrao!
+        Se voce nao quiser que alguns servicos listados no script sejam
+ativados por padrao, basta comenta-los, adicionando "#" na frente de cada
+linha desejada. Ou se quiser que uma regra seja adicionada e que esteja
+comentada, basta retirar o "#".
+
+Crie o script de firewall (touch /etc/rc.d/init.d/firewall) do seu servidor
+WEB e adicione:
+
+#!/bin/sh
+#
+# Adaptado para o tutorial de IPCHAINS por segfault.
+# 11/07/2000
+# Unsekurity Team.
+# 
+# ----------------------------------------------------------------------------
+# Modified by Gerhard Mourani:  02-01-2000
+# ----------------------------------------------------------------------------
+# Copyright (C) 1997, 1998, 1999  Robert L. Ziegler
+#
+# Permission to use, copy, modify, and distribute this software and its
+# documentation for educational, research, private and non-profit purposes,
+# without fee, and without a written agreement is hereby granted. 
+# This software is provided as an example and basis for individual firewall
+# development.  This software is provided without warranty.
+#
+# Any material furnished by Robert L. Ziegler is furnished on an 
+# "as is" basis.  He makes no warranties of any kind, either expressed 
+# or implied as to any matter including, but not limited to, warranty 
+# of fitness for a particular purpose, exclusivity or results obtained
+# from use of the material.
+# ----------------------------------------------------------------------------
+#
+# Inicializado em /etc/rc.d/init.d/firewall.
+# chkconfig: - 60 95
+# descricao: Inicia e para o firewall IPCHAINS.
+#             
+
+# Source function library.
+. /etc/rc.d/init.d/functions # Usuarios do Slackware: comentem esta linha. 
+
+# Source networking configuration.
+. /etc/sysconfig/network     # Usuarios do Slackware: comentem esta linha.
+
+# Check that networking is up.
+if [ ${NETWORKING} = "no" ]  # Usuarios do Slackware: comentem esta linha.
+then                         # Usuarios do Slackware: comentem esta linha.
+        exit 0               # Usuarios do Slackware: comentem esta linha.
+fi                           # Usuarios do Slackware: comentem esta linha.
+
+[ -f /sbin/ipchains ] || exit 0 
+
+# See how we were called.
+case "$1" in                 # Usuarios do Slackware: comentem esta linha.
+  start)                     # Usuarios do Slackware: comentem esta linha.
+        echo -n "Iniciando servicos de Firewall: "
+
+# Algumas definicoes para uma manutencao facil.
+
+# ----------------------------------------------------------------------------
+#  EDITE AS CONSTANTES ABAIXO DE ACORDO COM O SEU SISTEMA!.
+
+INTERFACE_EXTERNA="eth0"                        # a que liga voce com a INET
+LOOPBACK_INTERFACE="lo"
+IPADDR="208.164.186.3"                          # o seu IP, no caso eh do WEB
+QUALQUERLUGAR="any/0"
+NAMESERVER_1="208.164.186.1"                    # o ip do servidor DNS primario
+NAMESERVER_2="208.164.186.2"                    # o ip do servidor DNS secundar
+io
+
+SMTP_SERVER="mail.unsekurity.org"               # o endereco do servidor de MAI
+L
+SYSLOG_SERVER="mail.unsekurity.org"             # seu servidor syslog interno
+SYSLOG_CLIENT="208.164.168.0/24"                # os clientes do syslog
+
+#
+# Bem, ai os SYSLOG* acima eh o seguinte:
+# Caso alguem entre no seu sistema, e tente apagar logs vitais, existira uma
+# copia remota, fazendo com que o esforco dele tenha sido em vao. Para que
+# isso seja possivel, o "syslogd" deve ser inicializado com a opcao "-r"
+# e o servidor do syslog (no caso a maquina mail), deve aceitar pacotes udp
+# na porta 514!! Assim como o cliente deve aceitar o envio de pacotes udp
+# na mesma porta!! 
+# 
+# no syslog da maquina cliente deve conter a seguinte linha:
+#
+# kern.*                        @mail
+#
+# entao ela enviara as mensagem do kernel para a maquina mail!!
+#
+# maiores informacoes: man 8 syslogd
+#
+
+LOOPBACK="127.0.0.0/8"
+CLASS_A="10.0.0.0/8"
+CLASS_B="172.16.0.0/12"
+CLASS_C="192.168.0.0/16"
+CLASS_D_MULTICAST="224.0.0.0/4"
+CLASS_E_RESERVED_NET="240.0.0.0/5"
+BROADCAST_ORI="0.0.0.0"
+BROADCAST_DEST="255.255.255.255"
+PORTASPRIV="0:1023"
+PORTASNAOPRIV="1024:65535"
+
+# ----------------------------------------------------------------------------
+
+# as portas do SSH iniciam em 1023 e vao ate a porta 513 para cada conexao 
+# adicional!!
+PORTAS_SSH="1022:1023"                   # alcance das portas do SSH
+
+# traceroute geralmente usa -S 32769:65535 -D 33434:33523
+PORTAS_ORI_TRACEROUTE="32769:65535"
+PORTAS_DEST_TRACEROUTE="33434:33523"
+
+# ----------------------------------------------------------------------------
+# A regra padrao eh DENY
+
+    # Remove todas as regras existentes 
+    ipchains -F
+
+    # Configura a regra padrao do filtro para DENY
+    ipchains -P input  DENY
+    ipchains -P output REJECT
+    ipchains -P forward REJECT
+
+# ----------------------------------------------------------------------------
+
+    # Habilita protecao contra TCP SYN Cookies
+    echo 1 >/proc/sys/net/ipv4/tcp_syncookies
+
+    # Habilita protecao contra IP spoofing 
+    # verificando o endereco de origem
+    for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
+        echo 1 > $f
+    done
+
+    # Desabilita a aceitacao de redirecionamento ICMP
+    for f in /proc/sys/net/ipv4/conf/*/accept_redirects; do
+        echo 0 > $f
+    done
+
+    # Desabilita o envio pacotes sem direcao
+    for f in /proc/sys/net/ipv4/conf/*/accept_source_route; do
+        echo 0 > $f
+    done
+
+# ----------------------------------------------------------------------------
+# LOOPBACK
+
+    # Trafego ilimitado na interface de loopback
+    ipchains -A input  -i $LOOPBACK_INTERFACE -j ACCEPT 
+    ipchains -A output -i $LOOPBACK_INTERFACE -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+# Script kiddies
+# Barra o acesso deles.
+
+    # /etc/rc.d/rc.firewall.blocked deverah conter uma lista de
+    # ipchains -A input  -i $EXTERNAL_INTERFACE -s address -j DENY
+    # para bloquear o acesso deles..
+
+    # Recusa qualquer conexao dos enderecos contidos em rc.firewall.blocked
+    if [ -f /etc/rc.d/rc.firewall.blocked ]; then
+        . /etc/rc.d/rc.firewall.blocked
+    fi
+
+# ----------------------------------------------------------------------------
+# SPOOFING & ENDERECO INVALIDOS
+# Recusa pacotes forjados.
+# Ignora a entrada/saida de pacotes de/para enderecos invalidos.
+
+    # Recusa pacotes forjados dizendo ser da interface externa e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $IPADDR -j DENY -l
+
+    # Recusa pacotes para/dizendo ser de uma Classe A privada e loga.
+    # -d quer dizer DESTINO !
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_A -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $CLASS_A -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $CLASS_A -j REJECT -l
+    ipchains -A output -i $INTERFACE_EXTERNA -d $CLASS_A -j REJECT -l
+
+    # Recusa pacotes para/dizendo ser de uma Classe B privada e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_B -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $CLASS_B -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $CLASS_B -j REJECT -l
+    ipchains -A output -i $INTERFACE_EXTERNA -d $CLASS_B -j REJECT -l
+
+    # Recusa pacotes para/dizendo ser de uma Classe C privada e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_C -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $CLASS_C -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $CLASS_C -j REJECT -l
+    ipchains -A output -i $INTERFACE_EXTERNA -d $CLASS_C -j REJECT -l
+
+    # Recusa pacotes dizendo ser da interface de loopback e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $LOOPBACK -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $LOOPBACK -j REJECT -l
+
+    # Recusa enderecos de ORIGEM da broadcast 
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $BROADCAST_DEST -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $BROADCAST_ORI -j DENY -l
+
+    # Recusa uma classe D de enderecos multicast (in.h) (NET-3-HOWTO)
+    # Multicast eh ilegal como endereco de origem.
+    # Multicast usa UDP.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_D_MULTICAST -j DENY -l
+
+    # Recusa uma classe E de enderecos reservados
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_E_RESERVED_NET -j DENY -
+l
+
+    # recusa enderecos definidos como reservados pela IANA
+    # 0.*.*.*, 1.*.*.*, 2.*.*.*, 5.*.*.*, 7.*.*.*, 23.*.*.*, 27.*.*.*
+    # 31.*.*.*, 37.*.*.*, 39.*.*.*, 41.*.*.*, 42.*.*.*, 58-60.*.*.*
+    # 65-95.*.*.*, 96-126.*.*.*, 197.*.*.*, 201.*.*.* (?), 217-223.*.*.*
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 1.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 2.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 5.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 7.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 23.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 27.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 31.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 37.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 39.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 41.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 42.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 58.0.0.0/7 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 60.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 65.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 66.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 67.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 68.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 69.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 70.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 71.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 72.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 73.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 74.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 75.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 76.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 77.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 78.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 79.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 80.0.0.0/4 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 96.0.0.0/4 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 112.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 113.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 114.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 115.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 116.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 117.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 118.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 119.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 120.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 121.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 122.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 123.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 124.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 125.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 126.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 217.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 218.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 219.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 220.0.0.0/6 -j DENY -l
+
+# ----------------------------------------------------------------------------
+# ICMP
+
+    #    Para prevenir ataques "DoS" baseado em ICMP, devemos filtrar
+    #    incoming Redirect (5) e outgoing Destination Unreachable (3).
+    #    Entretanto, desabilitar o Destination Unreachable (3) nao eh
+    #    recomendavel, porque ele eh usado para negociar o tamanho de 
+    #    fragmentacao do pacote!!
+
+    # Para ping bi-direcional.
+    #     Tipos de mensagens:  Echo_Reply (0),  Echo_Request (8)
+    #     Para prevenir ataques, eh necessario limitar os enderecos de origem 
+    #     apenas para um certo alcance.
+    # 
+    # Para a saida de traceroute.
+    #     Tipos de mensagens:  INCOMING Dest_Unreachable (3), Time_Exceeded (11
+)
+    #     UDP base: 33434 ateh base+nhops-1
+    # 
+    # Para a entrada traceroute.
+    #     Tipos de mensagens:  OUTGOING Dest_Unreachable (3), Time_Exceeded (11
+)
+    #     Para bloquear isso, barre OUTGOING 3 e 11
+
+    #  0: echo-reply (pong)
+    #  3: destination-unreachable, port-unreachable, fragmentation-needed, etc.
+    #  4: source-quench
+    #  5: redirect
+    #  8: echo-request (ping)
+    # 11: time-exceeded
+    # 12: parameter-problem
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 0 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 3 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 4 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 11 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 12 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s 208.164.186.0/24 8 -d $IPADDR -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 0 -d 208.164.186.0/24 -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 3 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 4 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 8 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 12 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 11 -d 208.164.186.0/24 -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+    # Entrada UDP para TRACEROUTE
+    # traceroute geralmente usa -S 32769:65535 -D 33434:33523
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s 208.164.186.0/24 $PORTAS_ORI_TRACEROUTE \
+             -d $IPADDR $PORTAS_DEST_TRACEROUTE -j ACCEPT -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $QUALQUERLUGAR $PORTAS_ORI_TRACEROUTE \
+             -d $IPADDR $PORTAS_DEST_TRACEROUTE -j DENY -l
+
+# ----------------------------------------------------------------------------
+    # Servidor DNS
+    # ------------
+
+    # Redirecionamento DNS, servidor de cache apenas. (53)
+    # ----------------------------------------------------
+
+    # servidor para servidor perguntas ou respostas
+    # Servidor de cache requer apenas UDP, nada de TCP
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $NAMESERVER_1 53 \
+             -d $IPADDR 53 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR 53 \
+             -d $NAMESERVER_1 53 -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $NAMESERVER_2 53 \
+             -d $IPADDR 53 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR 53 \
+             -d $NAMESERVER_2 53 -j ACCEPT 
+
+    # cliente DNS (53)
+    # ----------------
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $NAMESERVER_1 53 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $NAMESERVER_1 53 -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $NAMESERVER_1 53 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $NAMESERVER_1 53 -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $NAMESERVER_2 53 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $NAMESERVER_2 53 -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $NAMESERVER_2 53 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $NAMESERVER_2 53 -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+    # conexoes TCP aceitas somente nas portas selecionadas!!
+    # ------------------------------------------------------
+    # ------------------------------------------------------------------
+
+    # servidor SSH (22)
+    # -----------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR 22 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR 22 \
+             -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTAS_SSH \
+             -d $IPADDR 22 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR 22 \
+             -d $QUALQUERLUGAR $PORTAS_SSH -j ACCEPT 
+
+    # cliente SSH (22)
+    # ----------------
+#    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+#             -s $QUALQUERLUGAR 22 \
+#             -d $IPADDR $PORTASNAOPRIV -j ACCEPT
+
+#    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+#             -s $IPADDR $PORTASNAOPRIV \
+#             -d $QUALQUERLUGAR 22 -j ACCEPT
+
+#    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+#             -s $QUALQUERLUGAR 22 \
+#             -d $IPADDR $PORTAS_SSH -j ACCEPT
+
+#    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+#             -s $IPADDR $PORTAS_SSH \
+#             -d $QUALQUERLUGAR 22 -j ACCEPT
+
+    # ------------------------------------------------------------------
+
+    # servidor HTTP (80)
+    # ------------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR 80 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR 80 \
+             -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    # ------------------------------------------------------------------
+
+    # servidor HTTPS (443)
+    # --------------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR 443 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR 443 \
+             -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    # ------------------------------------------------------------------
+
+    # servidor SYSLOG (514)
+    # ----------------------
+
+#    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+#             -s $SYSLOG_CLIENT \
+#             -d $IPADDR 514 -j ACCEPT
+
+    # cliente SYSLOG (514)
+    # -----------------
+
+#    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+#             -s $IPADDR 514 \
+#             -d $SYSLOG_SERVER 514 -j ACCEPT
+
+    # ------------------------------------------------------------------
+
+    # servidor AUTH (113)
+    # -------------------
+
+    # Rejeita, melhor do que barrar negar, conexoes na porta 113. (NET-3-HOWTO)
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR \
+             -d $IPADDR 113 -j REJECT 
+
+    # ------------------------------------------------------------------
+
+    # cliente SMTP (25)
+    # -----------------
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $SMTP_SERVER 25 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $SMTP_SERVER 25 -j ACCEPT 
+
+    # ------------------------------------------------------------------
+
+    # servidor FTP (20, 21)
+    # ---------------------
+
+    # requisicoes externas.
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR 21 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR 21 \
+             -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    # respostas PORT MODE.
+    # 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+            -s $QUALQUERLUGAR $PORTASNAOPRIV \
+            -d $IPADDR 20 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+            -s $IPADDR 20 \
+            -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    # respostas PASSIVE MODE.
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    # ------------------------------------------------------------------
+    # TRACEROUTE DE SAIDA
+    # -------------------
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR $PORTAS_ORI_TRACEROUTE \
+             -d $QUALQUERLUGAR $PORTAS_DEST_TRACEROUTE -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+# Ativa o logging para os pacotes que serao barrados.
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -d $IPADDR -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -d $IPADDR $PORTASPRIV -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -d $IPADDR $PORTASNAOPRIV -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 5 -d $IPADDR -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 13:255 -d $IPADDR -j DENY -l
+
+# ----------------------------------------------------------------------------
+
+        ;;
+  stop)
+        echo -n "Shutting Firewalling Services: "
+
+    # Remove todas as regras pertencentes ao filtro
+    ipchains -F
+
+    # Remove todas as regras definidas pelo usuario ao filtro
+    ipchains -X
+
+    # Muda a politica padrao para ACCEPT.
+    ipchains -P input  ACCEPT
+    ipchains -P output ACCEPT
+    ipchains -P forward ACCEPT
+
+    # Remove as protecoes TCP SYN Cookie.
+    echo 0 >/proc/sys/net/ipv4/tcp_syncookies
+
+    # Remove protecoes a IP spoofing.
+    # Liga verificacao de origem dos enderecos
+    for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
+        echo 0 > $f
+    done
+
+    # Ativa a aceitacao de redirecionamentos ICMP.
+    for f in /proc/sys/net/ipv4/conf/*/accept_redirects; do
+        echo 1 > $f
+    done
+
+    # Ativa a aceitacao de pacotes da origem roteados.
+    for f in /proc/sys/net/ipv4/conf/*/accept_source_route; do
+        echo 1 > $f
+    done
+        ;;
+  status)
+        status firewall
+        ;;
+  restart|reload)
+        $0 stop
+        $0 start
+        ;;
+  *)
+        echo "Usage: firewall {start|stop|status|restart|reload}"
+        exit 1
+esac
+
+exit 0
+
+Agora, faca mude as permissoes do script:
+
+[root@unsekurity:~]# chmod 700 /etc/rc.d/init.d/firewall
+[root@unsekurity:~]# chown 0.0 /etc/rc.d/init.d/firewall
+
+Se usar Redhat, digite os seguintes comandos:
+
+[root@unsekurity:~]# chkconfig --add firewall
+[root@unsekurity:~]# chkconfig --level 345 firewall on
+
+Ele vai adicionar o script para inicializar automaticamente (ou use o
+ntsysv). Num slackware ou outro linux, adicione-o no rc.local :)
+
+
+12. CONFIGURACAO DE UM FIREWALL PARA O SERVIDOR DE MAIL.
+
+        Agora vem a configuracao do nosso servidor de mail. Essa configuracao
+permite, trafego ilimitado na interface de loopback, ICMP, servidor e cliente 
+DNS, servidor SSH, servidor e cliente SMTP, servidor IMAP e saida de TRACEROU
+TES por padrao.
+
+        Se voce nao quiser alguns servicos listados no script para o
+servidor de mail, basta comenta-los com um # :)
+
+Crie o arquivo de firewall (touch /etc/rc.d/init.d/firewall) no servidor de
+mail e adicione:
+
+#!/bin/sh
+#
+# Adaptado para o tutorial de IPCHAINS por segfault.
+# 11/07/2000
+# Unsekurity Team.
+# 
+# ----------------------------------------------------------------------------
+# Modified by Gerhard Mourani:  02-01-2000
+# ----------------------------------------------------------------------------
+# Copyright (C) 1997, 1998, 1999  Robert L. Ziegler
+#
+# Permission to use, copy, modify, and distribute this software and its
+# documentation for educational, research, private and non-profit purposes,
+# without fee, and without a written agreement is hereby granted. 
+# This software is provided as an example and basis for individual firewall
+# development.  This software is provided without warranty.
+#
+# Any material furnished by Robert L. Ziegler is furnished on an 
+# "as is" basis.  He makes no warranties of any kind, either expressed 
+# or implied as to any matter including, but not limited to, warranty 
+# of fitness for a particular purpose, exclusivity or results obtained
+# from use of the material.
+# ----------------------------------------------------------------------------
+#
+# Inicializado em /etc/rc.d/init.d/firewall.
+# chkconfig: - 60 95
+# descricao: Inicia e para o firewall IPCHAINS.
+#             
+
+# Source function library.
+. /etc/rc.d/init.d/functions # Usuarios do Slackware: comentem esta linha. 
+
+# Source networking configuration.
+. /etc/sysconfig/network     # Usuarios do Slackware: comentem esta linha.
+
+# Check that networking is up.
+if [ ${NETWORKING} = "no" ]  # Usuarios do Slackware: comentem esta linha.
+then                         # Usuarios do Slackware: comentem esta linha.
+        exit 0               # Usuarios do Slackware: comentem esta linha.
+fi                           # Usuarios do Slackware: comentem esta linha.
+
+[ -f /sbin/ipchains ] || exit 0 
+
+# See how we were called.
+case "$1" in                 # Usuarios do Slackware: comentem esta linha.
+  start)                     # Usuarios do Slackware: comentem esta linha.
+        echo -n "Iniciando servicos de Firewall: "
+
+# Algumas definicoes para uma manutencao facil.
+
+# ----------------------------------------------------------------------------
+#  EDITE AS CONSTANTES ABAIXO DE ACORDO COM O SEU SISTEMA!.
+
+INTERFACE_EXTERNA="eth0"                        # a que liga voce com a INET
+LOOPBACK_INTERFACE="lo"
+IPADDR="208.164.186.2"                          # o seu IP, no caso eh do MAIL
+QUALQUERLUGAR="any/0"
+NAMESERVER_1="208.164.186.1"                    # o ip do servidor DNS primario
+NAMESERVER_2="208.164.186.2"                    # o ip do servidor DNS secundar
+io
+
+SYSLOG_SERVER="mail.unsekurity.org"             # seu servidor syslog interno
+SYSLOG_CLIENT="208.164.168.0/24"                # os clientes do syslog
+
+#
+# Bem, ai os SYSLOG* acima eh o seguinte:
+# Caso alguem entre no seu sistema, e tente apagar logs vitais, existira uma
+# copia remota, fazendo com que o esforco dele tenha sido em vao. Para que
+# isso seja possivel, o "syslogd" deve ser inicializado com a opcao "-r"
+# e o servidor do syslog (no caso a maquina mail), deve aceitar pacotes udp
+# na porta 514!! Assim como o cliente deve aceitar o envio de pacotes udp
+# na mesma porta!! 
+# 
+# no syslog da maquina cliente deve conter a seguinte linha:
+#
+# kern.*                        @mail
+#
+# entao ela enviara as mensagem do kernel para a maquina mail!!
+#
+# maiores informacoes: man 8 syslogd
+#
+
+LOOPBACK="127.0.0.0/8"
+CLASS_A="10.0.0.0/8"
+CLASS_B="172.16.0.0/12"
+CLASS_C="192.168.0.0/16"
+CLASS_D_MULTICAST="224.0.0.0/4"
+CLASS_E_RESERVED_NET="240.0.0.0/5"
+BROADCAST_ORI="0.0.0.0"
+BROADCAST_DEST="255.255.255.255"
+PORTASPRIV="0:1023"
+PORTASNAOPRIV="1024:65535"
+
+# ----------------------------------------------------------------------------
+
+# as portas do SSH iniciam em 1023 e vao ate a porta 513 para cada conexao 
+# adicional!!
+PORTAS_SSH="1022:1023"                   # alcance das portas do SSH
+
+# traceroute geralmente usa -S 32769:65535 -D 33434:33523
+PORTAS_ORI_TRACEROUTE="32769:65535"
+PORTAS_DEST_TRACEROUTE="33434:33523"
+
+# ----------------------------------------------------------------------------
+# A regra padrao eh DENY
+
+    # Remove todas as regras existentes 
+    ipchains -F
+
+    # Configura a regra padrao do filtro para DENY
+    ipchains -P input  DENY
+    ipchains -P output REJECT
+    ipchains -P forward REJECT
+
+# ----------------------------------------------------------------------------
+
+    # Habilita protecao contra TCP SYN Cookies
+    echo 1 >/proc/sys/net/ipv4/tcp_syncookies
+
+    # Habilita protecao contra IP spoofing 
+    # verificando o endereco de origem
+    for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
+        echo 1 > $f
+    done
+
+    # Desabilita a aceitacao de redirecionamento ICMP
+    for f in /proc/sys/net/ipv4/conf/*/accept_redirects; do
+        echo 0 > $f
+    done
+
+    # Desabilita o envio pacotes sem direcao
+    for f in /proc/sys/net/ipv4/conf/*/accept_source_route; do
+        echo 0 > $f
+    done
+
+# ----------------------------------------------------------------------------
+# LOOPBACK
+
+    # Trafego ilimitado na interface de loopback
+    ipchains -A input  -i $LOOPBACK_INTERFACE -j ACCEPT 
+    ipchains -A output -i $LOOPBACK_INTERFACE -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+# Script kiddies
+# Barra o acesso deles.
+
+    # /etc/rc.d/rc.firewall.blocked deverah conter uma lista de
+    # ipchains -A input  -i $EXTERNAL_INTERFACE -s address -j DENY
+    # para bloquear o acesso deles..
+
+    # Recusa qualquer conexao dos enderecos contidos em rc.firewall.blocked
+    if [ -f /etc/rc.d/rc.firewall.blocked ]; then
+        . /etc/rc.d/rc.firewall.blocked
+    fi
+
+# ----------------------------------------------------------------------------
+# SPOOFING & ENDERECO INVALIDOS
+# Recusa pacotes forjados.
+# Ignora a entrada/saida de pacotes de/para enderecos invalidos.
+
+    # Recusa pacotes forjados dizendo ser da interface externa e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $IPADDR -j DENY -l
+
+    # Recusa pacotes para/dizendo ser de uma Classe A privada e loga.
+    # -d quer dizer DESTINO !
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_A -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $CLASS_A -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $CLASS_A -j REJECT -l
+    ipchains -A output -i $INTERFACE_EXTERNA -d $CLASS_A -j REJECT -l
+
+    # Recusa pacotes para/dizendo ser de uma Classe B privada e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_B -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $CLASS_B -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $CLASS_B -j REJECT -l
+    ipchains -A output -i $INTERFACE_EXTERNA -d $CLASS_B -j REJECT -l
+
+    # Recusa pacotes para/dizendo ser de uma Classe C privada e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_C -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $CLASS_C -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $CLASS_C -j REJECT -l
+    ipchains -A output -i $INTERFACE_EXTERNA -d $CLASS_C -j REJECT -l
+
+    # Recusa pacotes dizendo ser da interface de loopback e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $LOOPBACK -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $LOOPBACK -j REJECT -l
+
+    # Recusa enderecos de ORIGEM da broadcast 
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $BROADCAST_DEST -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $BROADCAST_ORI -j DENY -l
+
+    # Recusa uma classe D de enderecos multicast (in.h) (NET-3-HOWTO)
+    # Multicast eh ilegal como endereco de origem.
+    # Multicast usa UDP.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_D_MULTICAST -j DENY -l
+
+    # Recusa uma classe E de enderecos reservados
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_E_RESERVED_NET -j DENY -
+l
+
+    # recusa enderecos definidos como reservados pela IANA
+    # 0.*.*.*, 1.*.*.*, 2.*.*.*, 5.*.*.*, 7.*.*.*, 23.*.*.*, 27.*.*.*
+    # 31.*.*.*, 37.*.*.*, 39.*.*.*, 41.*.*.*, 42.*.*.*, 58-60.*.*.*
+    # 65-95.*.*.*, 96-126.*.*.*, 197.*.*.*, 201.*.*.* (?), 217-223.*.*.*
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 1.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 2.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 5.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 7.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 23.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 27.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 31.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 37.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 39.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 41.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 42.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 58.0.0.0/7 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 60.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 65.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 66.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 67.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 68.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 69.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 70.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 71.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 72.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 73.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 74.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 75.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 76.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 77.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 78.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 79.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 80.0.0.0/4 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 96.0.0.0/4 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 112.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 113.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 114.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 115.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 116.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 117.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 118.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 119.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 120.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 121.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 122.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 123.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 124.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 125.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 126.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 217.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 218.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 219.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 220.0.0.0/6 -j DENY -l
+
+# ----------------------------------------------------------------------------
+# ICMP
+
+    #    Para prevenir ataques "DoS" baseado em ICMP, devemos filtrar
+    #    incoming Redirect (5) e outgoing Destination Unreachable (3).
+    #    Entretanto, desabilitar o Destination Unreachable (3) nao eh
+    #    recomendavel, porque ele eh usado para negociar o tamanho de 
+    #    fragmentacao do pacote!!
+
+    # Para ping bi-direcional.
+    #     Tipos de mensagens:  Echo_Reply (0),  Echo_Request (8)
+    #     Para prevenir ataques, eh necessario limitar os enderecos de origem 
+    #     apenas para um certo alcance.
+    # 
+    # Para a saida de traceroute.
+    #     Tipos de mensagens:  INCOMING Dest_Unreachable (3), Time_Exceeded (11
+)
+    #     UDP base: 33434 ateh base+nhops-1
+    # 
+    # Para a entrada traceroute.
+    #     Tipos de mensagens:  OUTGOING Dest_Unreachable (3), Time_Exceeded (11
+)
+    #     Para bloquear isso, barre OUTGOING 3 e 11
+
+    #  0: echo-reply (pong)
+    #  3: destination-unreachable, port-unreachable, fragmentation-needed, etc.
+    #  4: source-quench
+    #  5: redirect
+    #  8: echo-request (ping)
+    # 11: time-exceeded
+    # 12: parameter-problem
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 0 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 3 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 4 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 11 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 12 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s 208.164.186.0/24 8 -d $IPADDR -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 0 -d 208.164.186.0/24 -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 3 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 4 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 8 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 12 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 11 -d 208.164.186.0/24 -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+    # Entrada UDP para TRACEROUTE
+    # traceroute geralmente usa -S 32769:65535 -D 33434:33523
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s 208.164.186.0/24 $PORTAS_ORI_TRACEROUTE \
+             -d $IPADDR $PORTAS_DEST_TRACEROUTE -j ACCEPT -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $QUALQUERLUGAR $PORTAS_ORI_TRACEROUTE \
+             -d $IPADDR $PORTAS_DEST_TRACEROUTE -j DENY -l
+
+# ----------------------------------------------------------------------------
+    # Servidor DNS
+    # ------------
+
+    # DNS: servidor completo. (53)
+    # ----------------------------------------------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR 53 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR 53 \
+             -d $NAMESERVER_1 53 -j ACCEPT 
+
+    # cliente DNS (53)
+    # ----------------
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $NAMESERVER_1 53 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $NAMESERVER_1 53 -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $NAMESERVER_1 53 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $NAMESERVER_1 53 -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+    # conexoes TCP aceitas somente nas portas selecionadas!!
+    # ------------------------------------------------------
+    # ------------------------------------------------------------------
+
+    # servidor SSH (22)
+    # -----------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR 22 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR 22 \
+             -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTAS_SSH \
+             -d $IPADDR 22 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR 22 \
+             -d $QUALQUERLUGAR $PORTAS_SSH -j ACCEPT 
+
+    # cliente SSH (22)
+    # ----------------
+#    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+#             -s $QUALQUERLUGAR 22 \
+#             -d $IPADDR $PORTASNAOPRIV -j ACCEPT
+
+#    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+#             -s $IPADDR $PORTASNAOPRIV \
+#             -d $QUALQUERLUGAR 22 -j ACCEPT
+
+#    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+#             -s $QUALQUERLUGAR 22 \
+#             -d $IPADDR $PORTAS_SSH -j ACCEPT
+
+#    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+#             -s $IPADDR $PORTAS_SSH \
+#             -d $QUALQUERLUGAR 22 -j ACCEPT
+
+    # ------------------------------------------------------------------
+
+    # servidor SYSLOG (514)
+    # ----------------------
+
+#    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+#             -s $SYSLOG_CLIENT \
+#             -d $IPADDR 514 -j ACCEPT
+
+    # cliente SYSLOG (514)
+    # -----------------
+
+#    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+#             -s $IPADDR 514 \
+#             -d $SYSLOG_SERVER 514 -j ACCEPT
+
+    # ------------------------------------------------------------------
+
+    # servidor AUTH (113)
+    # -------------------
+
+    # Rejeita, melhor do que barrar negar, conexoes na porta 113. (NET-3-HOWTO)
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR \
+             -d $IPADDR 113 -j REJECT 
+
+    # ------------------------------------------------------------------
+
+    # servidor SMTP (25)
+    # -----------------
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR -j ACCEPT
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR 25 -j ACCEPT
+    
+     # -----------------------------------------------------------------
+    # cliente SMTP (25)
+    # -----------------
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $QUALQUERLUGAR 25 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR 25 -j ACCEPT 
+
+    # ------------------------------------------------------------------
+
+    # servidor IMAP (143)
+    # ---------------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR 143 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR 143 \
+             -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    # ------------------------------------------------------------------
+    # TRACEROUTE DE SAIDA
+    # -------------------
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR $PORTAS_ORI_TRACEROUTE \
+             -d $QUALQUERLUGAR $PORTAS_DEST_TRACEROUTE -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+# Ativa o logging para os pacotes que serao barrados.
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -d $IPADDR -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -d $IPADDR $PORTASPRIV -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -d $IPADDR $PORTASNAOPRIV -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 5 -d $IPADDR -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 13:255 -d $IPADDR -j DENY -l
+
+# ----------------------------------------------------------------------------
+
+        ;;
+  stop)
+        echo -n "Shutting Firewalling Services: "
+
+    # Remove todas as regras pertencentes ao filtro
+    ipchains -F
+
+    # Remove todas as regras definidas pelo usuario ao filtro
+    ipchains -X
+
+    # Muda a politica padrao para ACCEPT.
+    ipchains -P input  ACCEPT
+    ipchains -P output ACCEPT
+    ipchains -P forward ACCEPT
+
+    # Remove as protecoes TCP SYN Cookie.
+    echo 0 >/proc/sys/net/ipv4/tcp_syncookies
+
+    # Remove protecoes a IP spoofing.
+    # Liga verificacao de origem dos enderecos
+    for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
+        echo 0 > $f
+    done
+
+    # Ativa a aceitacao de redirecionamentos ICMP.
+    for f in /proc/sys/net/ipv4/conf/*/accept_redirects; do
+        echo 1 > $f
+    done
+
+    # Ativa a aceitacao de pacotes da origem roteados.
+    for f in /proc/sys/net/ipv4/conf/*/accept_source_route; do
+        echo 1 > $f
+    done
+        ;;
+  status)
+        status firewall
+        ;;
+  restart|reload)
+        $0 stop
+        $0 start
+        ;;
+  *)
+        echo "Usage: firewall {start|stop|status|restart|reload}"
+        exit 1
+esac
+
+exit 0
+
+Agora, faca mude as permissoes do script:
+
+[root@unsekurity:~]# chmod 700 /etc/rc.d/init.d/firewall
+[root@unsekurity:~]# chown 0.0 /etc/rc.d/init.d/firewall
+
+Se usar Redhat, digite os seguintes comandos:
+
+[root@unsekurity:~]# chkconfig --add firewall
+[root@unsekurity:~]# chkconfig --level 345 firewall on
+
+Ele vai adicionar o script para inicializar automaticamente (ou use o
+ntsysv). Num slackware ou outro linux, adicione-o no rc.local :)
+
+Bom, o tutorial ja tah enorme, heheh, mas vamos em frente, ainda falta o
+principal, o servidor gateway que fara o servico de masquerading. Essa eh a
+parte mais interessante. Ja pensou voce comecar a vender essa ideia, para
+uma empresa dizendo: Com apenas um computador e uma conexao de internet,
+todos os seus funcionarios podem acessar ela sem ter que pagar nenhum custo
+adicional? Humm, certamente eh uma boa ideia e certas pessoas pagam caro por
+isso. :)
+
+
+*12. REDIRECIONAMENTO E "MASCARAMENTO" NO LINUX.
+
+        Ao contrario da parte anterior, configurar um linux para fazer o
+servico de mascaramento e recirecionamento geralmente da rede interna que
+tem um ip "falso" para a rede externa (internet) requer uma configuracao
+especial do seu kernel e do seu script de firewall. Esse tipo de config deve
+ser feito apenas se voce quiser esse tipo de servico, pois eh meio longo :).
+
+13. CONSTRUINDO UM KERNEL COM SUPORTE A REDIR. E MASC.
+
+        A primeira coisa que voce deve fazer eh ter certeza que o kernel
+estah compilado com suporte ao IPchains. Lembre-se que todas as maquinas da
+rede deveriam estar configuradas para barrar portas inutilizadas (sempre
+alguem tenta invadir a sua rede, mesmo que voce nao saiba!). No kernel
+2.2.16 (outros tambem..hehe), ficaria assim:
+
+[root@unsekurity:~]# cd /usr/src/linux
+[root@unsekurity:/usr/src/linux]# make menuconfig
+
+        Vah em "Networking options" e marque:
+
+[*] Network firewalls
+[*] IP: firewalling
+[*] IP: TCP syncookie support (not enabled per default)
+[*] IP: masquerading      
+[*] IP: ICMP masquerading       
+
+Depois eh soh recompilar o kernel e rebootar a maquina...
+
+[root@unsekurity:/usr/src/linux]# make dep ; make clean ; make bzImage ;
+make modules ; make modules_install
+
+:)
+
+Esse "mascaramento" quer dizer que se um dos seus computadores na sua rede
+local (na qual o seu servidor gateway eh o Linux), quiser mandar alguma
+coisa pra "fora da rede", entao o seu gateway ira se "mascarar" como aquele
+computador que queria enviar algo. Ou seja, ele repassa pacotes locais para
+a rede externa (internet) dizendo ter vindo dele mesmo (gateway). 
+
+O Mascaramento IP soh vai funcionar se o redirecionamento de pacotes estiver
+habilitado no seu sistema. Ele vem desabilitado por padrao, entao voce pode
+habilita-lo com o seguinte comando:
+
+[root@unsekurity:~]# echo "1" > /proc/sys/net/ipv4/ip_forward
+
+Voce deve adicionar o comando acima no seu rc.local se nao estiver usando
+RH, pois ele sera executado automaticamente quando o computador for
+reiniciado. Caso use Redhat, faca o seguinte:
+
+Edite o seu /etc/sysconfig/network e mude:
+
+FORWARD_IPV4="false" para FORWARD_IPV4="true"
+
+e depois reinicie:
+
+[root@unsekurity:~]# /etc/rc.d/init.d/network restart
+
+Se voce habilitar o Mascaramento de IPS, entao os modulos ip_masq_ftp.o
+(para transferencias ftp), ip_masq_irc.o (para irc chats), ip_masq_quake.o
+(adivinha :), ip_masq_vdolive.o (para conexoes de video VDOLive),
+ip_masq_cuseeme.o (para CU-SeeMe), e ip_masq_raudio.o (para RealAudio) serao
+automaticamente compilados. Eles sao necessarios para o funcionamento desses
+protocolos. Existem outros tipos de modulos que podem ser facilmente puxados
+pela internet, no site da freshmeat e outros. O mascaramento basico (IP:
+masquerading, compilado no kernel)controla apenas pacotes TCP ou UDP (e erros 
+ICMP para conexoes existentes). O IP:ICMP Masquerading adiciona um suporte
+para mascaramento de pacotes ICMP, como o "ping" ou alguns testes usados
+pelo "tracer" do Windows.
+
+Apenas para lembrar que como este computador estara conectado na internet,
+voce nao devera' rodar mais servicos do que os necessarios, e devera' estar
+sempre ligado nos patches para as aplicacoes que voce roda (assine bugtraq). 
+SEMPRE SEMPRE SEMPRE. Tente acompanhar o que acontece no mundo "undeground"
+e fique ligado em novos exploits. Cuide do seu sistema. Nao seja mais uma
+pessoa a ter a pagina que voce administra na attrition.org :)
+
+
+14. CONFIGURACAO DO SCRIPT DE FIREWALL PARA O SERVIDOR GATEWAY
+
+        Essa configuracao para o gateway permite trafego ilimitado na
+interface de loopback, ICMP, servidor e cliente DNS (53), servidor e cliente
+SSH (22), servidor e cliente HTTP (80), servidor e cliente HTTPS (443),
+cliente POP (110), servidor e cliente SMTP(25), servidor IMAP(143), clientes
+IRC(6667), clientes ICQ (4000), clientes FTP(20, 21) e saida de traceroutes
+por padrao!
+
+#!/bin/sh
+#
+# Adaptado para o tutorial de IPCHAINS por segfault.
+# 14/08/2000 (DEMOREI HEIN! HEHEHE)
+# Unsekurity Team.
+# 
+# ----------------------------------------------------------------------------
+# Modified by Gerhard Mourani:  02-01-2000
+# ----------------------------------------------------------------------------
+# Copyright (C) 1997, 1998, 1999  Robert L. Ziegler
+#
+# Permission to use, copy, modify, and distribute this software and its
+# documentation for educational, research, private and non-profit purposes,
+# without fee, and without a written agreement is hereby granted. 
+# This software is provided as an example and basis for individual firewall
+# development.  This software is provided without warranty.
+#
+# Any material furnished by Robert L. Ziegler is furnished on an 
+# "as is" basis.  He makes no warranties of any kind, either expressed 
+# or implied as to any matter including, but not limited to, warranty 
+# of fitness for a particular purpose, exclusivity or results obtained
+# from use of the material.
+# ----------------------------------------------------------------------------
+#
+# Inicializado em /etc/rc.d/init.d/firewall.
+# chkconfig: - 60 95
+# descricao: Inicia e para o firewall IPCHAINS.
+#             
+
+# Source function library.
+. /etc/rc.d/init.d/functions # Usuarios do Slackware: comentem esta linha. 
+
+# Source networking configuration.
+. /etc/sysconfig/network     # Usuarios do Slackware: comentem esta linha.
+
+# Check that networking is up.
+if [ ${NETWORKING} = "no" ]  # Usuarios do Slackware: comentem esta linha.
+then                         # Usuarios do Slackware: comentem esta linha.
+        exit 0               # Usuarios do Slackware: comentem esta linha.
+fi                           # Usuarios do Slackware: comentem esta linha.
+
+[ -f /sbin/ipchains ] || exit 0 
+
+# See how we were called.
+case "$1" in                 # Usuarios do Slackware: comentem esta linha.
+  start)                     # Usuarios do Slackware: comentem esta linha.
+        echo -n "Iniciando servicos de Firewall: "
+
+# Algumas definicoes para uma manutencao facil.
+
+# ----------------------------------------------------------------------------
+#  EDITE AS CONSTANTES ABAIXO DE ACORDO COM O SEU SISTEMA!.
+
+INTERFACE_EXTERNA="eth0"                        # a que liga voce com a INET
+INTERFACE_INTERNA="eth1"                        # a da sua rede interna
+LOOPBACK_INTERFACE="lo"
+IPADDR="208.164.186.1"                          # o seu IP, no caso eh do servi
+dor
+LOCALNET="192.168.1.0/24"                       # a faixa de ips locais
+QUALQUERLUGAR="any/0"
+NAMESERVER_1="208.164.186.1"                    # o ip do servidor DNS primario
+NAMESERVER_2="208.164.186.2"                    # o ip do servidor DNS secundar
+io
+
+POP_SERVER="pop.algumacoisa.org"                # seu servidor de pop externo
+SYSLOG_SERVER="mail.unsekurity.org"             # seu servidor syslog interno
+
+#
+# Bem, ai os SYSLOG* acima eh o seguinte:
+# Caso alguem entre no seu sistema, e tente apagar logs vitais, existira uma
+# copia remota, fazendo com que o esforco dele tenha sido em vao. Para que
+# isso seja possivel, o "syslogd" deve ser inicializado com a opcao "-r"
+# e o servidor do syslog (no caso a maquina mail), deve aceitar pacotes udp
+# na porta 514!! Assim como o cliente deve aceitar o envio de pacotes udp
+# na mesma porta!! 
+# 
+# no syslog da maquina cliente deve conter a seguinte linha:
+#
+# kern.*                        @mail
+#
+# entao ela enviara as mensagem do kernel para a maquina mail!!
+#
+# maiores informacoes: man 8 syslogd
+#
+
+LOOPBACK="127.0.0.0/8"
+CLASS_A="10.0.0.0/8"
+CLASS_B="172.16.0.0/12"
+CLASS_C="192.168.0.0/16"
+CLASS_D_MULTICAST="224.0.0.0/4"
+CLASS_E_RESERVED_NET="240.0.0.0/5"
+BROADCAST_ORI="0.0.0.0"
+BROADCAST_DEST="255.255.255.255"
+PORTASPRIV="0:1023"
+PORTASNAOPRIV="1024:65535"
+
+# ----------------------------------------------------------------------------
+
+# as portas do SSH iniciam em 1023 e vao ate a porta 513 para cada conexao 
+# adicional!!
+PORTAS_SSH="1022:1023"                   # alcance das portas do SSH
+
+# traceroute geralmente usa -S 32769:65535 -D 33434:33523
+PORTAS_ORI_TRACEROUTE="32769:65535"
+PORTAS_DEST_TRACEROUTE="33434:33523"
+
+# ----------------------------------------------------------------------------
+# A regra padrao eh DENY
+
+    # Remove todas as regras existentes 
+    ipchains -F
+
+    # Configura a regra padrao do filtro para DENY
+    ipchains -P input  DENY
+    ipchains -P output REJECT
+    ipchains -P forward REJECT
+
+    # configura o timeout do mascaramento para 10 horas (conexoes TCP)
+    ipchains -M -S 36000 0 0
+
+    # Nao repassa fragmentos. Junta primeiro, depois envia.
+    ipchains -A output -f -i $LOCAL_INTERFACE -j DENY
+
+# ----------------------------------------------------------------------------
+
+    # Habilita protecao contra TCP SYN Cookies
+    echo 1 >/proc/sys/net/ipv4/tcp_syncookies
+
+    # Habilita protecao contra IP spoofing 
+    # verificando o endereco de origem
+    for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
+        echo 1 > $f
+    done
+
+    # Desabilita a aceitacao de redirecionamento ICMP
+    for f in /proc/sys/net/ipv4/conf/*/accept_redirects; do
+        echo 0 > $f
+    done
+
+    # Desabilita o envio pacotes sem direcao
+    for f in /proc/sys/net/ipv4/conf/*/accept_source_route; do
+        echo 0 > $f
+    done
+
+    # Esses modulos sao necessarios para mascarar as conexoes:
+    /sbin/modprobe ip_masq_ftp.o
+    /sbin/modprobe ip_mas_raudio.o ports=554,7070,70701,6970,6971
+    /sbin/modprobe ip_masq_irc.o
+#   /sbin/modprobe ip_masq_vdolive.o
+#   /sbin/modprobe ip_masq_cuseeme.o
+#   /sbin/modprobe ip_masq_quake.o
+
+
+# ----------------------------------------------------------------------------
+# LOOPBACK
+
+    # Trafego ilimitado na interface de loopback
+    ipchains -A input  -i $LOOPBACK_INTERFACE -j ACCEPT 
+    ipchains -A output -i $LOOPBACK_INTERFACE -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+# Script kiddies
+# Barra o acesso deles.
+
+    # /etc/rc.d/rc.firewall.blocked deverah conter uma lista de
+    # ipchains -A input  -i $EXTERNAL_INTERFACE -s address -j DENY
+    # para bloquear o acesso deles..
+
+    # Recusa qualquer conexao dos enderecos contidos em rc.firewall.blocked
+    if [ -f /etc/rc.d/rc.firewall.blocked ]; then
+        . /etc/rc.d/rc.firewall.blocked
+    fi
+
+# ----------------------------------------------------------------------------
+# SPOOFING & ENDERECO INVALIDOS
+# Recusa pacotes forjados.
+# Ignora a entrada/saida de pacotes de/para enderecos invalidos.
+
+    # Recusa pacotes forjados dizendo ser da interface externa e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $IPADDR -j DENY -l
+
+    # Recusa pacotes para/dizendo ser de uma Classe A privada e loga.
+    # -d quer dizer DESTINO !
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_A -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $CLASS_A -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $CLASS_A -j REJECT -l
+    ipchains -A output -i $INTERFACE_EXTERNA -d $CLASS_A -j REJECT -l
+
+    # Recusa pacotes para/dizendo ser de uma Classe B privada e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_B -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $CLASS_B -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $CLASS_B -j REJECT -l
+    ipchains -A output -i $INTERFACE_EXTERNA -d $CLASS_B -j REJECT -l
+
+    # Recusa pacotes para/dizendo ser de uma Classe C privada e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_C -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $CLASS_C -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $CLASS_C -j REJECT -l
+    ipchains -A output -i $INTERFACE_EXTERNA -d $CLASS_C -j REJECT -l
+
+    # Recusa pacotes dizendo ser da interface de loopback e loga.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $LOOPBACK -j DENY -l
+    ipchains -A output -i $INTERFACE_EXTERNA -s $LOOPBACK -j REJECT -l
+
+    # Recusa enderecos de ORIGEM da broadcast 
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $BROADCAST_DEST -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -d $BROADCAST_ORI -j DENY -l
+
+    # Recusa uma classe D de enderecos multicast (in.h) (NET-3-HOWTO)
+    # Multicast eh ilegal como endereco de origem.
+    # Multicast usa UDP.
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_D_MULTICAST -j DENY -l
+
+    # Recusa uma classe E de enderecos reservados
+    ipchains -A input  -i $INTERFACE_EXTERNA -s $CLASS_E_RESERVED_NET -j DENY -
+l
+
+    # recusa enderecos definidos como reservados pela IANA
+    # 0.*.*.*, 1.*.*.*, 2.*.*.*, 5.*.*.*, 7.*.*.*, 23.*.*.*, 27.*.*.*
+    # 31.*.*.*, 37.*.*.*, 39.*.*.*, 41.*.*.*, 42.*.*.*, 58-60.*.*.*
+    # 65-95.*.*.*, 96-126.*.*.*, 197.*.*.*, 201.*.*.* (?), 217-223.*.*.*
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 1.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 2.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 5.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 7.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 23.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 27.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 31.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 37.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 39.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 41.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 42.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 58.0.0.0/7 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 60.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 65.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 66.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 67.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 68.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 69.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 70.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 71.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 72.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 73.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 74.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 75.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 76.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 77.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 78.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 79.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 80.0.0.0/4 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 96.0.0.0/4 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 112.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 113.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 114.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 115.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 116.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 117.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 118.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 119.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 120.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 121.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 122.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 123.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 124.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 125.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 126.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 217.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 218.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 219.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE_EXTERNA -s 220.0.0.0/6 -j DENY -l
+
+# ----------------------------------------------------------------------------
+# ICMP
+
+    #    Para prevenir ataques "DoS" baseado em ICMP, devemos filtrar
+    #    incoming Redirect (5) e outgoing Destination Unreachable (3).
+    #    Entretanto, desabilitar o Destination Unreachable (3) nao eh
+    #    recomendavel, porque ele eh usado para negociar o tamanho de 
+    #    fragmentacao do pacote!!
+
+    # Para ping bi-direcional.
+    #     Tipos de mensagens:  Echo_Reply (0),  Echo_Request (8)
+    #     Para prevenir ataques, eh necessario limitar os enderecos de origem 
+    #     apenas para um certo alcance.
+    # 
+    # Para a saida de traceroute.
+    #     Tipos de mensagens:  INCOMING Dest_Unreachable (3), Time_Exceeded (11
+)
+    #     UDP base: 33434 ateh base+nhops-1
+    # 
+    # Para a entrada traceroute.
+    #     Tipos de mensagens:  OUTGOING Dest_Unreachable (3), Time_Exceeded (11
+)
+    #     Para bloquear isso, barre OUTGOING 3 e 11
+
+    #  0: echo-reply (pong)
+    #  3: destination-unreachable, port-unreachable, fragmentation-needed, etc.
+    #  4: source-quench
+    #  5: redirect
+    #  8: echo-request (ping)
+    # 11: time-exceeded
+    # 12: parameter-problem
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 0 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 3 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 4 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 11 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 12 -d $IPADDR -j ACCEPT 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s 208.164.186.0/24 8 -d $IPADDR -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 0 -d 208.164.186.0/24 -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 3 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 4 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 8 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 12 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE_EXTERNA -p icmp \
+             -s $IPADDR 11 -d 208.164.186.0/24 -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+    # Entrada UDP para TRACEROUTE
+    # traceroute geralmente usa -S 32769:65535 -D 33434:33523
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s 208.164.186.0/24 $PORTAS_ORI_TRACEROUTE \
+             -d $IPADDR $PORTAS_DEST_TRACEROUTE -j ACCEPT -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $QUALQUERLUGAR $PORTAS_ORI_TRACEROUTE \
+             -d $IPADDR $PORTAS_DEST_TRACEROUTE -j DENY -l
+
+# ----------------------------------------------------------------------------
+    # Servidor DNS
+    # ------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR 53 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR 53 \
+             -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    # cliente DNS (53)
+    # ----------------
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $NAMESERVER_1 53 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $NAMESERVER_1 53 -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $NAMESERVER_1 53 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $NAMESERVER_1 53 -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $NAMESERVER_2 53 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $NAMESERVER_2 53 -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $NAMESERVER_2 53 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $NAMESERVER_2 53 -j ACCEPT 
+
+# ----------------------------------------------------------------------------
+    # conexoes TCP aceitas somente nas portas selecionadas!!
+    # ------------------------------------------------------
+    # ------------------------------------------------------------------
+
+    # servidor SSH (22)
+    # -----------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR 22 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR 22 \
+             -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR $PORTAS_SSH \
+             -d $IPADDR 22 -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR 22 \
+             -d $QUALQUERLUGAR $PORTAS_SSH -j ACCEPT 
+
+    # cliente SSH (22)
+    # ----------------
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $QUALQUERLUGAR 22 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR 22 -j ACCEPT
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $QUALQUERLUGAR 22 \
+             -d $IPADDR $PORTAS_SSH -j ACCEPT
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTAS_SSH \
+             -d $QUALQUERLUGAR 22 -j ACCEPT
+
+    # ------------------------------------------------------------------
+
+    # servidor HTTP (80)
+    # ------------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $QUALQUERLUGAR 80 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR 80 -j ACCEPT 
+
+    # ------------------------------------------------------------------
+
+    # cliente HTTPS (443)
+    # --------------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $QUALQUERLUGAR 443 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR 443 -j ACCEPT 
+
+    # ------------------------------------------------------------------
+
+    # cliente POP (110)
+    # --------------------
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $POP_SERVER 110 \         
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \  
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR 110 -j ACCEPT
+
+    # ------------------------------------------------------------------
+
+    # cliente FINGER (79)
+    # --------------------
+
+#    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+#             -s $QUALQUERLUGAR 79 \         
+#             -d $IPADDR $PORTASNAOPRIV -j ACCEPT
+
+#    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \  
+#             -s $IPADDR $PORTASNAOPRIV \
+#             -d $QUALQUERLUGAR 79 -j ACCEPT
+
+    # ------------------------------------------------------------------
+
+    # servidor SYSLOG (514)
+    # ----------------------
+
+#    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+#             -s $SYSLOG_CLIENT \
+#             -d $IPADDR 514 -j ACCEPT
+
+    # cliente SYSLOG (514)
+    # -----------------
+
+#    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+#             -s $IPADDR 514 \
+#             -d $SYSLOG_SERVER 514 -j ACCEPT
+
+    # ------------------------------------------------------------------
+
+    # servidor AUTH (113)
+    # -------------------
+
+    # Rejeita, melhor do que barrar negar, conexoes na porta 113. (NET-3-HOWTO)
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $QUALQUERLUGAR \
+             -d $IPADDR 113 -j REJECT 
+
+    # ------------------------------------------------------------------
+
+    # cliente SMTP (25)
+    # -----------------
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $QUALQUERLUGAR 25 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR 25 -j ACCEPT 
+
+    # ------------------------------------------------------------------
+
+    # cliente IRC (6667)
+    # -----------------
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $QUALQUERLUGAR 6667 \ 
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR 6667 -j ACCEPT
+
+    # ------------------------------------------------------------------
+
+    # cliente ICQ (4000) 
+    # -----------------
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -s $QUALQUERLUGAR 4000 \  
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT
+
+    # ------------------------------------------------------------------
+
+    # cliente FTP (20, 21)
+    # ---------------------
+
+    # requisicoes externas.
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $QUALQUERLUGAR 21 \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR 21 -j ACCEPT 
+
+    # NORMAL mode .
+    # 
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+            -s $IPADDR 20 \
+            -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    # resposta do NORMAL mode.
+    #
+    ipchains -A output  -i $INTERFACE_EXTERNA -p tcp ! -y \  
+            -s $IPADDR $PORTASNAOPRIV \  
+            -d $QUALQUERLUGAR 20 -j ACCEPT
+
+    # PASSIVE MODE.
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -s $IPADDR $PORTASNAOPRIV \
+             -d $QUALQUERLUGAR $PORTASNAOPRIV -j ACCEPT 
+
+    # respostas do PASSIVE MODE.
+
+    ipchains -A output -i $INTERFACE_EXTERNA -p tcp ! -y \
+             -s $QUALQUERLUGAR $PORTASNAOPRIV \
+             -d $IPADDR $PORTASNAOPRIV -j ACCEPT 
+
+    # ------------------------------------------------------------------
+    # TRACEROUTE DE SAIDA
+    # -------------------
+    ipchains -A output -i $INTERFACE_EXTERNA -p udp \
+             -s $IPADDR $PORTAS_ORI_TRACEROUTE \
+             -d $QUALQUERLUGAR $PORTAS_DEST_TRACEROUTE -j ACCEPT 
+
+# Trafego ilimitado na rede interna.
+   # todas as maquinas tem acesso ao servidor de firewall.
+
+    ipchains -A input -i $LOCAL_INTERFACE -s $LOCALNET -j ACCEPT
+    ipchains -A output -i $LOCAL_INTERFACE -d $LOCALNET -j ACCEPT
+
+# Faz o mascaramento da rede interna!
+    
+    ipchains -A forward -i $EXTERNAL_INTERFACE -s $LOCALNET -j MASQ
+
+# ----------------------------------------------------------------------------
+# Ativa o logging para os pacotes que serao barrados.
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p tcp \
+             -d $IPADDR -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -d $IPADDR $PORTASPRIV -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p udp \
+             -d $IPADDR $PORTASNAOPRIV -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 5 -d $IPADDR -j DENY -l
+
+    ipchains -A input  -i $INTERFACE_EXTERNA -p icmp \
+             -s $QUALQUERLUGAR 13:255 -d $IPADDR -j DENY -l
+
+# ----------------------------------------------------------------------------
+
+        ;;
+  stop)
+        echo -n "Shutting Firewalling Services: "
+
+    # Remove todas as regras pertencentes ao filtro
+    ipchains -F
+
+    # Remove todas as regras definidas pelo usuario ao filtro
+    ipchains -X
+
+    # Muda a politica padrao para ACCEPT.
+    ipchains -P input  ACCEPT
+    ipchains -P output ACCEPT
+    ipchains -P forward ACCEPT
+
+    # Remove as protecoes TCP SYN Cookie.
+    echo 0 >/proc/sys/net/ipv4/tcp_syncookies
+
+    # Remove protecoes a IP spoofing.
+    # Liga verificacao de origem dos enderecos
+    for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
+        echo 0 > $f
+    done
+
+    # Ativa a aceitacao de redirecionamentos ICMP.
+    for f in /proc/sys/net/ipv4/conf/*/accept_redirects; do
+        echo 1 > $f
+    done
+
+    # Ativa a aceitacao de pacotes da origem roteados.
+    for f in /proc/sys/net/ipv4/conf/*/accept_source_route; do
+        echo 1 > $f
+    done
+        ;;
+  status)
+        status firewall
+        ;;
+  restart|reload)
+        $0 stop
+        $0 start
+        ;;
+  *)
+        echo "Usage: firewall {start|stop|status|restart|reload}"
+        exit 1
+esac
+
+exit 0
+
+Agora, faca mude as permissoes do script:
+
+[root@unsekurity:~]# chmod 700 /etc/rc.d/init.d/firewall
+[root@unsekurity:~]# chown 0.0 /etc/rc.d/init.d/firewall
+
+Se usar Redhat, digite os seguintes comandos:
+
+[root@unsekurity:~]# chkconfig --add firewall
+[root@unsekurity:~]# chkconfig --level 345 firewall on
+
+Ele vai adicionar o script para inicializar automaticamente (ou use o
+ntsysv). Num slackware ou outro linux, adicione-o no rc.local :)
+
+
+15. ALGUMAS DICAS DO IPCHAINS:
+
+        Esses comandos abaixo sao os mais usados quando administramos uma
+maquina que esta rodando ipchains. 
+
+a) para listar regras:
+
+[root@unsekurity:~]# ipchains -L
+
+Ele vai listar as regras numa determinada chain, se nao foi escolhida
+nenhuma, entao ele vai listar TODAS.
+
+b) para listar todas as regras de entrada:
+
+[root@unsekurity:~]# ipchains -L input
+
+c) para listar todas as regras de mascaramento:
+
+[root@unsekurity:~]# ipchains -ML
+
+
+16. SCRIPT PARA CONEXOES DIAL-UP
+
+#!/bin/bash
+#
+#  firewall.sh: firewall simples.
+#  versao: 1.0b
+#  feito por segfault/Unsekurity Team.
+#
+
+MEUIP=`ifconfig ppp0 | grep inet | awk '{print $2}' | cut -d : -f 2`
+REDEINTERNA="192.168.1.0/24"
+PORTAS="0:1023"
+NPORTAS="1024:65535"
+INTERFACE="ppp0"
+LOOPBACK="lo"
+QUALQUERLUGAR="any/0"
+PORTAS_ORI_TRACEROUTE="32769:65535"
+PORTAS_DEST_TRACEROUTE="33434:33523"
+DNS1="192.168.1.1"
+DNS2="200.250.6.1"
+PORTAS_SSH="1022:1023"
+
+# Remove todas as regras existentes
+    
+    ipchains -F
+
+# Configura a regra padrao do filtro para DENY
+    
+    ipchains -P input  DENY
+    ipchains -P output ACCEPT
+    ipchains -P forward REJECT
+
+
+# Recusa pacotes que dizem ser locais.
+
+    ipchains -A input -i $INTERFACE -s $MEUIP -l -j DENY
+
+# Habilita protecao contra TCP SYN Cookies
+
+    echo 1 >/proc/sys/net/ipv4/tcp_syncookies
+
+# Habilita protecao contra IP spoofing
+# verificando o endereco de origem
+
+    for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
+        echo 1 > $f
+    done
+
+# Desabilita a aceitacao de redirecionamento ICMP
+
+    for f in /proc/sys/net/ipv4/conf/*/accept_redirects; do
+        echo 0 > $f
+    done
+
+# Desabilita o envio pacotes sem direcao
+
+    for f in /proc/sys/net/ipv4/conf/*/accept_source_route; do
+        echo 0 > $f
+    done
+
+# Trafego ilimitado na interface de loopback
+    ipchains -A input  -i $LOOPBACK -j ACCEPT
+    ipchains -A output -i $LOOPBACK -j ACCEPT
+
+# recusa enderecos definidos como reservados pela IANA
+# 0.*.*.*, 1.*.*.*, 2.*.*.*, 5.*.*.*, 7.*.*.*, 23.*.*.*, 27.*.*.*
+# 31.*.*.*, 37.*.*.*, 39.*.*.*, 41.*.*.*, 42.*.*.*, 58-60.*.*.*
+# 65-95.*.*.*, 96-126.*.*.*, 197.*.*.*, 201.*.*.* (?), 217-223.*.*.*
+    ipchains -A input  -i $INTERFACE -s 1.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 2.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 5.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 7.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 23.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 27.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 31.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 37.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 39.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 41.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 42.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 58.0.0.0/7 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 60.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 65.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 66.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 67.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 68.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 69.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 70.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 71.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 72.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 73.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 74.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 75.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 76.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 77.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 78.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 79.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 80.0.0.0/4 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 96.0.0.0/4 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 112.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 113.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 114.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 115.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 116.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 117.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 118.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 119.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 120.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 121.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 122.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 123.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 124.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 125.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 126.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 217.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 218.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 219.0.0.0/8 -j DENY -l
+    ipchains -A input  -i $INTERFACE -s 220.0.0.0/6 -j DENY -l
+
+# ICMP
+
+#    Para prevenir ataques "DoS" baseado em ICMP, devemos filtrar
+#    incoming Redirect (5) e outgoing Destination Unreachable (3).
+#    Entretanto, desabilitar o Destination Unreachable (3) nao eh
+#    recomendavel, porque ele eh usado para negociar o tamanho de
+#    fragmentacao do pacote!!
+
+# Para ping bi-direcional.
+#     Tipos de mensagens:  Echo_Reply (0),  Echo_Request (8)
+#     Para prevenir ataques, eh necessario limitar os enderecos de origem
+#     apenas para um certo alcance.
+#
+# Para a saida de traceroute.
+#     Tipos de mensagens:  INCOMING Dest_Unreachable (3), Time_Exceeded (11
+#     UDP base: 33434 ateh base+nhops-1
+#
+# Para a entrada traceroute.
+#     Tipos de mensagens:  OUTGOING Dest_Unreachable (3), Time_Exceeded (11
+#     Para bloquear isso, barre OUTGOING 3 e 11
+
+    #  0: echo-reply (pong)
+    #  3: destination-unreachable, port-unreachable, fragmentation-needed, etc.
+    #  4: source-quench
+    #  5: redirect
+    #  8: echo-request (ping)
+    # 11: time-exceeded
+    # 12: parameter-problem
+
+    ipchains -A input  -i $INTERFACE -p icmp \
+             -s $QUALQUERLUGAR 0 -d $MEUIP -j ACCEPT 
+    ipchains -A input  -i $INTERFACE -p icmp \
+             -s $QUALQUERLUGAR 3 -d $MEUIP -j ACCEPT 
+    ipchains -A input  -i $INTERFACE -p icmp \
+             -s $QUALQUERLUGAR 4 -d $MEUIP -j ACCEPT 
+    ipchains -A input  -i $INTERFACE -p icmp \
+             -s $QUALQUERLUGAR 11 -d $MEUIP -j ACCEPT 
+    ipchains -A input  -i $INTERFACE -p icmp \
+             -s $QUALQUERLUGAR 12 -d $MEUIP -j ACCEPT 
+    ipchains -A input  -i $INTERFACE -p icmp \
+             -s 192.168.1.0/24 8 -d $MEUIP -j ACCEPT 
+    ipchains -A input  -i $INTERFACE -p icmp \
+             -s $QUALQUERLUGAR 8 -d $MEUIP -j DENY -l
+
+    ipchains -A output -i $INTERFACE -p icmp \
+             -s $MEUIP 0 -d 192.168.1.0/24 -j ACCEPT 
+    ipchains -A output -i $INTERFACE -p icmp \
+             -s $MEUIP 3 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE -p icmp \
+             -s $MEUIP 4 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE -p icmp \
+             -s $MEUIP 8 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE -p icmp \
+             -s $MEUIP 12 -d $QUALQUERLUGAR -j ACCEPT 
+    ipchains -A output -i $INTERFACE -p icmp \
+             -s $MEUIP 11 -d 192.168.1.0/24 -j ACCEPT 
+
+# Entrada UDP para TRACEROUTE
+# traceroute geralmente usa -S 32769:65535 -D 33434:33523
+
+    ipchains -A input  -i $INTERFACE -p udp \
+             -s 192.168.1.0/24 $PORTAS_ORI_TRACEROUTE \
+             -d $MEUIP $PORTAS_DEST_TRACEROUTE -j ACCEPT -l
+
+    ipchains -A input  -i $INTERFACE -p udp \
+             -s $QUALQUERLUGAR $PORTAS_ORI_TRACEROUTE \
+             -d $MEUIP $PORTAS_DEST_TRACEROUTE -j DENY -l
+
+# Servidor DNS
+# ------------
+
+    ipchains -A input  -i $INTERFACE -p udp \
+             -s $DNS1 53 \
+             -d $MEUIP 53 -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p udp \
+             -s $MEUIP 53 \
+             -d $DNS1 53 -j ACCEPT
+
+    ipchains -A input  -i $INTERFACE -p udp \
+             -s $DNS2 53 \
+             -d $MEUIP 53 -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p udp \
+             -s $MEUIP 53 \
+             -d $DNS2 53 -j ACCEPT
+ 
+    ipchains -A input  -i $INTERFACE -p udp \
+             -s $DNS1 53 \
+             -d $MEUIP $NPROTAS -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p udp \
+             -s $MEUIP $NPROTAS \
+             -d $DNS1 53 -j ACCEPT
+
+    ipchains -A input  -i $INTERFACE -p tcp ! -y \
+             -s $DNS1 53 \
+             -d $MEUIP $NPROTAS -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p tcp \
+             -s $MEUIP $NPROTAS \
+             -d $DNS1 53 -j ACCEPT
+
+    ipchains -A input  -i $INTERFACE -p udp \
+             -s $DNS2 53 \
+             -d $MEUIP $NPROTAS -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p udp \
+             -s $MEUIP $NPROTAS \
+             -d $DNS2 53 -j ACCEPT
+
+    ipchains -A input  -i $INTERFACE -p tcp ! -y \
+             -s $DNS2 53 \
+             -d $MEUIP $NPORTS -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p tcp \
+             -s $MEUIP $NPORTAS \
+             -d $DNS2 53 -j ACCEPT
+
+# servidor SSH (22)
+# -----------------
+
+    ipchains -A input  -i $INTERFACE -p tcp \
+             -s $QUALQUERLUGAR $NPORTAS \
+             -d $MEUIP 22 -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p tcp ! -y \
+             -s $MEUIP 22 \
+             -d $QUALQUERLUGAR $NPORTAS -j ACCEPT
+
+    ipchains -A input  -i $INTERFACE -p tcp \
+             -s $QUALQUERLUGAR $PORTAS_SSH \
+             -d $MEUIP 22 -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p tcp ! -y \
+             -s $MEUIP 22 \
+             -d $QUALQUERLUGAR $PORTAS_SSH -j ACCEPT
+
+# cliente SSH (22)
+# ----------------
+    ipchains -A input  -i $INTERFACE -p tcp ! -y \
+             -s $QUALQUERLUGAR 22 \
+             -d $MEUIP $NPORTAS -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p tcp \
+             -s $MEUIP $NPORTAS \
+             -d $QUALQUERLUGAR 22 -j ACCEPT
+
+    ipchains -A input  -i $INTERFACE -p tcp ! -y \
+             -s $QUALQUERLUGAR 22 \
+             -d $MEUIP $PORTAS_SSH -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p tcp \
+             -s $MEUIP $PORTAS_SSH \
+             -d $QUALQUERLUGAR 22 -j ACCEPT
+
+# servidor HTTP (80)
+# ------------------
+
+    ipchains -A input  -i $INTERFACE -p tcp \
+             -s $QUALQUERLUGAR $NPORTAS \
+             -d $MEUIP 80 -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p tcp ! -y \
+             -s $MEUIP 80 \
+             -d $QUALQUERLUGAR $NPORTAS -j ACCEPT
+
+# servidor HTTPS (443)
+# --------------------
+
+    ipchains -A input  -i $INTERFACE -p tcp \
+             -s $QUALQUERLUGAR $NPORTAS \
+             -d $MEUIP 443 -j ACCEPT
+
+    ipchains -A output -i $INTERFACE -p tcp ! -y \
+             -s $MEUIP 443 \
+             -d $QUALQUERLUGAR $NPORTAS -j ACCEPT
+
+# servidor AUTH (113)
+# -------------------
+
+    ipchains -A input  -i $INTERFACE -p tcp \
+             -s $QUALQUERLUGAR \
+             -d $MEUIP 113 -j ACCEPT
+
+
+# servidor SMTP (25)
+# -------------------
+
+    ipchains -A input  -i $INTERFACE -p tcp \
+             -s $QUALQUERLUGAR \
+             -d $MEUIP 25 -j ACCEPT
+
+# cliente ICQ (4000) 
+# -----------------
+
+    ipchains -A input  -i $INTERFACE -p udp \
+             -s $QUALQUERLUGAR 4000 \
+             -d $MEUIP $NPORTAS -j ACCEPT
+
+# Ativa o logging para os pacotes que serao barrados.
+
+    ipchains -A input  -i $INTERFACE -p tcp \
+             -d $MEUIP $NPORTAS -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE -p tcp \
+             -d $MEUIP -j REJECT -l
+
+    ipchains -A input  -i $INTERFACE -p udp \
+             -d $MEUIP $PORTAS -j REJECT -l
+
+    ipchains -A input  -i $INTERFACE -p udp \
+             -d $MEUIP $NPORTAS -j ACCEPT 
+
+    ipchains -A input  -i $INTERFACE -p icmp \
+             -s $QUALQUERLUGAR 5 -d $MEUIP -j DENY -l
+
+    ipchains -A input  -i $INTERFACE -p icmp \
+             -s $QUALQUERLUGAR 13:255 -d $MEUIP -j DENY -l
+
+echo "(unsek) firewall carregado com sucesso." 
+
+17. FINALIZANDO
+
+        Entao, esse foi um tutorialzinho de ipchains que eu passei pra
+voces, espero que tenham aprendido alguma coisa com ele, pois eu entendi
+MUITA coisa que com certeza vai me ajudar daqui pra frente. Aprender nunca
+eh demais, principalmente quando o conhecimento vale muita coisa. Soh
+lembrando: nunca se negue a ensinar alguem alguma coisa que voce sabe,
+alguma coisa "basica" pois sempre algum dia voce precisara' da ajuda de
+alguem e nao conseguira', pense nisso. Ajude, mude, faca a diferenca!
+
+
+Bibliografia:
+
+man 8 ipchains -> administracao do firewall
+man 8 ipchains-restore -> restora chains de stdin
+man 8 ipchains-save -> salva as regras para stdout
+
+apostilas.virtualave.net -> procure por firewall
+www.tutoriais.com.br -> procure por firewall
+
+Securing and Optimizing Red Hat Linux, Gerhard Mourani, primeira edicao
+MAKRON BOOKS
+
+

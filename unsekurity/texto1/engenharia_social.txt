@@ -1,0 +1,227 @@
+
+          ##################################################################
+          ###                     Engenharia Social                      ###
+          ##################################################################
+
+feito por Blood_Sucker.
+
+OBS: Este documento foi feito apenas com intuito educacional, nao estou incentivando ninguem
+a fazer issu e muito menos me resposabilizo pelo q possam fazer.
+
+=============
+   Sumario
+=============
+
+1. Introducao
+2. O que eh Engenharia Social
+3. Engenharia Social via telefone
+4. Engenharia Social via email
+5. Engenharia Social aliada ao Phreaking
+6. Engenharia Social pessoalmente(In Person Social Engineering)
+7. Consideracoes Finais
+
+
+1. Introducao
+--------------
+
+Bem, alguns de vcs ja devem ter ouvido falar disso, ou nao. Este tutorial eh simplesmente
+destinado a explicar o q eh e dar algumas dicas para nao fikar com cara de bobo se t pegarem
+com a mao na lambuja.
+Como sempre eh dito, eh um tuto destinado a newbies, portanto, se vc eh elite ou entaun
+eh do tipo de cara q assistiu o filme do mitnick e fikou dizendo "putz, olha como esse cara eh
+amador" (coisa q ja ouvi muito por ai) vc nao tem motivos para ler issu, ja q vc eh profissional.
+
+2. O que eh engenharia social?
+------------------------------
+
+Engenharia social eh a arte de se conseguir informacoes seja la qual for a maneira, muitos
+dizem ser loucura mas coisas do tipo falsificar uma carteira de identidade, ir numa universidade
+dizendo ser outra pessoa soh para poder ter acesso ao servidor central da mesma eh engenharia social.
+Engenharia social conta com qualquer tipo de coisa, sejam telefonemas, emails, comparecimentos,
+qualquer coisa...
+Issu tudo eh usado por phreakers, hackers e crackers...Mas quem eh q nunca falsificou uma copia
+de RG para entrar em um show, ou numa danceteria?? nao deixa de ser engenharia social...
+Portanto nao eh "coisa de hacker" como muito babaca diz por ai.
+Existem grandes loucuras usadas na engenharia social, temos de concordar q nao eh coisa para
+qualquer um, exige em muitos casos, mais "esperteza" do q "conhecimento tecnico".
+E em caso de "esperteza", brasileiro da show =]
+Bem, agora que vc ja sabe o q eh engenharia social, darei algumas pequenas dicas caso vc esteja
+planejando algo do tipo.
+
+3. Engenharia Social via telefone
+---------------------------------
+
+Irei aqui discutir metodos de engenharia social via telefone, com certeza eh a maneira mais
+usada, mas isso nao a diminui...
+
+Regras basicas neste tipo de engenharia social
+
+Pois eh...vc entrou numa pagina da internet q possuia informacoes de tal individuo q eh dono
+de um empresa q possui algum dado q vc quer, e simplesmente ligara para a empresa dizendo q eh
+ele e q quer a senha do banco de dados deles, certo???
+Com certeza issu nao dara certo, pelo simples fato da coisa nao ser tao simples assim, olha,
+nunca pense q vc eh o unico espertinhu no mundo, nem todo mundo eh idiota. Lembre-se disso.
+Primeiramente, issu eh um exemplo vago, porque c vc pretende fazer uma coisa dessas, nao seria
+assim q vc conseguiria.
+Antes de tudo vamus levar em consideracao algumas "regras" quando c quer fazer este tipo de coisa.
+Estas regras nao se aplicam somente neste tipo de engenharia social.
+
+- SEMPRE USE APARELHO TELEFONICO PUBLICO
+
+- NUNCA, MAS NUNCA MESMO TENTE ALGO SEM TER TODAS AS INFORMACOES NECESSARIAS SOBRE O LOCAL,
+  PESSOA(S), HORARIO DE TRABALHO, HORARIO DE ALMOCO, TUDO, ABSOLUTAMENTE TUDO.
+
+- PROCURE SABER O Q CADA PESSOA EH NA EMPRESA
+
+- VC NAO PODE SER RECONHECIDO POR NINGUEM, EU DISSE NINGUEM.
+
+Estas regras saun mais ligadas na engenharia social via telefone...mas tambem se aplicam a
+qualquer tipo.
+Vou explicar agora o motivo de cada regra.
+Primeiramente, ja inventaram rastreador de chamadas e nao foi recentemente, nao pensem q eh
+pq a telefonica esta oferecendo este servico somente agora q ele eh um servico novo.
+E eh meio q uma regra em empresas, conter rastreador de chamadas, e mesmo q vc tenha certeza
+absoluta q a empresa q vc esta tramando algo nao tem este tipo de coisa, nao use seu proprio
+telefone, NUNCA. Primeiro pq a telefonica tem um registro de C/S(Cliente/Servidor), ou seja, ela
+tem o registro completo de quem ligou pra quem, eu disse COMPLETO. Mas tem algumas maneiras de
+burlar issu, uma delas eh usando uma blue box...
+Uma dica ai, eh logico q vc nao vai ligar a cobrar, e muito menos fazer akele eskeminha de apertar
+o 9 como ja vi muito idiota fazer e dancar. O eskema eh, vc liga pro lugar com o cartao e quando
+a pessoa atender vc segura o 9 e retira o cartao, ai a ligacao passa a ser a cobrar. Mas e se esta
+telefonista nao for taun burra quanto vc pensa e ao ouvir o barulho do tom do telefone ela
+desligar na tua cara??? ou entaun ela pode ter percebido e esperado vc falar q eh tal pessoa para
+t dizer algo do tipo "O Sr. Marcos esta sentado em minha frente, como pode ser vc?? hahahaha"
+Muita gente me chama de doente quando eu levo em conta este tipo de coisa, mas nao existe crime
+perfeito. Nada eh perfeito. E issu nos concluimos a cada falha q descobrimos =]
+Na segunda regra cito q vc deve ter todas as informacoes necessarias e nao necessarias.
+Tipo, cara, e c vc liga falando q eh o senhor X e q precisa urgentemente de um relatorio e q
+enviara um motoboy pra pega-lo e a telefonista percebe q nao eh vc simplesmente pq o senhor X eh
+gago e pq vc esta falando perfeitamente, ou porque o cara tem voz fina e vc tem voz grossa??
+pois eh cara, tem q saber ateh os minimos detalhes...e se o tal cara andava comendo a telefonista
+e vc chega todo falando serio, ela vai perceber q nao eh vc porque devido a intimidade q eles tem
+nao era pra ele estar falando dessa maneira.
+Cara, saun inumeros detalhes q tem de saber, e nao somente informacoes cadastrais.
+Como citado na regra 3, vc tem de saber o q cada pessoa eh na empresa. Nao adianta vc conseguir
+o telefone do ramal de vendas e ligar pedindo uma informacao sobre o banco de dados, nao tem nada
+haver neh cara..
+A quarta regra eh a mais importante, nunca seja reconhecido por NINGUEM. Eh claro q por telefone
+eh muito dificil de ser reconhecido, mas nao force sua voz para tentar parecer outra pessoa tambem,
+Bom cara, saun milhares de tecnicas usadas para engenharia social por telefone, mas com certeza
+estas regras aplicam-se em todas.
+Aqui vai uma dica, se ligam pra vc e a voz eh de uma mulher bem sensual, vc deixaria de dar tal
+informacao para uma donzela indefesa? hehehe, pode parecer maxista, mas as pessoas agem com mais
+seriedade com as mulheres do q com os homens. Pois seria otimo se vc conseguisse q uma mulher q
+estivesse ciente de tudo, liga-se por vc. Mulher eh mais delicada e paciente pra falar(nem sempre
+huhauhauhauha).
+Se possivel, use artificios nao ligados a empresa, issu eh muito mais inteligente do q ligar dizendo
+ser tal pessoa e por acaso a pessoa q vc diz ser estiver do outro lado da linha. Por exemplo, se a
+empresa q vc esta tramando algo estiver fechando negocio com uma consultoria para configurar o servidor
+deles. Vc pode muito bem ligar para la, dizendo trabalhar na tal consultoria, e q precisa de informacoes
+incluindo senhas. Issu funciona, eu ja fiz issu.
+Eh logico q vc nao vai pedir somento o dado especifico q vc quer, por exemplo "ae, preciso da senha
+do root", ninguem eh taun burro neh cara..
+Se a pessoa do outro lado da linha nao cair na sua armadilha, e comecar a dizer merda pra vc, NAO
+DISCUTA, sera pior, simplesmente desligue o telefone.
+Outro item importante eh demonstrar seriedade, nada de risadinhas. E por ultimo, nao ligue de um
+aparelho publico muito lotado, nao deixe q as pessoas ao seu redor oucam o q vc fala. Procure
+sempre um orelhao vazio.
+
+4. Engenharia Social via email
+------------------------------
+
+Pode parecer idiotisse mas com a chegada da era da internet, muita coisa passou a ser feita via
+email, incluindo envio de dados importantissimos. Aonde entra a engenharia social nisso? Bem,
+na minha opiniao issu ja se trata mais de hacking do q engenharia social, mas o q eh q no hacking
+nao eh uma engenharia social????? busco esta resposta em todos q se consideram elites e vejo eles
+parados pensando e olhando seriamente para mim.
+Aqui aplicam-se diversas coisas, envio de email como sendo outra pessoa eh a mais usada, porem
+email anonimo pode ateh funcionar.
+Uma coisa importante eh vc escrever o email de uma maneira bastante seria, abusem mesmo, e pecam
+com urgencia, digam q precisam desta informacao em menos de 5 horas urgentemente senaun podem
+perder um negocio, sei la, cabe a vcs inventarem suas proprias verdades =]
+O nash/fallon fez um artigo explicando como enviar um email falso, soh pegar la na pagina da unsek.
+Soh para os desavisados, issu tudo aki eh crime e gente famosa como  o Marco Nunez se ferraram
+fazendo isso.
+Relembrando. As regras na secao Engenharia Social via Telefone aplicam-se aqui tambem ta.
+
+5. Engenharia Social aliada ao Phreaking
+----------------------------------------
+
+Engenharia Social e phreaking, duas coisas q quando bem combinadas se saem muito bem.
+A melhor maneira de usar phreaking na engenharia social eh grampeando telefones para
+conseguir informacoes, pode parecer um pouco alem de nosso alcance, mas nao eh tao dificil de se
+fazer uma coisa dessas...
+Pretendo comecar a escrever sobre phreaking junto ao meu amigo j00nix, bom, mas a ideia ja foi dada,
+cabe a vc usa-la ou nao =]
+
+6. Engenharia Social pessoalmente
+---------------------------------
+
+Chegamos a maior loucura de todas, engenharia social pessoalmente, tambem conhecida como
+"in person social engineering". Neste caso, nao eh brincadeira, c vc for pego cara, nao a NADA
+q pode ser feito, a nao ser CORRER. Eh o unico jeito, pois se t pegarem, o q vc vai dizer para a
+policia?? q era brincadeira??
+Se vc chegou a este ponto, com certeza nao foi atoa, vc ja deve ter usado o metodo via email ou
+telefone para conseguir tais informacoes. Neste caso, eh muito importante ter uma carteirinha de
+identificacao falsificada, e eh sempre akela mesma historia, saber com quem esta lidando, e ter
+o q eh mais importante, informacoes completas.
+Neste caso, tente parecer o mais serio possivel, mas demonstre um pouco de "estranhe-sa", nao no
+sentido q vcs estao pensando, mas no sentido de tentar parecer com o tipo de pessoa q meche na
+area q vc esta tentando fingir ser. Compliquei? Vou dar um exemplo. Temos de concordar q a maioria
+dos programadores ou pessoas q mechem com informatica saun considerados nerds ou loucos pelas
+outras pessoas, nao digo q isso nao seja verdade, mas por exemplo, ja vi programador de assembly
+falar sozinho, fikar olhando para um lugar e comecar a viajar, ter akele olhar de bobo, ateh mesmo
+o richard stallman na palestria dele na linux expo , teve uma hora q parou de falar, e comecou a
+olhar pro chao assim, do nada. Ninguem entendeu.
+Nao estou tentando dizer para parecerem imbecis, soh estou tentando faze-los entender q na engenharia
+social devem fingir ser o q as pessoas acham q o q vc esta fingindo ser "SAO". (q frase doida)
+
+7. Consideracoes Finais
+-----------------------
+
+Bem, expliquei aqui beeeem resumidamente o que eh a tal engenharia social.
+Uma coisa q esta fikando cada vez mais esquecida pelo simples fato das pessoas comecarem a serem
+mais atentas. Praticar Engenharia Social hj em dia, principalmente pessoalmente, eh muito raro,
+alem de muito perigoso, vc tem de ter total certeza do q vc ta fazendo, como sempre.
+Deixo aqui um pedaco do meu esforco escrevendo este texto para fins informativos. Pois somos todos
+newbies e temos muito a aprender.
+Valeu galera, Unsekurity forever.
+T+, Blood_Sucker! "Odiado por muitos e compreendido por poucos..."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

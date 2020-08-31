@@ -1,0 +1,262 @@
+
+
+ 
+                        Projeto Loki (ICMP Tunneling)   
+
+
+               /*  Assembled by Tiago R.A. (a.k.a. module)  *
+                *                                           *
+                *              unsekurity Team              *
+                *                                           *
+                *                ____   ____                *
+                *               /    \_/    \               *
+                *              /__|       |__\              *
+                *                 | unsek |                 *
+                *                 |       |                 *
+                *                 |_______|                 *
+                *                                           *
+                *        Get yours for U$9,99 only!!!       */
+
+
+
+
+
+
+
+   
+                                  Indice
+                                  ~~~~~~
+
+			    
+ 		    1- Introducao
+
+                    2- Internet Control Message Protocol
+                        
+		       - Menssagens ICMP 
+                          
+		       - ICMP_ECHO     
+		       
+		    3- Loki
+
+                    4- Agradecimentos
+                         
+                    
+
+
+                               *** AVISO *** 
+				       
+		            PELO AMOR DE DEUS!!!
+   SE VOCE EH MAIS UM KID QUE ADORA PEGAR EXPLOITS QUE SEI LAH QUEM
+   FEZ PRA FICAR JUNTANO MAQUINAS E NEM SABE O QUE FAZER COM ELAS
+   E SE ACHAR O MELHOR DO MUNDO POR ISSO, POR FAVOR NAO LEIA ISSO
+   AQUI PORQUE NAO VAI TE SERVIR DE ABSOLUTAMENTE  NADA !!!!! 
+                              
+        
+
+                                Introducao
+                                ~~~~~~~~~~
+
+
+Irei descrever aki o Projeto Loki que explora uma "falha" no ICMP,
+permitindo que uma pessoa utilize de um tunel ou canal existente no
+protocolo para trafego de dados arbitrarios.
+O Projeto Loki foi inicialmente descrito numa materia para a Phrack 49
+(por daemon9 e alhambra).
+
+
+
+
+
+                     Internet Control Message Protocol
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+O ICMP eh um protocolo que faz parte do conjunto de protocolos designados
+pelo TCP/IP.Esse protocolo esta no nivel 3 do modelo OSI.
+Ele eh utilizado para einviar menssagens aos hosts por anomalias na rede,
+tambem pode ser usado para obter informacao sobre a rede.
+Em sistemas do tipo "connection less" os roteadores operam por si soh
+distribuindo os datagramas sem nenhum tipo de verificacao.
+
+O IP falha a intrega dos datagramas quando:
+
+-A maquina destino esta temporariamente ou permanentemente desligada da
+ rede;
+-O contador de tempo de vida (time-to-live) expira; 
+-Quando os roteadores estao tao congestionados que nao podem processar
+ mais trafego; 
+-Etc
+
+/* sendo assim imagine as possibilidades de furos na camada IP, podem ser
+ explorados como IP spoofing, etc */
+
+Inicialmente projetado para permitir que os routeadores reportassem erros
+de entrega aos hosts, o ICMP nao se restringe so a roteadores. Ainda que
+haja restricoes na utilizacao de algumas mensagens ICMP, uma maquina
+arbitraria pode enviar uma mensagem ICMP para qulquer outra maquina.
+
+/* gracas a Deus =) */
+
+
+Uma explicacao mais pratica:
+
+Os cabecalhos IP apenas contem campos que especificam o emissor original e
+o destinatario final, estes nao contem um registo completo da sua viagem ao
+longo das redes (exceto em casos onde a opcao de registo do caminho eh
+utilizada). Alem disso, os roteadores podem apenas estabelecer e modificar
+as suas PROPRIAS tabelas de roteamento, nao existe um conhecimento "global"
+dos caminhos. Dessa forma, qdo um datagrama chega a um determinado roteador,
+eh impossivel conhecer o caminho que percorreu para chegar alih. Se o
+roteador detecta um problema, este nao pode saber o conjunto das maquinas
+intermediarias que processaram o datagrama e, por isso, nao pode informa-las
+sobre o problema. Em vez de descartar o datagrama, o roteador utiliza o ICMP
+para informar o emissor original da ocorrencia de um problema e aguardar que
+os administradores do host cooperem com os administradores da rede na
+procura e resolucao do problema. 
+
+
+
+                          Menssagens ICMP:
+                          ~~~~~~~~~~~~~~~~
+
+
+Os datagramas que transportam mensagens ICMP sao encaminhados exatamente
+como os datagramas que transportam informacao para os utilizadores,
+nao existe confianca ou prioridade adicional. Assim, as proprias menssagens
+de erro podem causar congestionamentos adicionais no trafego da rede. 
+
+/* Se vc tiver um minimo de inteligencia, verah que isto eh fundamental
+ para o nosso trabalho aqui */
+
+Os pacotes ICMP ficam encapsulados dentro dos datagramas IP.
+Os primeiros 3 campos do header sao os mesmos para todos os tipos de
+menssagens ICMP, resultando um total de 4-bytes.
+
+-TYPE (8 bits): Identifica a mensagem, o valor desse campo determina o
+formato do datagrama;
+
+-CODE (8 bits): Fornece mais informacoes sobre o tipo de mensagem;
+
+-CHECKSUM (16 bits): Verifica a integridade dos valores do cabecalho (header).
+
+
+
+Tipos de menssagens:
+
+
+                    ________________________________________________
+                   |    Type     |        ICMP Message              | 
+                   |=============|==================================|
+                   |     0       |         Echo reply               |
+                   |-------------|----------------------------------|     
+                   |     3       |    Destination unreachable       |
+                   |-------------|----------------------------------|      
+                   |     4       |        Sorce Quench              |
+                   |-------------|----------------------------------|                     
+                   |     5       |          Redirect                |
+                   |-------------|----------------------------------|                       
+                   |     8       |        Echo request              |
+                   |-------------|----------------------------------|                     
+                   |     11      |       Time exceeded              |
+                   |-------------|----------------------------------|                    
+                   |     12      |   Parameter(IP) unintelligible   |
+                   |-------------|----------------------------------|     
+                   |     13      |       Timestamp request          |
+                   |-------------|----------------------------------|                    
+                   |     14      |       Timestamp reply            |
+                   |-------------|----------------------------------|                      
+                   |     15      |     Information request          |
+                   |-------------|----------------------------------|                   
+                   |     16      |     Information reply            |
+                   |-------------|----------------------------------|                 
+                   |     17      |    Address mask request          |
+                   |-------------|----------------------------------|                
+                   |     18      |     Address mask reply           |
+                   |_____________|__________________________________|
+
+
+
+
+
+Os tipos que estamos interessados sao os tipos ICMP_ECHO listados abaixo:
+
+
+- ICMP ECHO_REQUEST (Tipo = 8): Eh o query dado por um client (um ping p.ex.) 
+
+
+- ICMP_ECHOREPLY (Tipo = 0): Eh a resposta que o servidor retorna ao emissor
+ do ECHO (esse "servidor" normalmente eh a propria kernel do OS).
+    
+Estes pacotes tem uma parte onde pode se incluir dados adicionais que sao
+normalmente dados sobre a rota ou sobre o tempo levado pela "Round Trip".
+Estes dados nao sao checados pelo seu conteudo e veracidade, sendo assim
+esses mesmos podem ter conteudo arbitrario desiginado pelo usuario que
+envia esse pacote, fazendo assim o uso de um canal escondido em meio aos
+pacotes.
+   
+   
+   
+                                  O canal    
+                                  ~~~~~~~
+   
+
+A nao ser que o trafego do ICMP_ECHO seja barrado por algum tipo de filtro
+o canal existe !
+Teoricamente quase todo tipo de dado pode ser escondido num canal e pode
+ser usado logicamente para transportar dados que vao variar do que o usuario
+deseja, podendo ser um Troia, uma backdoor, voce pode usar uma maquina como
+intermediaria de outras para capturar informacoes,
+pode ateh mesmo montar um metodo de comunicacao mais seguro e secreto para
+se enviar pacotes para um destinatario (um host, um roteador, etc), entre
+outras utilidades que irao variar de acordo com a capacidade e criatividade
+do seu criador.
+Logicamente esses dados irao precisar de quem os transporte, que pode ser
+um firewall, filtros, roteadores, etc.
+
+Esse canal eh de dificil deteccao. Pode se desconfiar de que o tunel eseteja
+ativo por vista de um excecivo numero de pacotes do tipo ICMP ECHO_REPLY no
+seu sistema.
+
+Algumas pessoas diriam que para se anular esse canal bastaria simplesmente
+restringir os direitos de uso dos ICMP_ECHO, o que eh ridiculo para um
+protocolo da cadeia IP ou qual quer outro "connection less". Sendo assim o
+unico sistema imune ao tunelamento eh aquele que nao possue trafego de
+ICMP_ECHO.
+
+                               *** OBS ***
+			 
+* Essa pratica eh aplicada a diversos outros protocolos como o RDP que
+possue uma falha interessante que consiste em dependendo das condicoes
+em que eh aplicado, pode se adicionar uma rota nao existente a rota default
+remotamente por meio de um spoof, e varios outros da camada IP.
+
+* A melhor exploitacao dessa falha seria feita utilizando o kernel space
+e mantendo a quantidade de dados que transitam o canal baixa.
+
+
+
+
+                              Agradecimentos
+	     		      ~~~~~~~~~~~~~~
+				
+				
+Bem agradeco primeiramente a minha mae e meu pai que me puzeram no mundo,
+a Deus por ter feito o mundo pra gente fazer merda nele =8), A minha voh
+que me incentiva a brincar com computadores, a MTV por passar clips supimpas
+pra gente ver.. ao Discovery Kids (Popular Mechanics For Kids rules!), a
+ESPN por passar ASA e X-Games =)), Agradeco principalmente aos loucos do
+unsekurity Team que nao sei como conseguem me suportar (VALEU GALERA !
+vcs sao magicos =)..........
+
+PUTZ ! CLARO !!!
+
+UM OBRIGADO SUPER ESPECIAL A MIM MESMO ! AFINAL .. OQ SERIA DESSE TEXTO SEM
+"EU" ?? =))
+
+
+        *** Fontes ***
+
+
+- rfc0792 (http://rfc-editor.org)
+- Phrack Magazine (http://www.phrack.com)				
+				

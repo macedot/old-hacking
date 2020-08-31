@@ -1,0 +1,194 @@
+        
+        |==========================================================|
+        |==================== UNSEKURITY SCENE ====================|
+        |==========================================================|
+
+
+
+
+
+
+  -> Se vc for "elite", ou se considera, nao leia oq segue, pois
+     nada ira acrescentar ao seu conhecimento.
+
+  -> O conteudo desse texto eh apenas de carater educativo. Nao
+     me responsabilizo pelos atos decorrentes antes e apos a 
+     leitura do mesmo.	
+
+  -> Esse texto eh voltado completamente para o pessoal newbie.
+
+
+
+	
+
+	         	 _______________
+		        |  ___________  |			  	
+		        | | Beige Box | |
+		        | |___________| |			
+		        |               |
+		        |    _  _  _    |	
+		        |   |_||_||_|   |
+		        |   |_||_||_|   |
+		        |   |_||_||_|   |
+		        |   |_||_||_|   |
+		        |_______________|
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+ I - Introducao
+
+
+
+	
+	Hoje podemos ver a guerra entre as empresas telefonicas na
+luta pelo dominio, monopolio da informacao, fazendo do usuario um
+mero fantoche, como se o mesmo nao fosse capaz de "entender" como
+funciona o sistema telefonico, apenas seus "tecnicos" e "engenheiros"
+podem ter acesso a tais informacoes.
+	Mas como no hacking, os fucadores que gostam de telefonia
+precisam arrumar alguma maneira de obter informacoes, as quais sao 
+bastante escassaz, ate mesmo na internet. Uma boa forma de arrumar
+infos sobre telefonia eh a famosa engenharia social, mas nunca deixe
+de lado seu espirito fucador e nao dependa somente da sua labia. Por
+isso rale bastante e prepare bem o seu queixo...:)
+	O que me levou a escrever esse texto foi justamente a vontade
+de varias pessoas que se interessam por telefonia mas sentem dificuldade
+devido a escassez de informacao sobre o assunto e acabam desistindo no
+inicio da batalha. 
+
+
+
+
+
+
+II - Entrando em acao
+
+
+
+
+
+	
+	A beige box, ao meu ver, eh a maneira mais convencional, sem falar sobre a 
+reprogramacao de telefones publicos, de se fazer ligacoes telefonicas sem pagar.
+	Para fazer uma beige box voce ira precisar de alguns equipamentos.
+
+
+     	 -> Um aparelho telefonico, o mais discreto possivel;
+         -> Dois jacares, os menores possivel;
+	 -> 2 pedacos de fio telefonico;
+	 -> Alicate para descascar fio;
+	 -> Coragem...:)
+
+
+	
+	Voce ira precisar ter acesso fisicamente a linha telefonica, no caso
+de telefones publicos isso eh bastante simples, basta voce procurar por uma
+fio perto atras do telefone.
+	Um detalhe importante eh q a telemar esta "protegendo" o fio, pois logo
+atras do telefone existe um cano de aco que geralmente tem cor azul marinho que
+conduz a linha telefonica ate o chao. Mas voce nao vai precisar furar o tal cano
+de aco, pois vc tb vera um cano prateado mais fino e maior. No fim desse cano
+voce vera a tao visada linha. Veja como eh +- o esquema.
+
+
+				  \	
+				   \ 4	
+				    \_
+				    | |
+				    | |
+				    | |			
+				    | |			1 - Telefone publico
+		________            | |			2 - Cano azul marinho
+ 		\	 \    ____  | |			3 - Cano mais fino e prateado
+		 \	  \   |   | | |			4 - Linha telefonica	
+		  \	   \--	  | | |
+		   \	1   \	  | |3|	
+		   /	    /-|   | | |			
+		  /	   /  |	  | | |
+		 /_______ /   |	  | | |
+			      | 2 | | |
+			      |   | | |
+			      |	  | | |
+			      |	  | | |
+			      |   | | |
+     _________________________|___|_|_|_____________
+
+
+
+
+
+	O primeiro passo a fazer eh montar a box.
+
+	Primeiramente um dos pedacos de fio telefonico que voce tem para fazer 
+a box deve ter em uma extreminada descascada e na outra um plug femea. O outro 
+fio precisa ter em uma extremidade uma plug macho e a outra deve estar conectada
+ao aparelho telefonico que vc arrumou. 
+	Agora encaixe o plug macho no plug femea e conecte os jacares na
+extremidade aonde o fio esta descascado. O esquema segue abaixo.
+
+
+		 ___
+		|_1_|--\		_  _               __________
+			\______________|2||3|_____________/  ___4___ \
+		 ___	/	       |_||_|		  \__________/
+		|_1_|--/
+
+
+
+					1 - Jacares
+					2 - Plug femea
+					3 - Plug macho
+					4 - Aparelho telefonico	
+
+
+	
+	Apos montado a box, descasque o fio telefonico do telefone publico, aquele
+de cor preta, voce vera que ele tb possui 2 fios dentro de si, conecte uma jacare 
+a cada fio e tire o seu aparelho do gancho.
+
+	TUUUUUUUUUUUUUUUU....!!!! Sinal de linha, agora eh soh voce discar pra
+quem e pra onde voce quiser sem precisar gastar nehum tostao..:)
+	
+	
+	Ainda nao ha uma maneira de detectar se alguma ligacao foi feita por uma 
+beige box, a nao ser se voce cortar completamente o fio do telefone publico ou se
+alguem vejo oq vc esta fazendo eh te denuncie.
+	Eh normal voce ouvir aquele ruido como se contasse as unidades do cartao.
+	Essa tecnica nao funciona somente em telefones publicos, voce pode usa-la
+em linhas convencionais.
+	Esse txt esta bem simples, esta voltado para auxiliar aos que gostam do
+assunto com uma leve introducao a este fantastico mundo da telefonia.
+
+
+
+
+III - Agradecimentos
+
+
+
+
+
+
+	Agradeco ao meus amigos Nash Leon, module, klogd e a todos do unsekurity
+scene e tambem ao pessoal da Phreakhaos que contribuiu bastante para a massificacao
+do phreaking aqui no Brasil.
+
+	
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+      .
+  by . .  Jerry Slater - jerryslater@bol.com.br
+
+
+
+
+
+
+
+		

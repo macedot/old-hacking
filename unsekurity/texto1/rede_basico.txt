@@ -1,0 +1,393 @@
+-------------------------------------
+Hardware de Rede Basico - Parte 1   |  
+-------------------------------------
+Desenvolvido por Hekodangews, popularmente conhecido como heko .  :) hehehe
+Sugestoes serao bem vindas: hekodangews@bol.com.br .
+Esse tutorial apesar de conter nomes tecnicos, eh o basico do basico, logo a 'e
+lite' ja sabe tudo
+e nem vai perder tempo, lendo esse humilde txt destinado a todos os newbies!
+Estes texto nao possui direitos autorais(eca), logo pode ser livremente difundi
+do .... sem 
+comunicacao previa ao autor(EU) :P
+
+Indice:
+-------------------------------------------------------,
+1 - TIPOS DE REDES                                     |
+    1.1 - Lans                                         |
+          1.1.1 - server                               |
+          1.1.2 - workstations                         |
+          1.1.3 - recursos de comunicacao              |
+    1.2 - WANS                                         |
+          1.2.1 - interfaces fisicas                   |
+    1.3 - INTERNET                                     |
+2 - REDES NAO-HIERARQUIZADAS                           |
+3 - REDES HIERARQUIZADAS (CLIENTE/SERVIDOR)            |
+4 - TIPOS DE SERVIDORES                                |
+5 - FORMAS DE PROTECAO DO SERVIDOR                     |
+    5.1 - Espelhamento de Disco                        |
+    5.2 - Duplexação de disco                          |
+    5.3 - Espelhamento de Servidor                     |
+6 - VISAO GERAL DE UMA REDE DE COMPUTADORES            |
+7 - PLACAS DE REDES(NICS)                              |
+8 - METODOS DE TRANSMISSAO:                            |
+      8.1 - Banda passante base                        |
+      8.2 - Banda passante larga                       |
+9 - TIPOS DE CABOS:                                    |
+     9.1 - IEEE 802.3, (10Base5)                       |
+     9.2 - IEEE 802.3, (10Base2)                       |
+     9.3 - Cabo UTP                                    |
+     9.4 - Cabo STP                                    |
+     9.5 - Fibra ótica                                 |
+-------------------------------------------------------'
+
+
+INTRODUCAO:
+-----------------------------------------------
+PERGUNTA:   O que são Redes de Computadores ?
+RESPOSTA:   Estritamente falando, redes de computadores são computadores conect
+ados entre si, 
+com o objetivo de compartilhar informações, programas, scanners, agendas de gru
+pos, correio 
+eletrônico, etc. Trazendo benefícios aos usuários que irão utilizá-las.
+
+-----------------------------------------------
+1- TIPOS DE REDES
+
+1.1- LANs - ( Local Area Network - Redes Locais )
+        Redes locais (LANs) são basicamente um grupo de computadores (PCs Deskt
+op's) conectados 
+entre si e a um servidor. Os usuários de uma LAN executam suas tarefas a partir
+ de seus 
+computadores (PCs Desktop's). Entre as tarefas podemos destacar os banco de dad
+os, planilhas e 
+editores de texto ou aplicações gráficas . Normalmente temos um grupo destes us
+uários executando 
+uma aplicação no servidor.
+Os módulos mais importantes de uma rede local são:
+-    Servidores ( Servers)
+-    Workstations (PCs Desktops - Estações Individuais)
+-    Recursos de comunicação
+
+1.1.1 - Servidor (Server)
+Os servidor de rede é um computador com elevada capacidade de processamento sua
+ função é fornecer
+serviços à rede. Em geral esta máquina processa grandes volumes de dados(databa
+ses), requerendo
+CPUs rápidas e dispositivos de armazenamento (Hard Disks, Optical Disks), de al
+ta capacidade 
+rápido acesso. Os serviços que um servidor normalmente oferece à rede, onde est
+es serviços 
+podem ou não estarem centralizados em um único microcomputador , são:
+- Servidor de Aplicação (Application Server)
+- Servidor de Arquivo (File Server)
+- Servidor de Impressoras (File Printers)
+- Servidor de Rede ( NetWork Server)
+- Servidor de Bancos de Dados Relacional (Relational DataBase Server)
+
+Dentro da tecnologia atualmente disponível, o hardware servidor é composto de u
+m Pentium, ou 
+então máquinas RISC de fabricantes como HP, Sun, Digital (linha ALPHA PC) ou IB
+M.
+O Sistema Operacional do Servidor se enquadra na categoria "NOS'' (Networking O
+perating Systems). Os "NOS" mais adotados no mercado são:
+Netware 4.11                    - Novell Inc.
+Windows NT Server               - Microsoft Corp.
+LAN Server 4.0                  - IBM
+Unix                            - IBM, SUN, HP, SCO, ...
+
+1.1.2 - WorkStations ( Estação de Trabalho Individuais )
+As Workstations ( PCs Desktop ) são estações individuais de trabalho. A partir 
+dela os usuários 
+acessam arquivos aplicações no servidor e executam tarefas locais. Em geral nas
+ workstations são 
+executadas tarefas com editores de textos ( Word, joe, etc ), planilhas ( Excel
+, ... ), edição 
+de gráficos e apresentações ( PowerPoint, Gimp).O harware da workstation varia 
+entre 486 e 
+Pentium e dependerá das informações a serem processados. 
+O "SO LOCAL" Sistema Operacional Local utilizado nas WorkStations deve ser feit
+o visando a 
+escolha da necessidade da  LAN em alguns casos o "NOS" utilizado no servidor. D
+entre os SOs 
+Locais utilizados nas WorkStations são: 
+DOS                             - Microsoft Corp.
+Windows 3.11, 95, 98            - Microsoft Corp.
+Windows NT WorkStation          - Microsoft Corp.
+Linux, FreeBsd, OpenBsd ....
+                
+1.1.3 - Recursos de comunicação
+E a infraestrutura de hardware e software necessária para a comunicação entre o
+s diversos 
+componentes de uma LAN. Os recursos a serem utilizados na comunicação entre os 
+equipamentos 
+posso citar: HUB, cabo par trançado (UTP/STP), cabo coaxial, placas de rede, re
+petidores, 
+bridges(pontes), roteadores(routers), cabeamento, etc.
+
+-------------------------
+1.2 - WANS - ( Wide Area NetWork - Redes Remotas )
+        A interligação de diversos sistemas de computadores localizados em regi
+ões fisicamente 
+distantes. As WANs utilizam linhas de transmissão de dados oferecidas por empre
+sas de 
+telecomunicações mais comuns são: AT&T, Sprint, MCI e Northern Telecom (NT). Os
+ serviços são 
+geralmente de aluguel de linhas privadas (Leased lines) ou discadas (Switched) 
+permitindo a 
+utilização de diversos protocolos tais como SNA, PPP/TCP-IP, etc.
+As redes WAN's estão passando por uma evolução muito grande com a aplicação de 
+novas tecnologias 
+de telecomunicações e com a utilização de fibra ótica (Optical fiber). Novos pa
+drões estão 
+surgindo para fibra ótica, destacando-se ATM ( Asynchronous Transfer Mode) que 
+disponibiliza a 
+transmissão de dados (texto, binário),dados de aplicação em "tempo real" como s
+om e imagem em 
+uma única linha e em altíssima velocidade ( 300Mbps ou superior). A velocidade 
+passa a ser 
+determinada pelos equipamentos que processam as informações (Clientes/Servidore
+s) e não do meio 
+físico.
+A conexão entre os equipamentos geralmente e feita através de Modem's de e linh
+as de 64Kbps, 
+enlaces E1 (2048Mbps). Estes serviços são oferecidos pelas concessionárias de t
+elecomunicações.
+
+1.2.1 - Interfaces Físicas
+As interfaces fisicas são utilizados para acesso aos serviços de transmissão de
+ dados, são 
+utilizados (hoje) linhas de comunicação que conversam com modems, estes convers
+am entre via 
+interface serias síncronas ou assíncronas com os computadores.
+Os modems de diversas velocidades ( 9,6Kbps, 14.4Kbps, 28.8Kbps, 36Kbps). 
+Alguns padrões de interface física são: 
+
+RS-232 ou EIA-232
+                                        
+- Velocidades típicas de 38.4Kbps, 57Kbps, 115.2Kbps
+- Padrão utilizados pelos fabricantes de equipamentos de informática e telecomu
+nicações .
+- Conector padrão e o DB 25 que corresponde ao padrão ISO 2110. Isto também val
+e para a função 
+dos pinos.  
+- Os sinais de tensão são balanceados nos limites entre -25V a +25v, sendo o pa
+drão de +/- 12V.
+
+1.3 - INTERNET :)
+
+A Internet também pode ser considerada como uma WAN de alcance mundial. Onde vá
+rios computadores 
+estão conectados através do protocolo TCP/IP e conexões discadas, ou dedicada. 
+A grande 
+maravilha talvez esteja no protocolo TCI/IP que possibilita total compartilhame
+nto de recursos 
+e informações, e ainda disponibiliza serviços como GOPHER, WWW e FTP e etc.
+
+NESSE MATERIAL EU VOU FOCAR MAIS A LAN, POIS ELA EH A BASE DA WAN, QUE A WAN PO
+R SUA VEZ EH A 
+BASE DA INETERNET!!!
+
+Exemplo de meios de transmissao para conexao de uma rede:
+
+               LP-linha         
+         ====   privada   ====  fibra otica ====
+         |RJ|-------------|SP|--------------|GO|
+         ====             ====              ====
+          ||
+          ||ondas de radio
+          ||
+         ==== satelite ====
+         |AM|----------|ES|
+         ====          ====
+
+----------------------------------
+2 - Redes não-Hierarquizadas
+Não existe servidores centrais, ao contrário, cada máquina fornece serviços que
+ podem ser 
+acessados por outras máquinas na rede.
+  
+        ========        ========         ========
+        estacao1--------estacao2---------estacao3 
+        ========        ========         ========
+
+----------------------------------
+3 - Redes Hierarquizadas  (Cliente/Servidor)
+É composta de um ou mais servidores especializados que controlam os serviços di
+sponibilizados 
+por outras máquinas chamadas de clientes. É mais segura.
+
+                                        ========             
+                                        estacao1
+                                        ========
+                                           ||
+                    ========            ========           ========
+                    estacao4============servidor===========estacao2
+                    ========            ========           ========
+                                           ||
+                                        ========             
+                                        estacao3
+                                        ========
+
+----------------------------------
+4 - TIPOS DE SERVIDORES:
+1)Banco de Dados ;   
+2)Proxy;   
+3)Arquivos;  
+4)Comunicação;  
+5)Impressão
+
+----------------------------------
+5 - FORMAS DE PROTECAO DO SERVIDOR:
+   5.1 - Espelhamento de Disco
+  Consiste em ligarmos dois ou mais HD's em um mesmo canal(controladora).Eles o
+peram em dupla e 
+um será a cópia do outro. Quando um falhar, o outro entra em ação.
+
+   5.2 - Duplexação de disco
+  Consiste em ligarmos dois discos em controladoras diferentes. Operam da mesma
+ forma do item 
+anterior, salvo que se for danificada uma controladora o outro não para.
+
+   5.3 - Espelhamento de Servidor 
+  Consiste em ligarmos dois micros como servidores, sendo um a cópia do outro, 
+Quando o 
+servidor principal(PDC) der defeito, o de cópia (BDC)assume o controle da rede.
+
+----------------------------------
+6 - Visão Geral de uma Rede de Computadores
+
+                                        Aplicação
+                                   -------------------
+                                      S.Operacional
+                                  ---------------------
+                                        Protocolo
+                                  ---------------------
+                                         Hardware
+                                  ---------------------
+                                          Cabos
+
+----------------------------------
+7 - PLACAS DE REDES(NICS)
+As placas de rede Ethernet que você irá adquirir deve ser adequada ao tipo de r
+ede escolhido 
+(10Mb ou 100Mb). Normalmente as placas vem com capacidades de conexão para todo
+s os tipos de 
+cabos ( RJ45, BNC etc). Porém devemos saber qual o tipo de barramento (PCI, ISA
+) disponível do 
+equipamento a ser instalada a placa, sendo que, sempre que possível seria melho
+r o desempenho 
+com a utilização de placas PCI.
+Quanto a instalação no equipamento deveremos ficar atentos para a sua configura
+ção. Será 
+necessário especificar uma IRQ e um Endereço para a placa. ( IQR 10, Endereço 3
+00H são os mais 
+utilizados). Eu ja tive muitos problemas com placa mae .... :( , todo cuidado e
+h pouco na 
+hora de comprar uma.
+
+----------------------------------
+8 - METODOS DE TRANSMISSAO:
+Banda passante base e Banda passante larga.
+
+  8.1 - Banda passante base: Define que somente um sinal digital pode viajar pe
+la mídia e que sua 
+velocidade não pode ser superior a 100Mbp. A informação e posta na mídia sem ti
+po de modulação 
+e cada sinal transmitido utiliza a largura da banda total da mídia.
+O cabo UTP, de Par Trançado, Fibra Ótica e o cabo Coaxial  para banda base são 
+os mais comuns 
+para esse tipo de transmissão.
+
+  8.2 - Banda passante larga: Permite que vários sinais possam viajar ao mesmo 
+tempo pela mídia. 
+Como por exemplo, um cabo coaxial CATV com uma largura de banda de 500Mhz pode 
+levar 80 canais 
+de TV de 6MHz de largura de banda cada um (6Mhz não e o valor limitante de velo
+cidade ).
+O sistema de TV a cabo é o melhor exemplo de vários canais podem ser vistos, me
+smo viajando 
+através de um único cabo.
+Os cabos de Fibra Ótica e o Coaxial  para banda larga são os mais comuns para e
+sse tipo de 
+transmissão.
+
+----------------------------------
+9 - TIPOS DE CABOS:
+
+Os cabos talvez sejam responsáveis por 50% do fracasso ou do sucesso da instala
+ção de uma rede. 
+Quem trabalha com redes, sabe o trabalho que um problema no cabo pode dar.
+BNC  - Coaxial
+RJ45 - Par trancado
+Coaxial - O cabo coaxial para banda base e o cabo coaxial para banda larga são 
+muitos parecidos 
+em sua construção, mas sua principais diferença são: capa do cabo, diâmetro e i
+mpedância.
+O cabo coaxial para banda base e de 3/8 de polegada e utiliza um capa de plásti
+co. Já o cabo 
+coaxial para banda larga e de 1/2 de polegada e é coberto por uma malha ou tela
+ de alumínio e 
+uma camada protetora de plástico.
+Nomenclatura internacional :) 
+
+9.1 - IEEE 802.3, 10Base5) /* IEEE = (Instituto de Engenheiros Elétricos e Elet
+rônicos)*/
+Esse tipo de cabo e cohecido como cabo coaxial grosso, opera com a velocidade d
+e 10Mbps em uma 
+só banda base e distância máxima de 500m. Sua impedância e de 50ohms e requer u
+m conector tipo 
+terminador em suas extremidades para poder enviar informações. Conector utiliza
+do nesse cabo é 
+o do tipo N, um transceiver e um cabo AUI, que vai do transceiver ate o disposi
+tivo que se 
+deseja conectar.
+
+9.2 - IEEE 802.3, 10Base2)
+Esse tipo de cabo e cohecido como cabo coaxial fino , opera com a velocidade de
+ 10Mbps em uma só 
+banda. Sua impedância e de 50ohms e requer um conector tipo terminador em suas 
+extremidades para 
+poder enviar informações. Conector utilizado nesse cabo é o do tipo BNC e conec
+tores do tipo T 
+para conectar dispositivos da rede a ele.
+
+9.3 - Cabo UTP ( Unshielded Twisted Pair - Par Trançado IEEE 10BaseT ):
+O cabo de par trançado é composto de pelo menos dois cabos de cobre com um cent
+ro sólido, 
+formado entre eles .
+
+9.4 - Cabo STP ( Shielded Twisted Pair - Par Trançado IEEE 10BaseT ):
+O cabo STP  tem as mesmas características  UTP, a diferença e que o cabo STP es
+ta sujeito a 
+menos interferência (por causa da blindagem) e suporta altas velocidades, dista
+ncias percorridas 
+maiores.
+
+9.5 - Fibra ótica
+Os cabos de fibra ótica são utilizados para transmitir sinais digitais de dados
+ em forma de 
+pulsos modulados de luz. Os cabos de fibra ótica são utilizados tanto para a tr
+ansmissão em 
+banda base e banda larga. A largura de banda de 3Ghz são acessíveis com este ti
+po de cabo e as 
+de 400 e 500Mhz são com o cabo coaxial.
+
+Tipo do cabo                    Velocidade (máx)        Distância (máx) 
+Conector
+Cabo Coaxial                    10 Mbps                 185 m           
+BNC
+Par Trançado(Categoria 5)       100 Mbps                100 m           
+RJ 45
+Fibra óptica                    200.000 Mbps            10 km           
+ST
+
+----------------------------------
+10 - Por aqui vou ficando, caso isso possa interessar a alguem, podem contar co
+m a parte dois ...
+Final de ano(12/2000), to com tempo, o negocio eh a disposicao.
+Numa parte 2 que pretendo fazer, vou estar comprometido com HUB, Bridges(Pontes
+), Roteadores,
+Repetidores, Gateway, Patch Panel, Topologia, Camadas OSI do modelo ISO, Padroe
+s de redes, 
+protocolos, .... .
+                        "Aprender eh uma arte que nunca acaba!"

@@ -1,0 +1,631 @@
+##############################################################################
+########################### UNSEKURITY SCENE #################################
+##############################################################################
+
+
+SHSCRIPT.TXT v0.1
+
+desenvolvido por Nibble
+<nibble@cyberspace.org>
+
+				     
+Greetz p/ Unsekurity Scene !!!
+
+Voce encontra este texto dentre outros em:
+http://unsekurity.virtualave.net
+
+
+\****************************************************************************/
+\\\\\\\\\\\\\\\\\\\\\\\ PROGRAMACAO DE SHELL SCRIPTS /////////////////////////
+\****************************************************************************/
+			:: referencia de sintaxe ::
+\****************************************************************************/
+	
+
+Este texto visa iniciante em shellscript; previo contato com outra linguagem
+eh desejavel. Tentarei passar pequenos trechos de codigo e ser o mais breve
+possivel em minhas afirmacoes. Vamos correr contra o tempo.
+
+Sei que ainda esta muito imcompleto, gostaria de receber sugestoes sobre
+aspectos que faltaram abordados (lembre-se, isto eh um guia de referencia).
+
+
+\****************************************************************************/
+\-------------------------------- INDICE ------------------------------------/
+\****************************************************************************/
+
+PARTE 1 (teorica):
+
+	1. Shell
+	   1.1. Conceitos
+	   1.2. O basico
+	   1.3. Tipos de shell
+
+
+PARTE 2 (pratica):
+
+	1. Variaveis
+
+	   1.1. Conceitos
+	   1.2. Tipos
+		1.2.1. Expressa entre aspas      ("")
+		1.2.2. Expressa entre apostrofos ('')
+		1.2.3. Expressa entre crases     (``)
+	   1.3. Parametros
+	   1.4. Variaveis de Ambiente
+	   
+	2. Estruturas
+	   2.1. Expressao de teste
+	   2.2. Blocos de teste
+		2.2.1. 'if'
+		2.2.2. 'case'
+		2.2.3. 'select'
+	   2.3. Lacos de teste
+		2.3.1. 'for'
+		2.3.2. 'while'
+		2.4.3. 'until'
+
+	3. Operadores
+	   3.1. Simples
+	   3.2. Binarios
+	   3.3. Aritmeticos
+
+	4. Funcoes
+
+	5. Bibliografia
+
+\****************************************************************************/
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\  PARTE TEORICA /////////////////////////////////
+\****************************************************************************/
+
+  1. A SHELL
+
+
+     1.2. CONCEITOS
+
+	  O termo SHELL, referido a um sistema UNIX, eh utilizado para
+	  denominar o programa de interface entre o usuario e sistema.
+
+	  SHELL SCRIPT sao arquivos de texto(scripts), que sao interpretados
+	  por uma shell, sendo esta responsavel por sua execucao no sistema.
+	  
+
+\----------------------------------------------------------------------------/
+
+     1.1. 0 BASICO (do basico)
+
+	  Quando um usuario se liga a um sistema UNIX, eh iniciado o que
+	  chamamos de shell, observamos entao um prompt indicando que
+	  podemos entrar com uma linha de comando. Apos a entrada da linha
+	  de comando a shell assume as seguintes responsabilidades:
+
+	  a) Avaliar metacaracteres.
+	  b) Gerir a saida e os processos em segundo plano.
+	  c) Controlar Sinais.
+	  d) Preparar a execucao dos programas.
+	
+	  Se um usuario precisa introduzir uma sequencia de linhas de
+	  comandos com certa frequencia, ele produz entao um arquivo de
+	  texto com as mesmas. Isto acontece principalmente em tarefas
+	  adminstrativas e/ou para resolver pequenos problemas.
+
+	  Designamos uma shell para um usuario atravez /etc/passwd, lah
+	  voce encontrar algo do tipo [ nibble:....:/bin/sh ] definindo
+	  'sh' para o usuario nibble. 
+	
+	  No linux as shells 'sh' e 'csh' sao link simbolicos (ln)
+	  para 'bash' e 'tcsh', respectivamente. 
+
+\----------------------------------------------------------------------------/
+   
+     1.3. TIPOS DE SHELL
+
+	  Existem diferentes tipos de shell, no entanto, neste texto vamos
+	  nos utilizar a sintaxe da shell bash, por ser amplamente conhecida
+	  e bastante versatil. Sao as principais:
+
+	  sh:   Bourne Shell. A shell. Bastante limitada, essa shell nao
+	        permite edicao de linha.
+
+	  bash: Bourne Shell Again. Criada e distribuida pela GNU, eh
+		bastante conhecida dos linuxers, oferece edicao em linha.
+
+	  csh:  C shell. Desenvolvidas em Berkeley. Em termos de interacao
+		com sistema ela eh bastante compativel com a shell "sh",
+		mais suas sintaxes sao diferentes.
+	   
+	  tcsh: C shell estentida. Indroduz a edicao em linha da C shell.
+
+	  ksh:  Korn Shell. A mais popular em sistema UNIX. Foi a primeira
+		em introduzir novidades e avancos na shell "sh". Oferece
+		edicao em linha.
+
+	  Existem ainda muitos tipos shells, como por exemplo: ash, zsh...
+
+
+\****************************************************************************/
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ PARTE PRATICA ////////////////////////////////
+\****************************************************************************/
+
+INTRODUCAO:
+
+	Lembro a todos q o objetivo deste texto nao eh ensinar shell script,
+mais prover exemplos de sintaxes para que iniciantes se deleitem sobre os
+codigos e aprendam sozinhos, por intuicao.
+
+
+\****************************************************************************/
+  1. VARIAVEIS
+\****************************************************************************/
+
+  1.1. CONCEITOS
+
+       Valor eh uma cadeia de caracteres que armazenam dados.
+       Ex: variavel="valor"
+
+       <>---------------------------------------------<>
+         bash-2.03# var="lalalala"
+         bash-2.03# echo $var
+         lalalala
+         bash-2.03# unset var
+	 bash-2.03# echo $var
+	 
+	 bash-2.03#
+       <>----------------------------------------------<>
+
+       Entendemos entao que entao que 'valor' eh atribuido a 'variavel'.
+       Valor pode ser interpretado de varias formas, mais isto serah
+       visto no proximo item. O comando(proprio da shell) unset atribui
+       NULL para uma variavel.
+
+\----------------------------------------------------------------------------/
+   
+  1.2. TIPOS
+
+       Como a variavel eh expressa define a mesma, assim sendo...
+
+       1.2.1. Expressa entre aspas ("")
+
+              Variaves expressas com aspas vao interpretar as variaveis
+              que estiverem dentro do 'valor' da variavel.
+       
+             <>----------------------------------------------<>   
+	       bash-2.03# var="seu diretorio home eh $HOME"
+	       bash-2.03# echo $var
+	       seu diretorio home eh /root
+	     <>----------------------------------------------<>
+
+       1.2.2. Expressa entre apostrofos ('')
+
+ 	      Variaveis expressas com apostrofos vao interpretar o valor
+              de forma literal, sem interpretar nada.
+
+	     <>----------------------------------------------<>
+	       bash-2.03# var='$HOME nao eh o meu ~/'
+	       bash-2.03# echo $var
+	       $HOME nao eh o meu ~/
+	     <>----------------------------------------------<>
+
+      1.2.3. Expressa entre crases (``)
+
+	     Variaveis expressas com crases vao interpretar o valor como
+	     um comando da shell, e vao retornar a saida do comando. 
+
+	     <>----------------------------------------------<>
+	       bash-2.03# var=`pwd`
+	       bash-2.03# echo $var
+	       /bin
+	     <>----------------------------------------------<>
+
+\----------------------------------------------------------------------------/
+   
+  1.3. PARAMETROS
+
+       Como qualquer outro programa, um shell script, pode requerer paramatros
+       na linha comando de sua execusao para sua execucao.
+
+       a) $0  este eh no nome do programa
+       b) $1, $2, $3.. aqui $1 eh o primeiro parametro da linha de comando,
+	  seguido dele temos $2, o segundo parametro, e assim por diante.
+       c) $* assim podemos referenciar toda a cadeia de caracteres que foi
+	  passada ao programa pela linha de comando sem contar o $0.
+       d) $# desta forma fazemos uma referencia ao numero de parametros.
+
+       <>-< exa1.sh >----------------------------------<>
+
+         #!/bin/bash
+         echo "$0" # o nome do programa
+         echo "$1" # o primeiro parametro
+         echo "$2" # o segundo parametro
+         echo "$*" # todos os parametros
+         echo "$#" # o numero de parametros
+
+       <>----------------------------------------------<>
+	 bash-2.03# ./exa1.sh asd 123
+	 ./exa1.sh
+	 asd
+	 123
+         asd 123
+	 2
+	 bash-2.03#
+       <>----------------------------------------------<> 
+ 
+\----------------------------------------------------------------------------/
+
+  1.4. VARIAVES DE AMBIENTE
+  
+       Quando "entramos" em uma shell nos sao designados uma serie de
+       variaveis, chamadas de variaveis de ambiente. Conhece-las eh muito
+       importante, considero as seguintes as mais importantes:
+
+   1)  ENV     -> arquivo de arranque
+   2)  HOME    -> diretorio de apresentacao
+   3)  LOGNAME -> nome do usuario
+   4)  MAIL    -> caixa de correio do usuario
+   5)  PATH    -> lista de diretorio onde sao procurados programas
+   6)  PS1     -> carater de peticao da shell
+   7)  PWD     -> diretorio em que se encontra o usuario
+   8)  SHELL   -> path da shell associada ao usario
+   9)  TERM    -> tipo de terminal utilizado na ligacao
+   10) TMOUT   -> tempo que o termina precisa estar inativo para finaliza-lo
+   11) TZ      -> zona horaria utilizada pelo sistema
+
+       O comando /usr/bin/env lista as variaveis de ambientes.
+
+
+\****************************************************************************/
+  2. ESTRUTURAS DE TESTE
+\****************************************************************************/
+
+  2.1. EXPRESSOES DE TESTE
+       
+       Dividi as expressoes de testes em duas partes para entender elas
+       melhor; blocos de teste e lacos de teste. As expressoes de teste
+       sao usadas para testar(duh); podemos testar arquivos, variaveis...
+
+       Para testes usamos os operadores que se dividem em simples, binarios
+       e aritmeticos. Dada uma expressao estes retornam sempre verdadeiro
+       ou falso, que isso fique bem claro (releia se preciso!!).
+
+\----------------------------------------------------------------------------/
+
+  2.1. BLOCOS DE TESTES
+
+  2.1.1. 'if'
+
+         sintaxe: 
+	 if LIST; then LIST; [ elif LIST; then LIST; ] ... [ else LIST; ] fi
+
+         <>-< exa2.sh >----------------------------------<>
+
+	   #!/bin/bash
+	   if [ $1 -z ]; then
+	      echo "falta argumento!"
+              exit
+           fi
+	   echo "programa executado com sucesso!"
+              
+         <>----------------------------------------------<>
+	   bash-2.03# ./exa2.sh
+	   falta argumento!
+	   bash-2.03#
+         <>----------------------------------------------<>  
+	   Obs: tente com argumentos.
+  
+
+  2.1.1. 'case'
+	 
+         sintaxe: 
+	 case WORD in [ (PATT [PATT] ...) LIST;; ] ... esac
+
+         <>-< exa2.sh >----------------------------------<>
+
+	   #!/bin/bash
+	   case $1 in
+	   (1) echo "opcao 1 selecionada";;
+	   (2) echo "opcao 2 selecionada";;
+	   (*) echo "opcao errada";;
+	   esac
+              
+         <>----------------------------------------------<>
+	   bash-2.03# ./exa2.sh 3
+	   opcao errada
+	   bash-2.03#
+         <>----------------------------------------------<>  
+	   Obs: tente argumentos validos.
+      
+
+  2.1.1. 'select'
+         
+         sintaxe: 
+	 select NAME [ in WORD ]; do LIST; done
+
+         <>-< exa2.sh >----------------------------------<>
+
+	   #!/bin/bash
+	   select i in $*
+	     echo $i;
+	   done
+              
+         <>----------------------------------------------<>
+	   bash-2.03# ./exa2.sh AB 12 1D
+	   1) AB
+	   2) 12
+	   3) 1D
+	   #?
+         <>----------------------------------------------<>  
+	   Obs: entre com uma das opcoes aprensentadas,
+	   observe o resultado; tente outros argumentos. 
+
+\----------------------------------------------------------------------------/
+
+  2.2. LACOS DE TESTE
+
+  2.3.1 'for'
+
+	sintaxe: 
+	for NAME [ in WORD ]; do LIST; done
+
+        <>-< exa3.sh >----------------------------------<>
+	
+	  #!/bin/bash
+	  var="$*"
+	  for i in $var; do
+	  echo "$i";
+	  done
+              
+        <>----------------------------------------------<>
+	  bash-2.03# ./exa3.sh asd ~ 123 
+	  asd
+	  /root    <- humnn..
+	  123
+	  bash-2.03# ./exa3.sh a
+        <>----------------------------------------------<>  
+	  Obs: tente diferentes parametros.. =)
+
+
+  2.3.2. 'While'
+
+	 sintaxe: 
+	 while LIST1; do LIST2; done
+
+	 <>-< exa4.sh >----------------------------------<>
+
+	   #!/bin/bash
+	   num=1
+	   while [ $num -le 3 ]; do
+	      echo "$num"
+	      num=`expr $num + 1`
+	   done
+            
+	 <>----------------------------------------------<>
+	   bash-2.03# ./exa4.sh
+	   1
+	   2
+	   3
+	   bash-2.03#
+	 <>----------------------------------------------<>  
+	   
+  2.3.3. 'Until'
+
+	  sintaxe: 
+	  until LIST1; do LIST2; done
+
+	  <>-< exa5.sh >----------------------------------<>
+  
+     	    #!/bin/bash
+	    var=1
+	    until [ $var -gt 3 ]; do
+	      echo "$var"
+	      var=`expr $var + 1`
+	    done
+
+	  <>----------------------------------------------<> 
+	    bash-2.03# ./exa5.sh
+	    1
+	    2
+	    3
+	    bash-2.03#
+	  <>----------------------------------------------<>  
+
+
+\****************************************************************************/
+  3. OPERADORES
+\****************************************************************************/
+
+Os operadores de shell scripts, usado para testes nas expressoes:
+
+ ____________________________________________________________________________
+|                                                                            |
+|                       OPERADORES SIMPLES                                   |
+|____________________________________________________________________________|
+|         |                                                                  |
+| -b arq  | [v] se arq existe e eh de binario.                               |
+|----------------------------------------------------------------------------|
+| -c arq  | [v] se o arq existe e eh caracteres.                             |
+|----------------------------------------------------------------------------|
+| -d arq  | [v] se o arq existe e eh um diretorio.                           |
+|----------------------------------------------------------------------------|
+| -e arq  | [v] se arq existe.                                               |
+|----------------------------------------------------------------------------|
+| -f arq  | [v] se arq existe e eh um arquivo normal.		             |
+|----------------------------------------------------------------------------|
+| -g arq  | [v] se arq existe e tem o bit 'group-id' ativado.                |
+|----------------------------------------------------------------------------|
+| -L arq  | [v] se arq existe e eh uma ligacao simbolica.                    |
+|----------------------------------------------------------------------------|
+| -p arq  | [v] se arq existe e eh um pipeline.                              |
+|----------------------------------------------------------------------------|
+| -r arq  | [v] se arq existe e eh se pode ler.                              |
+|----------------------------------------------------------------------------|
+| -s arq  | [v] se arq existe e tem tamanho maior que zero.                  |
+|----------------------------------------------------------------------------|
+| -S arq  | [v] se arq existe e eh um 'socket'.                              |
+|----------------------------------------------------------------------------|
+| -t arq  | [v] se arq esta aberto em um terminal.                           |
+|----------------------------------------------------------------------------|
+| -ou arq | [v] se arq existe e tem o bit 'user-id' ativado.                 |
+|----------------------------------------------------------------------------|
+| -w arq  | [v] se arq existe e se pode escrever nele.                       |
+|----------------------------------------------------------------------------|
+| -x arq  | [v] se arq existe e eh um executavel.                            |
+|----------------------------------------------------------------------------|
+| -O arq  | [v] se arq existe e o dono eh o que indica a var. amb. 'EUID'.   |
+|----------------------------------------------------------------------------|
+| -G arq  | [v] se arq existe e o dono eh o que indica a var. amb. 'EGID'.   |
+|____________________________________________________________________________|
+	Obs: [v] = retorna verdadeiro
+
+ ____________________________________________________________________________
+|                                                                            |
+|                         OPERADORES BINARIOS                                |
+|----------------------------------------------------------------------------|
+| arq1 -nt arq2 |  O arq1 eh mais novo que arq2(data de modificacao.         |
+|----------------------------------------------------------------------------|
+| arq1 -ot arq2 |  O arq1 eh mais antigo que arq2(data de modificacao.       |
+|----------------------------------------------------------------------------|
+| arq1 -ef arq2 |  O arq1 e arq2 tem o mesmo disp. assoc. e o mesmo tam.     |
+|----------------------------------------------------------------------------|
+| -z cadeia     |  [v] se o comprimento da cadeia eh igual a zero.           |
+|----------------------------------------------------------------------------|
+| -n cadeia     |  [v] se o comprimento da cadeia nao eh igual a zero.       |
+|----------------------------------------------------------------------------|
+| cad1 = cad2   |  [v] se as cadeias sao iguais.                             |
+|----------------------------------------------------------------------------|
+| cad1 != cad2| |  [v] se as cadeias sao diferentes.                         |
+|----------------------------------------------------------------------------|
+| !exp          |  [v] se a expressao eh falsa                               |
+|----------------------------------------------------------------------------|
+| exp1 -a exp2  |  [v] se ambas expressoes sao verdadeiras.                  |
+|----------------------------------------------------------------------------|
+| exp1 -o exp2  |  [v] se alguma das expressoes for verdadeira.              |
+|_______________|____________________________________________________________|
+	Obs: [v] = retorna verdadeiro
+
+ ____________________________________________________________________________
+|									     |
+|                         OPERADORES ARITMETICOS                             |
+|----------------------------------------------------------------------------|
+| arg1 -eq arg2 |  [v] se os argumentos sao iguais.		             |
+|----------------------------------------------------------------------------|
+| arg1 -em arg2 |  [v] se os argumentos sao diferentes.                      |
+|----------------------------------------------------------------------------|
+| arg1 -lt arg2 |  [v] se o arg1 eh inferior a arg2.                         |
+|----------------------------------------------------------------------------|
+| arg1 -le arg2 |  [v] se o arg1 eh inferior ou igual a arg2.                |
+|----------------------------------------------------------------------------|
+| arg1 -gt arg2 |  [v] se o arg1 eh superior a arg2.                         |
+|----------------------------------------------------------------------------|
+| arg1 -ge arg3 |  [v] se o arg1 eh superior ou igual a arg2.                |
+|_______________|____________________________________________________________|
+	Obs: [v] = retorna verdadeiro
+
+
+\****************************************************************************/
+  4. FUNCOES
+\****************************************************************************/
+
+As funcoes, em shell script, funcionam como em qualquer linguagem: sao blocos
+de comandos que podem ser usados apartir de qualquer ponto do codigo. Sao
+utilizadas para organizar o codigo... bem, este texto nao se propoe a ensinar
+ninguem a programar!! Vejamos mais um exemplo (na pratica a teoria eh outra):
+
+
+       <>-< exa6.sh >----------------------------------<>
+
+         #!/bin/bash
+
+	 main()
+	 {
+	 echo "funcao main"
+	 func1
+	 }
+
+	 func1()
+	 {
+	 echo "funcao func1"
+	 func2
+	 }
+
+	 func2()
+	 {
+	 echo "funcao func2"
+	 }
+
+	 main
+
+       <>----------------------------------------------<>
+         bash-2.03#./exa6.sh
+	 funcao main
+	 funcao func1
+	 funcao func2
+         bash-2.03#
+       <>----------------------------------------------<>
+
+Percebe-se que nao existe uma funcao que deve ser chamada como padrao,
+como em C, devemos chamar as funcoes apatir de codigo externo as funcoes,
+ou ainda, quando dentro de uma funcao, chamar outras sucessivamente.
+
+
+\****************************************************************************/
+  4. BIBLIOGAFIA
+\****************************************************************************/
+
+	MAN pages:
+
+		man bash
+		man tcsh
+
+	Revistas:
+
+		Linux Actual (Ano 1, numero 1)
+		Linux Actual (Ano 1, numero 2) 
+		Revista do Linux (Ano 1, numero 6)
+		Revista do Linux (Ano 1, numero 8)
+
+
+Recomendo os sites de busca: 
+  google (www.google.com)
+  altavista (www.altavista.com)
+
+
+\****************************************************************************/
+  
+           		   Ultimas palavras...
+
+
+Em primeiro lugar quero agradecer pela forca de vontade de todos que apoiam
+e colaboram para que a unsekurity nao se torne um grupo como tantos outros,
+mais sim uma cena.. aberta, transparente, de livre fluxo para a informacao.
+Espero que os muitos grupos que existem no brasil abram os olhos para isso.
+
+		     Este texto eh dedicado a todos que lutam pela liberdade
+                     de informacao, que a humanidade um dia nos compreenda.
+
+Certa vez, a muito tempo, disse um politico brasileiro: "facamos a revolucao,
+antes que o povo a faca". Temos de estar atentos, muitos sites e empresas de
+seguranca vem surgindo com enormes investimentos; eles perceberam explosao
+da revolta hacker surgindo e agora querem fazer da sua forma.. manipulando
+kids, extorquindo empresas com contratos que escravisam as empresas aos seus
+produtos e solucoes. A verdade eh transparente e nao tem preco, vida longa
+ao free software.. lutar por essa causa eh pedir uma vida melhor para nossos
+filhos.. nao podemos privar as pessoas do que eh mais valioso: a informacao.
+
+Obrigado. Nibble.
+
+ 
+\****************************************************************************/
+       ..:: you may stop this indidual, but you can't stop us all ::..
+\****************************************************************************/
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ EOF //////////////////////////////////////
+\****************************************************************************/
+
+
+
+
+
+
+
+
+
+

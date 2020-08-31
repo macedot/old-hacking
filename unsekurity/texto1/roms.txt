@@ -1,0 +1,136 @@
+Unsekurity Team
+irc.brasnet.org : #unsekurity
+http://unsekurity.virtualave.net
+e-brain - eebrain@hotmail.com
+                            _    _    _    _    _  
+                          _|_|__|_|__|_|__|_|__|_|_
+                         |   Programming/Erasing   |
+                         |_         ROM's          |
+                         |_)  Read Only Memories   |
+                         | bY e-brain * TeaM UnSek |
+                         |o________________________|
+                           |_|  |_|  |_|  |_|  |_|
+
+        Bom... os textos do coracaodeleao e do module sao gigantescos.
+Parecem livros, eu porem vou ser breve com este aqui. O texto ir  tratar
+sobre os diferentes tipos de memorias ROM. Se voce nao sabe o que vem a
+ser uma ROM, vai ouvir musica... ou ver tv.
+        Se alguem estiver interessado em saber o funcionamento exato de
+um dispositivo de memoria, mande um e-mail. Se houver muita gente
+interessada, eu escrevo outro txt com as informacoes.
+
+                                                Now to the good shit!
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Masked programmed ROM (MROM)
+        Sao ROM's programaveis por mascara. Um negativo fotografico eh
+usado para especificar as conexoes eletricas do chip, de acordo com o que
+pede o cliente. Estas mascaras sao muito caras, e sao utilizadas geralmente
+para produzir grandes quantidades de memoria. Este tipo de memoria, uma vez
+gravada, nao pode ser apagada ou reprogramada.
+
+                                    .o!o.
+
+Programmable ROM (PROM)
+        As PROM's sao MROM's que podem ser programadas pelo usuario, jah
+que eh constituida de conexoes a fusivel. Quimar um fusivel ira deixar um
+valor 0 naquela posicao, e deixa-lo intacto tera valor 1. O circuito de
+programacao geralmente nao eh o mesmo onde a ROM serah usada.
+        Para queimar um fusivel, fornece-se o endereco no barramento de
+enderecos da ROM, fornece-se o valor que sera programado no barramento de
+dados, e em seguida um pulso de alta tensao em um pino especial de
+programacao do CI. Eh exatamente como uma operacao de escrita em um
+determinado endereco de memoria de uma RAM, soh que voce ira gravar um dado
+permanente.
+
+                                    .o!o.
+
+Erasable Programmable ROM (EPROM)
+        As EPROM's sao constituidas de transistores cujas portas estao em
+flutuacao. Para programa-las, aplica-se uma tensao entre 10 a 25 volts nos
+pinos corretos (como na PROM), em um certo intervalo de tempo de geralmente
+50ms para cada posicao, e os transistores sao carregados eletricamente,
+ficando os eletrons retidos, pois a porta do transistor esta em flutuacao.
+Como na PROM, o circuito de programcao geralmente nao eh o mesmo onde a ROM
+serah usada.
+        O apagamento das EPROM's eh feito atraves de exposicao da janela do
+encapsulamento do circuito a luz ultravioleta, por cerca de 20 minutos, e as
+celulas voltam ao estado de nao conducao (todas elas).
+
+                                    .o!o.
+
+Eletrically Erasable Programmable ROM (EEPROM ou E2PROM)
+        As EEPROM's podem ser eletricamente programadas, ou seja, podem ser
+programadas no mesmo circuito onde serao usadas, uma vez que o mecanismo de
+transporte de cargas requer correntes muito baixas. Uma outra vantagem, eh
+pode-se apagar na memoria bytes individuais, ao invez de ter que expor a
+memoria a luz ultravioleta e apaga-la por completo.
+        O problema com as EEPROM's sao o tamanho e  custo. A complexidade
+das celulas de armazenamento torna os circuitos bem maiores e caros, se
+comparados com EPROM's. Nao ha muito o que discutir sobre tempo de aplicacao
+e tensao utilizados na programacao de EEPROM's, jah que toda a operacao eh
+executada apenas "programando" o barramento de controle do CI.
+
+                                    .o!o.
+
+Flash ROM's
+        Sao sucessoras das EPROM's e EEPROM's. Ela basicamente eh uma EEPROM
+com celula de armazenamento semelhante a de uma EPROM (com apenas um
+transistor, ao invez dos dois que usa a EEPROM), e menor custo. Sao chamadas
+de flash pois tem tempo de programacao bem pequenos, e a maioria dos
+circuitos realiza apagamento em bloco (setores de 512 bytes por exemplo).
+
+                                    .o!o.
+
+CD-ROM's e CD-RW's
+        O funcionamento destes todos jah devem saber. No caso do CD-ROM, ele
+eh recoberto com uma superficie reflexiva, e um laser faz "buracos" nessa
+superficie, os quais difratam o laser no momento de leitura. A parte que
+reflete representa nivel alto 1 e a parte que difrata representa o nivel
+logico 0.
+        O CD-RW possui bastonetes tridimencionais, os quais sao polarizados
+no momento da gravacao, para refletir ou nao o laser do drive no momento de
+leitura.
+        Nao me pergunte como eh o processo de gravcao desses dois ai, pois
+o equipamento eh bem caro, e soh coloquei essa informacao a titulo de
+curiosidade. Alem disso, o que nos interessa aqui, eh o que se pode fazer
+programando os outrostipos de ROM's.
+
+                                    .o!o.
+
+OK, WE'RE DONE!
+        Pra que que eu fui ler essa bosta desse texto? Eu podia viver bem a
+o resto da minha vida sem saber o que esta escrito aqui!
+        Tudo bem, eu lhe dei toda a informacao necessaria (na realidade soh
+uma introducaozinha tecnica) p/ programacao de memoria. Ainda acha que nao
+tem utilidade? Bem, algumas das muitas:
+1. Clonar ROM's de celulares. Esse eh o real motivo pelo qual eu me interessei
+   sobre o assunto. As outras aplicacoes sao boas, mas mto dificeis de serem
+   projetadas, copiar e gravar uma ROM eh uma coisa relativamente facil de ser
+   feita. Eletronica digital nao eh um bicho de sete cabecas, mas nem vem me
+   falar de analogica. Eu odeio PENSAR em circuito analogico!
+2. Jah vi gente (falando serio sobre o assunto) comentar a respeito de
+   inserir virus em uma BIOS, ou qualquer outro dispositivo de ROM de um PC.
+   Na minha opiniao, o cara tem que ser guru da programacao p/ fazer tal
+   coisa, mas nao eh impossivel.
+3. Hahahahah... essa eh boa. Eu tava discutindo com o module sobre isso na
+   Inforuso (feira de computacao), e um colega dele disse que rolava de
+   aumentar ou diminuir a injecao de combustivel no motor de um carro,
+   programando uma ROM que era responsavel por isso. Isso eu nem sei se rola
+   mesmo, mas se rolar, taih mais uma aplicacao. Vai lah e hackeia seu carro!
+
+P.S.: os valores de tensao, tempo, etc citados no texto sao aproximados. Se
+voce for realmente construir um projeto, analise bem um databook que contenha
+as informacoes necessarias p/ programar/apagar uma ROM!
+
+
+That's it for now!
+        Como eu disse, podem mandar perguntas, que as que eu souber responder,
+eu responderei. Provavelmente eu irei escrever mais alguns textos para o team,
+e mesmo que nao escreve, vale sempre apena dar uma espiada no site p/ ver se
+tem textos novos dos membros.
+
+                                                Bye ya'll,
+                                                        e-brain
+
+

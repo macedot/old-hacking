@@ -1,0 +1,291 @@
+* http://unsekurity.virtualave.net *
+
+* Unsekurity Team *
+
+
+by.. psych .. Atualizado por Blind_Bard.  (valeu blind)
+
+subject.. Virtual Hosts & Subdomains.
+
+================================================================================
+
+Como o 'publico alvo' do nosso grupo sao os newbies resolvemos escrever este
+texto para dar uma ajuda ao pessoal que gostaria de saber como criar vhosts e/ou
+subdomains, esse eh um assunto relativamente facil porem percebemos que ha muita
+dificuldade para aprender com alguem isso, o pessoal que 'sabe', na maioria das
+vezes, eh meio chato e nao gosta de ficar explicando passo a passo essas coisas.
+
+OBS: Como sempre lembramos em nossos tutoriais... elitos, nao leiam isto!
+
+================================================================================
+
+
+DNS & VIRTUAL HOSTS
+
+1 - DNS 
+
+Para servir um dominio na Internet voce precisa - alem de possuir um registro na
+entidade reguladora mais proxima (FAPESP, no caso do Brasil) - configurar o
+daemon named (o famoso BIND).
+Atualmente as configuracoes do named ficam geralmente no arquivo /etc/named.conf, 
+apesar de ja haverem figurado em outros arquivos (versoes antigas, o BIND 4).
+O arquivo /etc/named.conf tem o seguinte formato:
+
+/* Opcoes do modo de operacao do BIND */
+options {
+	directory "/var/named"; /* Diretorio onde ficam os dados dos dominios */
+};
+
+/* Configuracao para acesso dos servidores "raiz" de DNS */
+zone "." in {
+	type hint;
+	file "root.cache"; /* Arquivo que contem o endereco dos servidores */
+};
+
+/* Configuracao do DNS reverso para o endereco de loopback */
+zone "0.0.127.in-addr.arpa" in { 
+	type master;
+	file "named.local";
+};
+
+/* Configuracao dos dominios servidos */
+
+/* Dominio unsekurity.org */
+zone "unsekurity.org" {
+	type master; /* neste caso estamos configurando o servidor master */
+	file "unsekurity.org.hosts"; /* arquivo com configuracoes de dominio */
+}
+/* Configuracao do DNS reverso para unsekurity.org */
+zone "0.168.192.in-addr.arpa" in {
+	type master;
+	file "unsekurity.org.rev"; /* arquivo com configuracoes de ip reverso */
+};
+
+2 - Virtual Hosts
+
+Adaptando para seu dominio um arquivo no formato citado, so vai faltar criar 
+os dois arquivos relativos as opcoes do enderecamento. Pro nosso exemplo, eles 
+seguem abaixo:
+
+
+unsekurity.org.hosts
+<-- cut here -->
+
+@ 	IN 	SOA	unsekurity.org root.unsekurity.org. (
+				199802151 ; Serial (data de hoje + num.)
+				8H ; Tempo do ciclo de atualizacao do DNS 
+				2H ; Tempo do ciclo de tentativas 
+				1W ; Tempo limite sem atualizacao 
+				1D ) ; Time-to-live para o dominio
+
+
+		; Configuracao dos servidores de DNS
+		NS	psych.unsekurity.org.
+		NS	blind.unsekurity.org.
+
+		; Configuracao dos servidores de e-mail
+		MX	10 nash.unsekurity.org.
+
+
+; Definicao dos IP's para cada nome
+localhost	A	127.0.0.1
+psych		A	192.168.0.2
+blind		A	192.168.0.3
+nash		A	192.168.0.4
+
+<-- cut here -->
+
+
+unsekurity.org.rev
+<-- cut here -->
+
+@ 	IN 	SOA	unsekurity.org root.unsekurity.org. (
+				199802151 ; Serial (data de hoje + num.)
+				8H ; Tempo do ciclo de atualizacao do DNS 
+				2H ; Tempo do ciclo de tentativas 
+				1W ; Tempo limite sem atualizacao 
+				1D ) ; Time-to-live para o dominio
+
+		; Configuracao dos servidores de DNS
+		NS	psych.unsekurity.org.
+		NS	blind.unsekurity.org.
+
+; Reverso dos hosts
+2	PTR	psych
+3	PTR	blind
+4	PTR	nash
+
+<-- cut here -->
+
+
+Note que foram configurados 3 hostnames em nosso dominio: psych, blind e nash.
+A primeira vista, alguem poderia afirmar que se tratam de 3 maquinas em nossa
+rede, mas isso nao eh necessariamente verdade.
+Aqui poderiamos ter 2 servidores na rede - um deles chamado psych e outro blind,
+sendo que um deles (blind) "hospeda" um virtual host.
+Nesse caso - diria o iniciante - voce teria a maquina blind com 2 placas de rede
+e setaria um ip para cada uma delas, certo? Errado. O fato eh que podemos ter
+varios ips em uma mesma placa de rede, e eh isto que constitui a essencia do
+virtual host em DNS.
+Agora vem a parte pratica da coisa: para 'levantar' um ip extra na maquina blind
+e permitir que ela responda pelo host nash.unsekurity.org, usamos o comando:
+
+blind:~# ifconfig eth0:1 192.168.0.4 up
+
+E game over! Voce acaba de criar um virtual host! Apenas tenha o cuidado de
+observar se existem outros virtual hosts em sua maquina, o que faria com que o
+numero apos o identificador de dispositivo (eth0, no nosso caso), mudasse (cada
+ip deve ter um numero destes).
+
+2.1 - Virtual hosts no Apache
+
+Agora mano, voce poderia me perguntar: "qual a finalidade de um virtual host?".
+Pois bem. Imagine que no nosso dominio imaginario unsekurity.org quisessemos
+hospedar uma pagina para cada membro, e que para facilitar as coisas o endereco
+dessas paginas seriam "module.unsekurity.org", "cs0.unsekurity.org", etc.
+Se tivessemos que usar uma maquina para cada site - cada uma rodando um httpd -
+estariamos em maus lencois, concorda?
+Eh ai que entra uma das utilidades de um virtual host: usando ainda o exemplo
+inicial, bastaria configurar o apache para responder diferentemente aos pedidos
+de pagina para "blind.unsekurity.org" e "nash.unsekurity.org".
+Fazer isso nao eh complicado... continuem lendo.
+
+2.1.1 - Configurando o Apache para ouvir varios IP's
+
+Para permitir que o Apache se "binde" a portas que nao a default, vc usa a
+diretiva "Listen". Assim:
+
+# Ouve o IP do hostname blind
+Listen 192.168.0.3:80
+# Ouve o IP do hostname nash
+Listen 192.168.0.4:80
+
+Dessa forma, alem de ouvir na porta padrao (a 80 do ip 192.168.0.3) o Apache
+vai responder a requisicoes na 80 de 192.168.0.4.
+Eh muito importante lembrar q a diretiva BindAddress deve estar setada como
+"*" (sem as aspas), ou apenas requisicoes ao endereco IP especificado nela
+serao consideradas.
+
+2.1.2 - Ativando os virtual hosts pra valer
+
+Pra terminar nosso trabalho devemos informar ao Apache quais sites devem ser
+servidos quem quais combinacoes IP/Porta. Para isso usaremos a diretiva
+NameVirtualHost e o bloco <VirtualHost>. Vejam como:
+
+# Determina que teremos um virtual host neste par IP/Porta
+NameVirtualHost 192.168.0.4:80
+
+# Cria o virtual host nash.unsekurity.org
+<VirtualHost 192.168.0.3>
+     # E-mail do admin
+     ServerAdmin admin@nash.unsekurity.org
+
+     # Local onde serao armazenados os documentos html
+     DocumentRoot /www/nash/webpages
+
+     # Nome que deve ser chamado pelo browser para ativar este virtual host
+     ServerName nash.unsekurity.org
+
+     # Diretorio onde o nash armazenara seus scripts CGI
+     ScriptAlias /scripts/ "/www/nash/scripts/"
+
+     # Definicoes para o diretorio de CGI
+     <Directory "/www/nash/scripts">
+          AllowOverride None
+          Options None
+          Order allow, deny
+          Allow from all
+     </Directory>
+</VirtualHost>
+
+Agora voce so precisa reiniciar o seu server httpd e admirar o trabalho! 
+Por favor, note que esta eh uma configuracao de http MUITO simplificada -
+mas eu nao gostaria de ser acusado de fugir do tema central do txt ;-)
+Assim sendo, fica acertado pra um futuro proximo o release de um txt
+so sobre o Apache.
+
+3 - Subdomains
+
+Bem - se vc chegou ate aqui -, criar subdomains eh moleza: para setar um virtual
+host especificamos seu nome e ip no arquivo unsekurity.org.hosts, certo? Pois
+para ter seu subdomain, basta fazer a mesma coisa! Vejamos um exemplo pratico,
+onde criamos o subdomain tutoriais.unsekurity.org:
+
+
+unsekurity.org.hosts
+<-- cut here -->
+
+@ 	IN 	SOA	unsekurity.org root.unsekurity.org. (
+				199802151 ; Serial (data de hoje + num.)
+				8H ; Tempo do ciclo de atualizacao do DNS 
+				2H ; Tempo do ciclo de tentativas 
+				1W ; Tempo limite sem atualizacao 
+				1D ) ; Time-to-live para o dominio
+
+
+		; Configuracao dos servidores de DNS
+		NS	psych.unsekurity.org.
+		NS	blind.unsekurity.org.
+
+		; Configuracao dos servidores de e-mail
+		MX	10 nash.unsekurity.org.
+
+
+; Definicao dos IP's para cada nome
+localhost	A	127.0.0.1
+psych		A	192.168.0.2
+blind		A	192.168.0.3
+nash		A	192.168.0.4
+
+; Definicao de subdomains
+tutoriais.unsekurity.org	A	192.168.0.20
+
+<-- cut here -->
+
+
+unsekurity.org.rev
+<-- cut here -->
+
+@ 	IN 	SOA	unsekurity.org root.unsekurity.org. (
+				199802151 ; Serial (data de hoje + num.)
+				8H ; Tempo do ciclo de atualizacao do DNS 
+				2H ; Tempo do ciclo de tentativas 
+				1W ; Tempo limite sem atualizacao 
+				1D ) ; Time-to-live para o dominio
+
+		; Configuracao dos servidores de DNS
+		NS	psych.unsekurity.org.
+		NS	blind.unsekurity.org.
+
+; Reverso dos hosts
+2	PTR	psych
+3	PTR	blind
+4	PTR	nash
+
+; Reverso dos subdomains
+20	PTR	tutoriais.unsekurity.org
+
+<-- cut here -->
+
+
+Pronto! Subdomain criado!
+
+================================================================================
+
+Bem, nao somos grandes autores, mas escrevemos este txt para ajudar ao UnsekTeam
+e ao pessoal que quer e gosta de aprender cada vez mais - os quais tem nos dado 
+a maior forca para continuar com nosso trabalho.
+Esperamos sinceramente que o txt tenha ficado do agrado de vcs! Qualquer duvida
+sobre esse assunto (ou outro, desde que esteja ao nosso alcance :->) mande-nos
+um e-mail:
+		psych <psych@linuxbr.com.br>
+		Blind_Bard <bill@unig2001.com.br>
+
+================================================================================
+
+Agradecemos aos integrantes do Unsek. Eh desnecessario citar os nicks - voces
+certamente os conhecem e tambem ao grandioso objetivo do grupo, o qual esperamos
+que seja alcancado.
+
+				c ya...
+					psych & Blind_Bard.

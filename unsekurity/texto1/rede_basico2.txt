@@ -1,0 +1,274 @@
+-----------------------------------------------
+Hardware de Rede Basico - Parte 2 - A Revanche|  
+-----------------------------------------------
+
+Desenvolvido por Hekodangews.
+Sugestoes serao bem vindas: hekodangews@bol.com.br .
+Esse tutorial apesar de conter nomes tecnicos, eh o basico do basico, logo a 'elite' ja sabe tudo
+e nem vai perder tempo, lendo esse humilde txt destinado a todos os newbies!
+Estes texto nao possui direitos autorais(eca), logo pode ser livremente difundido .... sem 
+comunicacao previa ao autor(EU) :P
+Ai, promessa eh divida, como eu tinha dita na parte1 q me comprometeria com:
+	"Numa parte 2 que pretendo fazer, vou estar comprometido com HUB, Bridges(Pontes), 
+Roteadores, Repetidores, Gateway, Patch Panel, Topologia, Camadas OSI do modelo ISO, Padroes de 
+redes, protocolos, .... ."
+
+Indice
+*****************************************************
+1 - HUB
+    1.1 - Empilhamento de Hub
+    1.2 - Cascateamento de Hub
+2 - BRIDGES (Pontes)
+3 - ROTEADORES
+4 - REPETIDORES
+5 - CAMADAS DO MODELO OSI ESTABELECIDAS PELA ISO
+	5.1 - Camada fisica
+	5.2 - Camada de enlace
+	5.3 - Camada de rede
+	5.4 - Camada de transporte
+	5.5 - Camada de sessao
+	5.6 - Camada de apresentacao
+	5.7 - Camada de aplicacao
+6 - TOPOLOGIA    
+	6.1 - Em barra (ou barramento):
+	6.2 - Em Estrela:
+	6.3 - Em Anel:
+	6.4 - Vantagens e Desvantagens:
+		6.4.1 - Topologia Estrela	
+		6.4.2 - Topologia Anel (Token Ring)	
+		6.4.3 - Topologia barramento	
+7 - PROTOCOLOS
+	7.1 - IPX/SPX(novell)
+	7.2 - NET BEUI
+	7.3 - TCP/IP 
+8 - NOTA
+9 - LINKs
+10 - FIM
+*****************************************************
+
+1 - HUB
+
+Hub eh o dispositivo que aceita varias conexoes da rede, interligando varios computadores. 
+Existem diversos tipos de hubs. Alguns sao dispositivos simples de hardware que apenas aceitam 
+conexaes (denominado hubs passivos); outros sao complicados componentes eletranicos que 
+monitoram e controlam o fluxo de informaçaes na rede.
+
+1.1 - Empilhamento de Hub
+
+*Utiliza cabo par trançado com RJ45 para o empilhamento;
+*Maximo de 3Hubs;
+*A cada empilhamento perde-se uma porta no Hub;
+			 _____________________
+			|		      |
+			| =  =  =  =  =  =  = |   Aqui uma porta eh perdida
+			|__________________/__|
+          				  /
+					 /
+					/
+		  _____________________/
+		 |		      /|
+		 | =  =  =  =  =  =  = |
+		 |_____________________|
+
+
+1.2 - Cascateamento de Hub
+
+*Utiliza cabo fornecido pelo fabricante ou coaxial;
+*Maximo de 8 Hubs ;
+*Nao perde porta do Hub;
+*Eh a melhor configuraçao;
+         ________________________
+	|		  ==(in)|
+	| ==(in)  ==(out)       |
+	|_________/_______==(ou)|
+                 /
+                /
+         ______/_________________
+	|     /		  ==(in)|
+	|   ==(in) ==(out)      |
+	|_________________==(ou)|
+
+------------------------------------------------------------------
+
+2 - BRIDGES (Pontes)
+
+Conectam multiplas LAN's como por exemplo a LAN da contabilidade com a LAN do departamento de 
+Marketing. Isto divide o trafego na rede, apenas passando informaçoes de um lado para outro 
+quando for necessario. Nao acho que seu uso seja de vital importancia para o bom funcionamento 
+de uma rede.
+------------------------------------------------------------------
+
+3 - ROTEADORES
+
+Faz o papel de guarda de transito, garantindo que os pacotes de mensagens sejam dirigidos a 
+endereços certos na rede. Pelo fato de quase nao haver bradcast(ver nota no fim da pagina),
+o trafego da rede eh bastante otimizado, mandando o pacote direto pro enredeco.
+
+
+	|roteador|-------------|roteador|         
+	    |                      |
+	 |-----|		|-----|              |--------|
+	 |lan 1|                |lan 3|              |INTERNET|
+	 |-----|                |-----|		     |--------|
+            |                      |		         |
+        |roteador|             |roteador|------------|roteador|
+            |
+	    |	
+            |       |-----|
+	|roteador|--|lan 2|  exemplo de algumas lans ligadas entre si, aqui eu coloquei, sempre
+		    |-----|  2 roteadores entre as redes, mas isso pode ser perfeitamente
+                             modificado!     
+------------------------------------------------------------------
+
+4 - REPETIDORES
+
+Sao equipamentos utilizados quando se deseja repetir o sinal enviado por um equipamento quando 
+a distancia  a ser percorrida eh maior do que o recomendado. Ele realiza uma ampliacao no sinal 
+já fraco dando nova força para que chegue ao ponto de destino. Esse equipamento eh facilmente
+encontrado em predios com lans .....
+------------------------------------------------------------------
+
+5 - CAMADAS DO MODELO OSI ESTABELECIDAS PELA ISO
+
+O modelo OSI (Open System Interconect) foi criado em 1977 pela ISO (International Organization 
+for Standardization) com o objetivo de criar padroes de conectividade para interligar 
+sistemas de computadores locais e remotos. Os aspectos gerais da rede estao divididos em 7 
+camadas funcionais, facilitando assim a compreensao de questoes fundamentais sobre a rede.
+A tabela apresentada abaixo mostra o modelo ISO/OSI e a atuacao dos produtos de comunicaçao em 
+cada uma das camadas deste modelo, em uma divisao muito clara das camadas de um sistema de 
+comunicacao. Este eh um grande auxilio para o entendimento dos diversos protocolos de mercado.
+
+				7	Aplicacao
+				6	Apresentacao
+				5	Sessao
+				4	Transporte
+				3	Rede
+				2	Enlace
+				1	Fisica
+5.1 - Camada fisica
+A camada 1 compreende as especificacoes de hardware (Mecanicos, eletricos, fisicos) todos 
+documentados em padroes internacionais.
+
+5.2 - Camada de enlace
+Responsavel pelo acesso logico ao ambiente fisico, como transmissao e reconhecimento de erros.
+
+5.3 - Camada de rede
+Cuida do trafego e roteamento dos dados na rede.
+
+5.4 - Camada de transporte
+Controla a transferencia dos dados e transmissoes, isto eh executado pelo protocolo utilizado.
+
+5.5 - Camada de sessao
+Estabelece as sessoes entre os usuarios com a configuracao da tabela de endereço dos usuarios.
+
+5.6 - Camada de apresentacao
+Transfere informacoes de um software de aplicacao para o sistema operacional.
+
+5.7 - Camada de aplicacao
+Eh representada pelo usuario final. Os serviços podem ser: correio, transferencia de arquivos 
+etc.
+------------------------------------------------------------------
+
+6 - TOPOLOGIA
+
+Eh a forma de como eh montada fisicamente uma rede de computadores. Entre os principais temos:
+
+6.1 - Em barra (ou barramento):
+Utiliza um unico meio de transmissao para conectar as estacoes , que e o cabo coaxial.
+Para interligar as estacoes aos cabos utilizamos conectores BNC tipo "T"e terminais BNC  50  
+para fazer a terminacao. Apresenta a vantagem de possuir um custo baixo por sua implantacao, 
+porem a desvantagem de ser gasto muito para manter a rede funcionando.
+
+6.2 - Em Estrela:
+Eh uma estrutura de conexao, onde um dispositivo central(HUB), gerencia juntamente com o Sistema.
+Operacional de rede as acoes das estacoes. Eh utilizado o cabo par trancado com conector RJ45.
+Cada estacao terah a sua ligacao independente com o HUB. Possui como desvantagem o seu alto custo 
+de implantacao e como vantagem o custo baixo de manutencao.
+
+6.3 - Em Anel:
+Uma rede em anel consiste de estacoes conectadas atraves de um caminho fechado. Nesta 
+configuracao, muitas das estacoes remotas ao anel nao se comunicam diretamente com o computador 
+central.
+Redes em anel sao capazes de transmitir e receber dados em qualquer direcao, mas as 
+configuracoes mais usuais sao UNIDIRECIONAIS, de forma a tornar menos sofisticado os protocolos 
+de comunicacao que asseguram a entrega da mensagem corretamente e em sequencia ao destino. 
+Quando um mensagem eh enviada por um noh(estacao), ela entra no anel e circula ate ser retirada 
+pelo no destino, ou entao ateh voltar ao noh fonte, dependendo do protocolo empregado. O ultimo 
+procedimento eh mais desejavel porque permite o envio simultaneo de um pacote para multiplas 
+estacoes. Outra vantagem eh a de permitir a determinadas estacoes receber pacotes enviados por 
+qualquer outra estacao da rede, independentemente de qual seja o noh destino.
+Os maiores problemas desta topologia sao relativos a sua pouca tolerancia a falhas. Qualquer 
+que seja o controle de acesso empregado, ele pode ser perdido por problemas de falha e pode ser 
+dificil determinar com certeza se este controle foi perdido ou decidir qual noh deve recria-lo. 
+Erro de transmissao e processamento podem fazer com que uma mensagem continue eternamente a 
+circular no anel(loop infinito). 
+A utilizacao de uma estacao monitora visa contornar estes problemas. Outras funcoes desta 
+estacao seriam: iniciar o anel, enviar pacotes de teste e diagnostico e outras 
+tarefas de manutencao. A estacao monitora pode ser dedicada ou uma outra que assuma em 
+determinado tempo essas funcoes.
+Esta configuraçao requer que cada noh seja capaz de remover seletivamente mensagens da rede ou 
+passa-las adiante para o proximo noh. Nas redes unidirecionais, se uma linha entre dois nos cair, 
+todo sistema sai do ar ateh que o problema seja resolvido.Se a rede for bidirecional, nenhum noh 
+ficarah inacessivel, jah que poderah ser atingido pelo outro lado.
+
+6.4 - Vantagens e Desvantagens:
+
+6.4.1 - Topologia Estrela	
+VANTAGEM: Eh mais tolerante a falhas. Facil de intalar usuarios. Monitoramento centralizado.
+DESVANTAGEM: Custo de instalacao maior porque recebe mais cabos.
+
+6.4.2 - Topologia Anel (Token Ring)	
+VANTAGEM: Razoavelmente facil de instalar. Requer menos cabos. Desempenho uniforme. 
+DESVANTAGEM: Se uma estacao para todas param.. Os problemas sao dificeis de isolar.
+
+6.4.3 - Topologia barramento	
+VANTAGEM: Simples e facil de instalar. Requer menos cabos. Facil de entender. 
+DESVANTAGEM: A rede fica mais lenta em periodos de uso intenso.. Os problemas sao dificeis de 
+isolar.
+------------------------------------------------------------------
+7 - PROTOCOLOS
+Sao um conjunto de regras utilizados para garantir comunicacao confiavel na rede. Sao comparados 
+a lingua que usamos para nos comunicar.
+
+7.1 - IPX/SPX(novell)
+	Eh nativo da Netware para sistema cliente/ servidor, fornecendo serviços como 
+compartilhamento de arquivos, fax, impressao, etc...
+
+7.2 - NET BEUI
+	Utilizado em rede windows, de preferencia nao-hierarquizada(ver parte1).
+
+7.3 - TCP/IP (ver nota no fim da pagina)
+	Eh um conjunto de protocolos de comunicacao utilizados para troca de dados entre uma LAN 
+ou WAN.	No TCP/IP os protocolos de aplicacao mais conhecidos sao:
+
+	TELNET = Para emulacao de terminal;
+	SMTP = Para ser utilizado correio eletronico;
+	FTP = Transferencia de arquivos;
+
+Eh usado por Unix , Novell 4.x, Win NT, Win 9(x), Linux, FreeBSD, Tropix, V2_OS ...! 
+------------------------------------------------------------------
+
+8 - NOTA: Mais sobre roteadores e TCP/IP, podem ser encontrados em respectivamente em:
+"basico_routers.txt"  by  TankDS    e       "tcpip.txt"  by  Dimitri Vashnov. 
+Disponiveis em: unsekurity.virtualave.net!
+
+9 - LINKs: unsekurity.virtualave.net
+           causanobre.orui.dhs.org
+           www.gabrieltorres.com
+10 - FIM
+  Pois bem, chego o final desse txt, me sinto feliz, pq jah na primeira parte, recebi uns alguns
+mails que me motivaram, sem contar os elogios nos canais ..., termino REDE, sabendo que ajudei a
+alguem. Meu intuito desde de o inicio sempre foi ajudar.
+Nao escrevi isso aqui pra provar que sou melhor do que alguem ou coisas do tipo, tb nao escrevi
+para aparcer, ou para ficar mais conhecido, eu simplesmente escrevi para ajudar os caras que
+passam horas procurando algum material na internet e nao acham nada, sei bem o q eh isso,
+pois eu ja passei por isso ....
+ACABO aqui, a principio, tudo o que eu tinha que falar nestes basicos de REDES, eu ja falei,
+posso fazer revisoes, reformulacoes .....! Se eu nao receber reclamacao, tudo vai continuar como
+esta!
+*OBS: eu ja tinha acabado ese txt, quando me lembrei que poderia escrever isso:
+"A intencao desses txts de redes, nao eh falar tudo de redes, ou ensinar tudo, a intencao eh:
+tao somente amostrar a porta, agora abri e passar por ela, cabe a vc!"
+    	Adaptado de Matrix!
+			"Aprender eh uma arte que nunca acaba!"
+

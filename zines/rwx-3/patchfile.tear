@@ -1,0 +1,35 @@
+--- ip_fragment.c       Mon Nov 10 14:58:38 1997
++++ ip_fragment.c.patched       Mon Nov 10 19:18:52 1997
+@@ -12,6 +12,7 @@
+  *             Alan Cox        :       Split from ip.c , see ip_input.c
+for hi$  *             Alan Cox        :       Handling oversized frames
+  *             Uriel Maimon    :       Accounting errors in two fringe
+cases.
++ *             route           :       IP fragment overlap bug
+  */
+
+ #include <linux/types.h>
+@@ -578,6 +579,22 @@
+                        frag_kfree_s(tmp, sizeof(struct ipfrag));
+                }
+        }
++
++        /*
++         * Uh-oh.  Some one's playing some park shenanigans on us.
++         * IP fragoverlap-linux-go-b00m bug.
++         * route 11.3.97
++         */
++
++        if (offset > end)
++        {
++                skb->sk = NULL;
++                printk("IP: Invalid IP fragment (offset > end) found from %s\n$+   
+                 kfree_skb(skb, FREE_READ);
++                ip_statistics.IpReasmFails++;
++                ip_free(qp);
++                return NULL;
++        }
+
+        /*
+         *      Insert this fragment in the chain of fragments.
+
